@@ -61,7 +61,7 @@ CREATE TABLE Cliente (
 -- Tabla Proyecto
 CREATE TABLE Proyecto (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    idProyecto INT UNIQUE,
+    idProyecto VARCHAR(20),
     nombre VARCHAR(50),
     descripcion VARCHAR(100),
     idCliente INT,
@@ -155,7 +155,7 @@ CREATE TABLE Cotizacion (
     idCliente INT,
     idPorcentajesC INT,
     total FLOAT,
-    idServicio INT,
+    idServicio VARCHAR(50),
     idEstado INT,
     fechaCreacion DATE,
     FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
