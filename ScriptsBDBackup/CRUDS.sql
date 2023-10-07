@@ -11,7 +11,7 @@ END
 GO
 
 GO
--- Read (Leer información de un perfil por ID):
+-- Read (Leer informaciï¿½n de un perfil por ID):
 CREATE PROCEDURE readPerfil
     @idperfil INT
 AS
@@ -59,7 +59,7 @@ END
 GO
 
 GO
--- Read (Leer información de un estado por ID):
+-- Read (Leer informaciï¿½n de un estado por ID):
 CREATE PROCEDURE readEstado
     @idEstado INT
 AS
@@ -115,7 +115,7 @@ END
 GO
 
 GO
--- Read (Leer información de un funcionario por ID):
+-- Read (Leer informaciï¿½n de un funcionario por ID):
 CREATE PROCEDURE readFuncionario
     @idFuncionario INT
 AS
@@ -180,7 +180,7 @@ END
 GO
 
 GO
--- Read (Leer información de una modalidad por ID):
+-- Read (Leer informaciï¿½n de una modalidad por ID):
 CREATE PROCEDURE readModalidad
     @idModalidad INT
 AS
@@ -219,7 +219,7 @@ GO
 
 GO
 -- Tabla TipoCapacitacion
--- Create (Insertar un nuevo tipo de capacitación):
+-- Create (Insertar un nuevo tipo de capacitaciï¿½n):
 CREATE PROCEDURE createTipoCapacitacion
     @nombre VARCHAR(50)
 AS
@@ -230,7 +230,7 @@ END
 GO
 
 GO
--- Read (Leer información de un tipo de capacitación por ID):
+-- Read (Leer informaciï¿½n de un tipo de capacitaciï¿½n por ID):
 CREATE PROCEDURE readTipoCapacitacion
     @idTipo INT
 AS
@@ -242,7 +242,7 @@ END
 GO
 
 GO
--- Update (Actualizar un tipo de capacitación por ID):
+-- Update (Actualizar un tipo de capacitaciï¿½n por ID):
 CREATE PROCEDURE updateTipoCapacitacion
     @idTipo INT,
     @nombre VARCHAR(50)
@@ -255,7 +255,7 @@ END
 GO
 
 GO
--- Delete (Eliminar un tipo de capacitación por ID):
+-- Delete (Eliminar un tipo de capacitaciï¿½n por ID):
 CREATE PROCEDURE deleteTipoCapacitacion
     @idTipo INT
 AS
@@ -267,7 +267,7 @@ GO
 
 GO
 -- Tabla TipoEvaluacion
--- Create (Insertar un nuevo tipo de evaluación):
+-- Create (Insertar un nuevo tipo de evaluaciï¿½n):
 CREATE PROCEDURE createTipoEvaluacion
     @nombre VARCHAR(50),
     @precio FLOAT
@@ -279,7 +279,7 @@ END
 GO
 
 GO
--- Read (Leer información de un tipo de evaluación por ID):
+-- Read (Leer informaciï¿½n de un tipo de evaluaciï¿½n por ID):
 CREATE PROCEDURE readTipoEvaluacion
     @idTipo INT
 AS
@@ -291,7 +291,7 @@ END
 GO
 
 GO
--- Update (Actualizar un tipo de evaluación por ID):
+-- Update (Actualizar un tipo de evaluaciï¿½n por ID):
 CREATE PROCEDURE updateTipoEvaluacion
     @idTipo INT,
     @nombre VARCHAR(50),
@@ -306,7 +306,7 @@ END
 GO
 
 GO
--- Delete (Eliminar un tipo de evaluación por ID):
+-- Delete (Eliminar un tipo de evaluaciï¿½n por ID):
 CREATE PROCEDURE deleteTipoEvaluacion
     @idTipo INT
 AS
@@ -334,7 +334,7 @@ END
 GO
 
 GO
--- Read (Leer información de un cliente por ID):
+-- Read (Leer informaciï¿½n de un cliente por ID):
 CREATE PROCEDURE readCliente
     @idCliente INT
 AS
@@ -400,7 +400,7 @@ END
 GO
 
 GO
--- Read (Leer información de un proyecto por ID):
+-- Read (Leer informaciï¿½n de un proyecto por ID):
 CREATE PROCEDURE readProyecto
     @id INT
 AS
@@ -453,7 +453,7 @@ GO
 
 GO
 -- Tabla Evaluacion
--- Create (Insertar una nueva evaluación):
+-- Create (Insertar una nueva evaluaciï¿½n):
 CREATE PROCEDURE createEvaluacion
     @idEvaluacion VARCHAR(20),
     @nombre VARCHAR(50),
@@ -474,7 +474,7 @@ END
 GO
 
 GO
--- Read (Leer información de una evaluación por ID):
+-- Read (Leer informaciï¿½n de una evaluaciï¿½n por ID):
 CREATE PROCEDURE readEvaluacion
     @id INT
 AS
@@ -486,7 +486,7 @@ END
 GO
 
 GO
--- Update (Actualizar una evaluación por ID):
+-- Update (Actualizar una evaluaciï¿½n por ID):
 CREATE PROCEDURE updateEvaluacion
     @id INT,
     @idEvaluacion VARCHAR(20),
@@ -519,7 +519,7 @@ END
 GO
 
 GO
--- Delete (Eliminar una evaluación por ID):
+-- Delete (Eliminar una evaluaciï¿½n por ID):
 CREATE PROCEDURE deleteEvaluacion
     @id INT
 AS
@@ -531,7 +531,7 @@ GO
 
 GO
 -- Tabla Capacitacion
--- Create (Insertar una nueva capacitación):
+-- Create (Insertar una nueva capacitaciï¿½n):
 CREATE PROCEDURE createCapacitacion
     @idCapacitacion VARCHAR(20),
     @nombre VARCHAR(50),
@@ -556,7 +556,7 @@ END
 GO
 
 GO
--- Read (Leer información de una capacitación por ID):
+-- Read (Leer informaciï¿½n de una capacitaciï¿½n por ID):
 CREATE PROCEDURE readCapacitacion
     @id INT
 AS
@@ -568,7 +568,7 @@ END
 GO
 
 GO
--- Update (Actualizar una capacitación por ID):
+-- Update (Actualizar una capacitaciï¿½n por ID):
 CREATE PROCEDURE updateCapacitacion
     @id INT,
     @idCapacitacion VARCHAR(20),
@@ -609,7 +609,7 @@ END
 GO
 
 GO
--- Delete (Eliminar una capacitación por ID):
+-- Delete (Eliminar una capacitaciï¿½n por ID):
 CREATE PROCEDURE deleteCapacitacion
     @id INT
 AS
@@ -640,7 +640,7 @@ END
 GO
 
 GO
--- Read (Leer información de un usuario por ID):
+-- Read (Leer informaciï¿½n de un usuario por ID):
 CREATE PROCEDURE readUsuario
     @idUsuario INT
 AS
@@ -703,18 +703,18 @@ CREATE PROCEDURE createPorcentajes
     @idUsuario INT
 AS
 BEGIN
-    INSERT INTO Porcentajes (fdu, coordinacionGeneral, coordinacionEspecífica, iva, fechaIngreso, idUsuario)
+    INSERT INTO Porcentajes (fdu, coordinacionGeneral, coordinacionEspecifica, iva, fechaIngreso, idUsuario)
     VALUES (@fdu, @coordinacionGeneral, @coordinacionEspecifica, @iva, @fechaIngreso, @idUsuario);
 END
 GO
 
 GO
--- Read (Leer información de porcentajes por ID):
+-- Read (Leer informaciï¿½n de porcentajes por ID):
 CREATE PROCEDURE readPorcentajes
     @idPorcentajes INT
 AS
 BEGIN
-    SELECT idPorcentajes, fdu, coordinacionGeneral, coordinacionEspecífica, iva, fechaIngreso, idUsuario
+    SELECT idPorcentajes, fdu, coordinacionGeneral, coordinacionEspecifica, iva, fechaIngreso, idUsuario
     FROM Porcentajes
     WHERE idPorcentajes = @idPorcentajes;
 END
@@ -735,7 +735,7 @@ BEGIN
     UPDATE Porcentajes
     SET fdu = @fdu,
         coordinacionGeneral = @coordinacionGeneral,
-        coordinacionEspecífica = @coordinacionEspecifica,
+        coordinacionEspecifica = @coordinacionEspecifica,
         iva = @iva,
         fechaIngreso = @fechaIngreso,
         idUsuario = @idUsuario
@@ -756,7 +756,7 @@ GO
 
 GO
 -- Tabla Cotizacion
--- Create (Insertar una nueva cotización):
+-- Create (Insertar una nueva cotizaciï¿½n):
 CREATE PROCEDURE createCotizacion
     @nombre VARCHAR(50),
     @descripcion VARCHAR(100),
@@ -774,7 +774,7 @@ END
 GO
 
 GO
--- Read (Leer información de una cotización por ID):
+-- Read (Leer informaciï¿½n de una cotizaciï¿½n por ID):
 CREATE PROCEDURE readCotizacion
     @idCotizacion INT
 AS
@@ -786,7 +786,7 @@ END
 GO
 
 GO
--- Update (Actualizar una cotización por ID):
+-- Update (Actualizar una cotizaciï¿½n por ID):
 CREATE PROCEDURE updateCotizacion
     @idCotizacion INT,
     @nombre VARCHAR(50),
@@ -813,7 +813,7 @@ END
 GO
 
 GO
--- Delete (Eliminar una cotización por ID):
+-- Delete (Eliminar una cotizaciï¿½n por ID):
 CREATE PROCEDURE deleteCotizacion
     @idCotizacion INT
 AS
@@ -825,7 +825,7 @@ GO
 
 GO
 -- Tabla ProyectoXFuncionario
--- Create (Insertar una nueva relación ProyectoXFuncionario):
+-- Create (Insertar una nueva relaciï¿½n ProyectoXFuncionario):
 CREATE PROCEDURE createProyectoXFuncionario
     @idProyecto INT,
     @idFuncionario INT
@@ -837,7 +837,7 @@ END
 GO
 
 GO
--- Read (Leer información de una relación ProyectoXFuncionario por ID):
+-- Read (Leer informaciï¿½n de una relaciï¿½n ProyectoXFuncionario por ID):
 CREATE PROCEDURE readProyectoXFuncionario
     @idProyectoXFuncionario INT
 AS
@@ -849,7 +849,7 @@ END
 GO
 
 GO
--- Update (Actualizar una relación ProyectoXFuncionario por ID):
+-- Update (Actualizar una relaciï¿½n ProyectoXFuncionario por ID):
 CREATE PROCEDURE updateProyectoXFuncionario
     @idProyectoXFuncionario INT,
     @idProyecto INT,
@@ -864,7 +864,7 @@ END
 GO
 
 GO
--- Delete (Eliminar una relación ProyectoXFuncionario por ID):
+-- Delete (Eliminar una relaciï¿½n ProyectoXFuncionario por ID):
 CREATE PROCEDURE deleteProyectoXFuncionario
     @idProyectoXFuncionario INT
 AS
