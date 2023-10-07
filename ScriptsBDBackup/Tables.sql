@@ -61,7 +61,7 @@ CREATE TABLE Cliente (
 -- Tabla Proyecto
 CREATE TABLE Proyecto (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    idProyecto VARCHAR(20),
+	idProyecto VARCHAR(20) UNIQUE,
     nombre VARCHAR(50),
     descripcion VARCHAR(100),
     idCliente INT,
