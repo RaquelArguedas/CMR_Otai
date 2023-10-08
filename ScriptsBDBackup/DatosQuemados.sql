@@ -51,11 +51,11 @@ VALUES (567890123, 'ESPH', 66667777, 'esph@gmail.com', '2023-10-05', 5);
 
 -- Sentencias INSERT para la tabla Proyecto
 INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('CA001', 'Proyecto A', 'Descripción del Proyecto A', 1, null, '2023-10-05', '2023-12-31', 1000.00, 1);
+VALUES ('PRO001', 'Proyecto A', 'Descripción del Proyecto A', 1, null, '2023-10-05', '2023-12-31', 1000.00, 1);
 INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('CA001', 'Proyecto B', 'Descripción del Proyecto B', 2, null, '2023-11-01', '2024-01-31', 1500.00, 2);
+VALUES ('PRO002', 'Proyecto B', 'Descripción del Proyecto B', 2, null, '2023-11-01', '2024-01-31', 1500.00, 2);
 INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('CA001', 'Proyecto C', 'Descripción del Proyecto C', 3, null, '2023-12-15', '2024-03-15', 2000.00, 3);
+VALUES ('PRO003', 'Proyecto C', 'Descripción del Proyecto C', 3, null, '2023-12-15', '2024-03-15', 2000.00, 3);
 
 -- Sentencias INSERT para la tabla Evaluacion
 INSERT INTO Evaluacion (idEvaluacion, nombre, descripcion, fechaCreacion, idTipo, fechaEjecucion, documento, idEstado, precio, idProyecto, idCliente)
