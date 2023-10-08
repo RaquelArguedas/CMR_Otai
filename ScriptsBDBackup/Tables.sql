@@ -140,7 +140,7 @@ CREATE TABLE Porcentajes (
     idPorcentajes INT IDENTITY(1,1) PRIMARY KEY,
     fdu FLOAT,
     coordinacionGeneral FLOAT,
-    coordinacionEspecífica FLOAT,
+    coordinacionEspecifica FLOAT,
     iva FLOAT,
     fechaIngreso DATE,
     idUsuario INT,
