@@ -67,6 +67,9 @@ class Proyecto:
             raise TypeError("Tipos de atributos no válidos")
 
     def toList(self):
+        listaFuncionarios = []
+        for f in self.funcionarios:
+            listaFuncionarios += [f.toList()]
         lista = [
             self.id,
             self.idProyecto,
@@ -78,6 +81,6 @@ class Proyecto:
             self.fechaFinalizacion,
             self.subTotal,
             self.estado,
-            self.funcionarios  
+            listaFuncionarios
         ]
         return lista
