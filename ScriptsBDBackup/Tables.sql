@@ -130,7 +130,7 @@ CREATE TABLE Usuario (
     numTelefono INT,
     correo VARCHAR(100),
     fechaIngreso DATE,
-    contrasenha VARCHAR(10),
+    contrasenha VARCHAR(20),
     idEstado INT,
     FOREIGN KEY (idEstado) REFERENCES Estado(idEstado)
 );

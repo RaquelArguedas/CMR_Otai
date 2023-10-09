@@ -1,7 +1,7 @@
 from Enums import *
 
 class Evaluacion:
-    def __init__(self, id, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, estado, precio, idProyecto, idCliente):
+    def __init__(self, id, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
         # Verificar si la variable es una lista y contiene elementos de tipo int
         if isinstance(documentos, list) and all(isinstance(item, int) for item in documentos):
             try:
@@ -12,8 +12,8 @@ class Evaluacion:
                 self.fechaCreacion = str(fechaCreacion)
                 self.tipoEvaluacion = int(tipoEvaluacion)
                 self.fechaEjecucion = str(fechaEjecucion)
-                self.documento = documentos #se guardara el id de mongo
-                self.estado = Estado(estado)
+                self.documentos = documentos #se guardara el id de mongo
+                self.idEstado = Estado(idEstado)
                 self.precio = float(precio)
                 self.idProyecto = int(idProyecto)
                 self.idCliente = int(idCliente)
@@ -22,7 +22,7 @@ class Evaluacion:
         else:
             raise TypeError("documentos no es lista de enteros")
 
-    def editar(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, estado, precio, idProyecto, idCliente):
+    def editar(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
         try:
             if idEvaluacion is not None:
                 self.idEvaluacion = str(idEvaluacion)
@@ -39,11 +39,11 @@ class Evaluacion:
             if documentos is not None:
                 # Verificar si la variable es una lista y contiene elementos de tipo int
                 if isinstance(documentos, list) and all(isinstance(item, int) for item in documentos):
-                    self.documento = documentos
+                    self.documentos = documentos
                 else:
                     raise TypeError("documentos no es lista de enteros")
-            if estado is not None:
-                self.estado = Estado(estado)
+            if idEstado is not None:
+                self.estado = Estado(idEstado)
             if precio is not None:
                 self.precio = float(precio)
             if idProyecto is not None:
@@ -62,8 +62,8 @@ class Evaluacion:
             self.fechaCreacion,
             self.tipoEvaluacion,
             self.fechaEjecucion,
-            self.documento,
-            self.estado.value, 
+            self.documentos,
+            self.idEstado.value, 
             self.precio,
             self.idProyecto,
             self.idCliente

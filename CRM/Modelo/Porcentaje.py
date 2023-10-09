@@ -11,10 +11,8 @@ class Porcentaje:
         except (ValueError, TypeError):
             raise TypeError("Tipos de atributos no válidos")
 
-    def editar(self, idPorcentaje, fdu, coordinacionGeneral, coordinacionEspecifica, iva, fechaIngreso, idUsuario):
+    def editar(self, fdu, coordinacionGeneral, coordinacionEspecifica, iva, fechaIngreso, idUsuario):
         try:
-            if idPorcentaje is not None:
-                self.idPorcentaje = int(idPorcentaje)
             if fdu is not None:
                 self.fdu = float(fdu)
             if coordinacionGeneral is not None:

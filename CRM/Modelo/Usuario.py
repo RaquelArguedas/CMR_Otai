@@ -16,7 +16,7 @@ class Usuario:
         except (ValueError, TypeError):
             raise TypeError("Tipos de atributos no válidos")
 
-    def editar(self, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, contrasenha, estado):
+    def editar(self, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, fechaIngreso, contrasenha, estado):
         try:
             if nombre is not None:
                 self.nombre = str(nombre)
@@ -30,6 +30,8 @@ class Usuario:
                 self.numTelefono = int(numTelefono)
             if correo is not None:
                 self.correo = str(correo)
+            if fechaIngreso is not None:
+                self.fechaIngreso = str(fechaIngreso)
             if contrasenha is not None:
                 self.contrasenha = str(contrasenha)
             if estado is not None:
