@@ -41,8 +41,8 @@ def readCapacitacion(idCapacitacion):
   return json.dumps(c.__dict__)
 
 #Update
-@app.route('/modificarEstudiante', methods=['POST'])
-def modificarEstudiante(): 
+@app.route('/updateCapacitacion', methods=['POST'])
+def updateCapacitacion(): 
   id = control.updateCapacitacion(request.json['idCapacitacion'], request.json['nombre'],
                                   request.json['descripcion'], request.json['fechaCreacion'], 
                                   request.json['fechaEjecucion'], request.json['documentos'], 
@@ -51,6 +51,14 @@ def modificarEstudiante():
                                   request.json['idFuncionario'], request.json['precio'],
                                   request.json['tipoCapacitacion'], request.json['idProyecto'],
                                   request.json['idCliente'])
+  
+  return jsonify(str(id))
+
+#Delete
+@app.route('/deleteCapacitacion/<idCapacitacion>', methods=['POST'])
+def deleteCapacitacion(idCapacitacion): 
+  id = control.updateCapacitacion(idCapacitacion, None, None, None, None, None, 
+                                  1, None, None, None, None, None, None, None, None)
   
   return jsonify(str(id))
 
@@ -87,6 +95,10 @@ def updateCliente():
     )
     return jsonify(str(id))
 
+@app.route('/deleteCliente/<idCliente>', methods=['POST'])
+def deleteCliente(idCliente):
+    id = control.updateCliente( idCliente, None, None, None, None, 1)
+    return jsonify(str(id))
 
 #CRUD Cotizacion
 @app.route('/createCotizacion', methods=['POST'])
@@ -123,6 +135,11 @@ def updateCotizacion():
         request.json['estado'],
         request.json['fechaCreacion']
     )
+    return jsonify(str(id))
+
+@app.route('/deleteCotizacion/<idCotizacion>', methods=['POST'])
+def deleteCotizacion(idCotizacion):
+    id = control.updateCotizacion( idCotizacion, None,None,None,None,None,None,1,None)
     return jsonify(str(id))
 
 
@@ -168,6 +185,11 @@ def updateEvaluacion():
     )
     return jsonify(str(id))
 
+@app.route('/deleteEvaluacion/<idEvaluacion>', methods=['POST'])
+def deleteEvaluacion(idEvaluacion): 
+    id = control.updateEvaluacion( idEvaluacion, None,None,None,None,None,None,1,None,None,None)
+    return jsonify(str(id))
+
 
 #CRUD Funcionario
 @app.route('/createFuncionario', methods=['POST'])
@@ -206,6 +228,11 @@ def updateFuncionario():
         request.json['fechaIngreso'],
         request.json['perfil']
     )
+    return jsonify(str(id))
+
+@app.route('/deleteFuncionario/<idFuncionario>', methods=['POST'])
+def deleteFuncionario(idFuncionario):
+    id = control.updateFuncionario(idFuncionario,None,None,None,None,None,None,1,None,None)
     return jsonify(str(id))
 
 
@@ -305,6 +332,11 @@ def updateProyecto():
     )
     return jsonify(str(id))
 
+@app.route('/deleteProyecto/<idProyecto>', methods=['POST'])
+def deleteProyecto(idProyecto):
+    id = control.updateProyecto(idProyecto,None,None,None,None,None,None,None,1,None)
+    return jsonify(str(id))
+
 
 #CRUD TipoCapacitacion
 @app.route('/createTipoCapacitacion', methods=['POST'])
@@ -386,9 +418,16 @@ def updateUsuario():
         request.json['correo'],
         request.json['fechaIngreso'],
         request.json['contrasenha'],
+        request.json['estado']
     )
     return jsonify(str(id))
 
+@app.route('/deleteUsuario/<idUsuario>', methods=['POST'])
+def deleteUsuario(idUsuario):
+    id = control.updateUsuario(idUsuario,None,None,None,None,None,None,None,None,1)
+    return jsonify(str(id))
+
+#Papelera
 @app.route('/consultarPapelera', methods=['GET'])
 def readUsuario():
     l = control.consultarPapelera()
