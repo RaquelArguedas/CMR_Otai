@@ -226,7 +226,6 @@ class SingletonDAO(metaclass=SingletonMeta):
         else:
             return -1
 
-
     #CRUDS Evaluacion
     def createEvaluacion(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
         if idEvaluacion == None or nombre == None or descripcion== None or fechaCreacion== None or tipoEvaluacion== None or fechaEjecucion== None or documentos== None or idEstado== None or precio== None or idProyecto== None or idCliente== None:
@@ -361,7 +360,6 @@ class SingletonDAO(metaclass=SingletonMeta):
         else:
             return -1
 
-
     #CRUDS Perfil
     def createPerfil(self, nombre):
         if nombre == None:
@@ -389,7 +387,6 @@ class SingletonDAO(metaclass=SingletonMeta):
         else:
             return -1
     
-
     #CRUDS Procentaje
     def createPorcentaje(self, fdu, coordinacionGeneral, coordinacionEspecifica, iva, fechaIngreso, idUsuario):
         if fdu is None or coordinacionGeneral is None or coordinacionEspecifica is None or iva is None or fechaIngreso is None or idUsuario is None:
@@ -415,7 +412,6 @@ class SingletonDAO(metaclass=SingletonMeta):
             self.executeCommit(f"EXEC updatePorcentajes {p.idPorcentaje}, {p.fdu}, {p.coordinacionGeneral}, {p.coordinacionEspecifica}, {p.iva}, '{p.fechaIngreso}', {p.idUsuario}")
         else:
             return -1
-
 
     #CRUDS TipoCapacitacion
     def createTipoCapacitacion(self, nombre):
