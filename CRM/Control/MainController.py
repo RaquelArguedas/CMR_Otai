@@ -13,6 +13,7 @@ from Proyecto import *
 from TipoCapacitacion import *
 from TipoEvaluacion import *
 from Usuario import *
+from Enums import *
 
 class SingletonMeta(type):
     _instances = {}
@@ -490,3 +491,19 @@ class SingletonDAO(metaclass=SingletonMeta):
             self.executeCommit(f"EXEC updateUsuario {u.idUsuario}, '{u.nombre}', '{u.apellido}', '{u.fechaNacimiento}', {u.cedula}, {u.numTelefono}, '{u.correo}', '{u.fechaIngreso}', '{u.contrasenha}', {u.estado.value}")
         else:    
             return -1
+
+    #Consultar papelera
+    def consultarPapelera(self):
+        listaA = self.capacitacion + self.evaluacion
+        listaB = self.cliente + self.cotizacion  + self.funcionario + self.proyecto + self.usuario
+        listaSalida = []
+
+        for itemB in listaB:
+            if itemB.estado == Estado.ELIMINADO:
+                listaSalida += [itemB]
+        for itemA in listaA:
+            if itemA.idEstado == Estado.ELIMINADO:
+                listaSalida += [itemA]
+        
+        return listaSalida
+        

@@ -386,5 +386,15 @@ def updateUsuario():
         request.json['correo'],
         request.json['fechaIngreso'],
         request.json['contrasenha'],
+    )
+    return jsonify(str(id))
+
+@app.route('/consultarPapelera', methods=['GET'])
+def readUsuario():
+    l = control.consultarPapelera()
+    if (l == []):
+        return jsonify("vacia")
+    return json.dumps(l.__dict__)
+
 
 

@@ -50,7 +50,7 @@ class Usuario:
             self.correo,
             self.fechaIngreso,
             self.contrasenha,
-            self.estado.value  # Para obtener el valor numérico de la enumeración
+            self.estado  # Para obtener el valor numérico de la enumeración
         ]
         return lista
 

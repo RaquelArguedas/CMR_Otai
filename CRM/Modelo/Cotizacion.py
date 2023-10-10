@@ -45,7 +45,7 @@ class Cotizacion:
             self.idPorcentajesC,
             self.Total,
             self.idServicio,
-            self.estado.value, 
+            self.estado, 
             self.fechaCreacion
         ]
         return lista

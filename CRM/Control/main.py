@@ -2,8 +2,11 @@ from MainController import *
 
 if __name__ == "__main__":
     dao = SingletonDAO()
-    dao.updateUsuario(2, 'Alexa', 'apellido', None, 1, 1, None, None, 'contrasenha',1)
-
+    #dao.updateUsuario(2, 'Alexa', 'apellido', None, 1, 1, None, None, 'contrasenha',1)
+    l = dao.consultarPapelera()
+    print("HOLA")
+    for item in l:
+        print(item.toList())
     # LO QUE ESTA COMENTADO A CONTINUACION IMPRIME TODITO LO QUE SE CARGO DE LA BD
     # # Capacitacion
     # for item in dao.capacitacion:
@@ -46,6 +49,6 @@ if __name__ == "__main__":
     #     print("TipoEvaluacion:", item.toList())
     # print("\n")
     # # Usuario
-    for item in dao.usuario:
-        print("Usuario:", item.toList())
+    # for item in dao.usuario:
+    #     print("Usuario:", item.toList())
 
