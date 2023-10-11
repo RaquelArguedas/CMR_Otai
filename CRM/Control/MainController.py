@@ -1,7 +1,7 @@
 import pyodbc
 
 import sys
-sys.path.append('CRM/Modelo')
+sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo')
 from Capacitacion import *
 from Cliente import *
 from Cotizacion import *

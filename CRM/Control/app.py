@@ -429,11 +429,13 @@ def deleteUsuario(idUsuario):
 
 #Papelera
 @app.route('/consultarPapelera', methods=['GET'])
-def readUsuario():
+def consultarPapelera():
     l = control.consultarPapelera()
     if (l == []):
         return jsonify("vacia")
     return json.dumps(l.__dict__)
 
-
+# inicia el servidor
+if __name__ == "__main__":
+    app.run(debug=True)
 
