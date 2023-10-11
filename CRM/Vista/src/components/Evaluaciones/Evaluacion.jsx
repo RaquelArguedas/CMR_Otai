@@ -1,6 +1,7 @@
-import React from "react";
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { Navbar } from '../Navbar/Navbar';
 
 const Title = styled.h1`
   font-size: 24px;
@@ -38,25 +39,33 @@ const SearchButton = styled.button`
   cursor: pointer;
 `;
 
-function Evaluacion(){
+export function Evaluacion(){
 
     const [searchTerm, setSearchTerm] = useState('');
     
     return (
-        <div>
-            <Title>Evaluaciones</Title>
+       
+         <Fragment>
+        <div className='container'>
+            <Navbar/>
+
+            <div class="row">
+              <div class="col-sm-3">
+              <Title>Evaluaciones</Title>
+              </div>
+              <div class="col-lg">
+                
             <Button>Crear Evaluación</Button>
             <Button>Tipos de Evaluación</Button>
-            <SearchContainer>
-                <SearchInput
-                type="text"
-                placeholder="Buscar..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </SearchContainer>
+              </div>
+            </div>
+
+
+            
         </div>
+        <div>
+        </div>
+    </Fragment>
       );
     }
     
-    export default Evaluacion
