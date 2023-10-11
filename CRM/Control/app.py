@@ -305,7 +305,7 @@ def createProyecto():
         request.json['fechaFinalizacion'],
         request.json['subTotal'],
         request.json['estado'],
-        request.json['funcionarios']
+        request.json['funcionarios'] #recibe una lista con ids de funcionarios
     )
     return jsonify(str(id))
 
@@ -328,7 +328,7 @@ def updateProyecto():
         request.json['fechaFinalizacion'],
         request.json['subTotal'],
         request.json['estado'],
-        request.json['funcionarios']
+        request.json['funcionarios'] #recibe una lista con ids de funcionarios
     )
     return jsonify(str(id))
 

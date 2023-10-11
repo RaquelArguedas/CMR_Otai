@@ -255,18 +255,22 @@ class SingletonDAO(metaclass=SingletonMeta):
             return -1
 
     #CRUDS Proyecto
-    def createProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios):
-        if idProyecto == None or nombre == None or descripcion== None or idCliente== None or documentos== None or fechaInicio==None or fechaFinalizacion==None or subTotal==None or estado== None or funcionarios == None:
+    def createProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
+        if idProyecto == None or nombre == None or descripcion== None or idCliente== None or documentos== None or fechaInicio==None or fechaFinalizacion==None or subTotal==None or estado== None or funcionariosIds == None:
             return -1 #No se puede crear una capacitacion con atributos nulos   
 
         self.executeCommit(f"EXEC createProyecto {idProyecto}, {nombre}, {descripcion}, {idCliente}, null, '{fechaInicio}', '{fechaFinalizacion}', {subTotal}, {estado}")
         result = self.execute(f"SELECT id from Proyecto where idProyecto = '{idProyecto}'")
 
-        #pendiente agregar los funcionarios en la tabla ProyectoXFuncionario
-
         #si hay lista y no existe el idCapacitacion en los datos se crea
         if result and (self.readProyecto(idProyecto) == None):
-            self.proyecto += [Proyecto(result[0][0], idProyecto, nombre, descripcion, idCliente, [], fechaInicio, fechaFinalizacion, subTotal, estado, [])]
+            funcionarios = []
+            for fId in funcionariosIds:
+                f = self.readFuncionario(int(fId))
+                if f is not None:
+                    funcionarios += [f]
+                    self.executeCommit(f"EXEC createProyectoXFuncionario {result[0][0]}, {fId}")
+            self.proyecto += [Proyecto(result[0][0], idProyecto, nombre, descripcion, idCliente, [], fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)]
         
     def readProyecto(self, idProyecto):
         for p in self.proyecto:
@@ -274,10 +278,18 @@ class SingletonDAO(metaclass=SingletonMeta):
                 return p
         return None
     
-    def updateProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios):
+    def updateProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
         p = self.readProyecto(idProyecto)
         if p != None:
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            if funcionariosIds != None:
+                funcionarios = []
+                self.executeCommit(f"delete from ProyectoXFuncionario where idProyecto = {p.id}")
+                for fId in funcionariosIds:
+                    f = self.readFuncionario(int(fId))
+                    if f is not None:
+                        funcionarios += [f]
+                        self.executeCommit(f"EXEC createProyectoXFuncionario {p.id}, {fId}")
             p.editar(idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
             self.executeCommit(f"EXEC updateProyecto {p.id}, {p.idProyecto}, {p.nombre}, {p.descripcion}, '{p.idCliente}',  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
         else:
