@@ -63,7 +63,7 @@ class Evaluacion:
             self.tipoEvaluacion,
             self.fechaEjecucion,
             self.documentos,
-            self.idEstado, 
+            self.idEstado.value, 
             self.precio,
             self.idProyecto,
             self.idCliente

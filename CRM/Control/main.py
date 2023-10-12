@@ -26,13 +26,13 @@ if __name__ == "__main__":
     #     print("Cotizacion:", item.toList())
     # print("\n")
     # Evaluacion
-    # for item in dao.evaluacion:
-    #     print("Evaluacion:", item.toList())
-    # print("\n")
-    # # Funcionario
-    for item in dao.funcionario:
-        print("Funcionario:", item.toList())
+    for item in dao.evaluacion:
+        print("Evaluacion:", item.toList())
     print("\n")
+    # # Funcionario
+    # for item in dao.funcionario:
+    #     print("Funcionario:", item.toList())
+    # print("\n")
     # # Perfil
     # for item in dao.perfil:
     #     print("Perfil:", item.toList())
@@ -42,9 +42,9 @@ if __name__ == "__main__":
     #     print("Porcentaje:", item.toList())
     # print("\n")
     # # Proyecto
-    for item in dao.proyecto:
-        print("Proyecto:", item.toList())
-    print("\n")
+    # for item in dao.proyecto:
+    #     print("Proyecto:", item.toList())
+    # print("\n")
     # # TipoCapacitacion
     # for item in dao.tipoCapacitacion:
     #     print("TipoCapacitacion:", item.toList())

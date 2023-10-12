@@ -8,6 +8,9 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { Navbar } from '../Navbar/Navbar';
 import './CrearEvaluacion.css';
 import Swal from 'sweetalert2';
+
+const API = "http://127.0.0.1:5000";
+
 export const ModificarEvaluacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
@@ -53,9 +56,13 @@ export const ModificarEvaluacion = () => {
     }
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
-        // const res = await fetch(`${API}/getProfesorCodigo/${codigoRef.current.value}`);
-        // const data = await res.json();//resultado de la consulta
-        // console.log(data) // imprime en consola web
+        console.log(1) // imprime en consola web
+        const res = await fetch(`${API}/readEvaluacion/${'EVAL001'}`);
+        console.log(2) // imprime en consola web
+        const data = await res.json();//resultado de la consulta
+        console.log(3) // imprime en consola web
+        console.log(data) // imprime en consola web
+        console.log("idEvaluacion:", data[0]);
         setNombre('Evaluacion para el Ministerio de salud')
         setDescripcion('Evaluacion de accesibilidad')
         //setFechaEjecucion('20/09/2023')

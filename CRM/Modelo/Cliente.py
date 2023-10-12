@@ -36,7 +36,7 @@ class Cliente:
             self.numTelefono,
             self.correo,
             self.fechaIngreso,
-            self.estado
+            self.estado.value
         ]
         return lista
 

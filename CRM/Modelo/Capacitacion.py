@@ -80,7 +80,7 @@ class Capacitacion:
             self.fechaCreacion,
             self.fechaEjecucion,
             self.documentos,
-            self.idEstado, 
+            self.idEstado.value, 
             self.horasDuracion,
             self.fechaFinalizacion,
             self.modalidad.value,

@@ -80,7 +80,7 @@ class Proyecto:
             self.fechaInicio,
             self.fechaFinalizacion,
             self.subTotal,
-            self.estado,
+            self.estado.value,
             listaFuncionarios
         ]
         return lista

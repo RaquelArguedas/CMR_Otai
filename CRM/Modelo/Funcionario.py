@@ -50,7 +50,7 @@ class Funcionario:
             self.cedula,
             self.numTelefono,
             self.correo,
-            self.estado,
+            self.estado.value,
             self.fechaIngreso,
             self.perfil,
         ]

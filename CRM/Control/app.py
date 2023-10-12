@@ -35,7 +35,7 @@ def createCapacitacion():
 #Read
 @app.route('/readCapacitacion/<idCapacitacion>', methods=['GET'])
 def readCapacitacion(idCapacitacion):
-  c = control.readCapacitacion(int(idCapacitacion))
+  c = control.readCapacitacion(idCapacitacion)
   if (c == None):
      return jsonify("No existe")
   return json.dumps(c.__dict__)
@@ -163,10 +163,10 @@ def createEvaluacion():
 
 @app.route('/readEvaluacion/<idEvaluacion>', methods=['GET'])
 def readEvaluacion(idEvaluacion):
-    c = control.readEvaluacion(int(idEvaluacion))
+    c = control.readEvaluacion(idEvaluacion)
     if (c == None):
         return jsonify("No existe")
-    return json.dumps(c.__dict__)
+    return jsonify(c.toList())
 
 @app.route('/updateEvaluacion', methods=['POST'])
 def updateEvaluacion(): 
