@@ -1,4 +1,9 @@
 import pyodbc
+import pymongo 
+from werkzeug.utils import secure_filename
+from bson.binary import Binary
+from bson import ObjectId
+import os
 
 import sys
 sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo')
@@ -24,20 +29,6 @@ class SingletonMeta(type):
         return cls._instances[cls]
 
 class SingletonDAO(metaclass=SingletonMeta):
-    
-    #Atributos de conexión
-    connection = None
-    cursor = None
-
-    
-
-    #Atributos para conetarse a MONGO
-    # MONGO_HOST="localhost"
-    # MONGO_PUERTO="27017"
-    # MONGO_TIEMPO_FUERA=1000
-    # MONGO_URI="mongodb://"+MONGO_HOST+":"+MONGO_PUERTO+"/"
-    # MONGO_CLIENTE = None
-    # MONGO_BASEDATOS = None
 
     #Atributos provenientes de la bd
     capacitacion = []
@@ -193,10 +184,6 @@ class SingletonDAO(metaclass=SingletonMeta):
                 if (idFunc[0]  == funcionario.idFuncionario):
                     lista += [funcionario]
         return lista
-
-    
-    #CONEXION A MONGODB
-
 
 
     #CRUDS Capacitacion
@@ -519,3 +506,95 @@ class SingletonDAO(metaclass=SingletonMeta):
         
         return listaSalida
         
+
+    #guarda el documento
+    def saveDoc(self,id,doc):
+        try:
+            MONGO_HOST="localhost"
+            MONGO_PUERTO="27017"
+            MONGO_TIEMPO_FUERA=1000
+            MONGO_URI="mongodb://"+MONGO_HOST+":"+MONGO_PUERTO+"/"
+
+            MONGO_CLIENTE = pymongo.MongoClient(MONGO_URI,serverSelectionTimeoutMS=MONGO_TIEMPO_FUERA)
+            MONGO_BASEDATOS = MONGO_CLIENTE["Otai"]   
+            docs = MONGO_BASEDATOS["documentos"]
+            print("Conexion a Mongo exitosa.")
+
+            doc_data = doc.read()
+            docs.insert_one({'id':id, 'nombreDoc': secure_filename(doc.filename), 'foto': Binary(doc_data)})
+            # Guarda los datos del archivo en MongoDB
+            print("Se ha insertado exitosamente.")
+
+            MONGO_CLIENTE.close()
+        except Exception as ex:
+            print(ex)
+
+    #elimina documento de un id
+    def deleteDocs(self, id):
+        try:
+            MONGO_HOST = "localhost"
+            MONGO_PUERTO = "27017"
+            MONGO_TIEMPO_FUERA = 1000
+            MONGO_URI = f"mongodb://{MONGO_HOST}:{MONGO_PUERTO}/"
+
+            MONGO_CLIENTE = pymongo.MongoClient(MONGO_URI, serverSelectionTimeoutMS=MONGO_TIEMPO_FUERA)
+            MONGO_BASEDATOS = MONGO_CLIENTE["Otai"]
+            docs = MONGO_BASEDATOS["documentos"]
+            print("Conexion a Mongo exitosa.")
+
+            # Eliminar todas las filas con el mismo 'id'
+            docs.delete_many({'id': id})
+
+            MONGO_CLIENTE.close()
+        except Exception as ex:
+            print(ex)
+
+    #obtiene todos los documentos de un id
+    def getDoc(self,idBuscado):
+        try:
+            MONGO_HOST="localhost"
+            MONGO_PUERTO="27017"
+            MONGO_TIEMPO_FUERA=1000
+            MONGO_URI="mongodb://"+MONGO_HOST+":"+MONGO_PUERTO+"/"
+
+            MONGO_CLIENTE = pymongo.MongoClient(MONGO_URI,serverSelectionTimeoutMS=MONGO_TIEMPO_FUERA)
+            MONGO_BASEDATOS = MONGO_CLIENTE["Otai"]   
+            docs = MONGO_BASEDATOS["documentos"]
+            print("Conexion a Mongo exitosa.")
+            
+            dict = {}
+            for x in docs.find({'id':idBuscado}):
+                n = x['nombreDoc']
+                dict[n] = str(x['_id'])
+
+            return dict
+
+        except Exception as ex:
+            print(ex)
+
+    def download(self,idBuscado):
+        try:
+            MONGO_HOST="localhost"
+            MONGO_PUERTO="27017"
+            MONGO_TIEMPO_FUERA=1000
+            MONGO_URI="mongodb://"+MONGO_HOST+":"+MONGO_PUERTO+"/"
+
+            MONGO_CLIENTE = pymongo.MongoClient(MONGO_URI,serverSelectionTimeoutMS=MONGO_TIEMPO_FUERA)
+            MONGO_BASEDATOS = MONGO_CLIENTE["Otai"]   
+            docs = MONGO_BASEDATOS["documentos"]
+            print("Conexion a Mongo exitosa.")
+            
+            x = docs.find_one({'_id': ObjectId(idBuscado)})  # Utiliza find_one para encontrar el documento
+            if x:
+                print(x['nombreDoc'], "descargado")
+                carpeta_descargas = os.path.expanduser("~" + os.sep + "Downloads")
+
+                ruta_archivo = os.path.join(carpeta_descargas, x['nombreDoc'])
+                with open(ruta_archivo, 'wb') as archivo_local:
+                    archivo_local.write(x['foto'])
+            else:
+                print("No se encontró ningún documento con ese _id.")
+                return None
+
+        except Exception as ex:
+            print(ex)

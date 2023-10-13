@@ -9,6 +9,9 @@ import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { Navbar } from '../Navbar/Navbar';
 import './CrearEvaluacion.css';
 import Swal from 'sweetalert2';
+
+const API = "http://127.0.0.1:5000";
+
 export  const CrearEvaluacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
@@ -28,6 +31,8 @@ export  const CrearEvaluacion = () => {
     
     const handleSubmit = async (event) => {
         event.preventDefault();  
+        const formData = new FormData(); // Crea un objeto FormData
+        
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         Swal.fire({
@@ -39,8 +44,16 @@ export  const CrearEvaluacion = () => {
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
           }).then((result) => {
             if (result.isConfirmed) {
+                console.log(selectedFiles)
+                formData.append('doc', selectedFiles[0]);
+                // Realiza la solicitud al servidor para guardar los datos y los archivos
+                fetch(`${API}/saveDoc`, {
+                    method: 'POST',
+                    body: formData, // Utiliza el objeto FormData que contiene archivos
+                });
+
               // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
-              gotoMenu();
+              //gotoMenu();
             }
           });
         

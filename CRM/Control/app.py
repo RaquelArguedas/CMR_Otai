@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, Response,make_response
 from flask_cors import CORS
 from MainController import *
 from datetime import datetime, timedelta
@@ -7,6 +7,10 @@ from io import BytesIO
 from PIL import Image
 from flask import send_file #nuevo import
 import base64
+import mimetypes
+import io
+import os
+import zipfile
 
 # Instantiation
 app = Flask(__name__)
@@ -38,7 +42,7 @@ def readCapacitacion(idCapacitacion):
   c = control.readCapacitacion(idCapacitacion)
   if (c == None):
      return jsonify("No existe")
-  return json.dumps(c.__dict__)
+  return jsonify(c.toList())
 
 #Update
 @app.route('/updateCapacitacion', methods=['POST'])
@@ -81,7 +85,7 @@ def readCliente(idCliente):
     c = control.readCliente(int(idCliente))
     if (c == None):
         return jsonify("No existe")
-    return json.dumps(c.__dict__)
+    return jsonify(c.toList())
 
 @app.route('/updateCliente', methods=['POST'])
 def updateCliente():
@@ -120,7 +124,7 @@ def readCotizacion(idCotizacion):
     c = control.readCotizacion(int(idCotizacion))
     if (c == None):
         return jsonify("No existe")
-    return json.dumps(c.__dict__)
+    return jsonify(c.toList())
 
 @app.route('/updateCotizacion', methods=['POST'])
 def updateCotizacion():
@@ -212,7 +216,7 @@ def readFuncionario(idFuncionario):
     f = control.readFuncionario(int(idFuncionario))
     if (f == None):
         return jsonify("No existe")
-    return json.dumps(f.__dict__)
+    return jsonify(f.toList())
 
 @app.route('/updateFuncionario', methods=['POST'])
 def updateFuncionario():
@@ -247,7 +251,7 @@ def readPerfil(idPerfil):
     p = control.readPerfil(int(idPerfil))
     if (p == None):
         return jsonify("No existe")
-    return json.dumps(p.__dict__)
+    return jsonify(p.toList())
 
 @app.route('/updatePerfil', methods=['POST'])
 def updatePerfil():
@@ -276,7 +280,7 @@ def readPorcentaje(idPorcentaje):
     p = control.readPorcentaje(int(idPorcentaje))
     if (p == None):
         return jsonify("No existe")
-    return json.dumps(p.__dict__)
+    return jsonify(p.toList())
 
 @app.route('/updatePorcentaje', methods=['POST'])
 def updatePorcentaje():
@@ -314,7 +318,7 @@ def readProyecto(idProyecto):
     p = control.readProyecto(int(idProyecto))
     if (p == None):
         return jsonify("No existe")
-    return json.dumps(p.__dict__)
+    return jsonify(p.toList())
 
 @app.route('/updateProyecto', methods=['POST'])
 def updateProyecto():
@@ -349,7 +353,7 @@ def readTipoCapacitacion(idTipoCapacitacion):
     t = control.readTipoCapacitacion(int(idTipoCapacitacion))
     if (t == None):
         return jsonify("No existe")
-    return json.dumps(t.__dict__)
+    return jsonify(t.toList())
 
 @app.route('/updateTipoCapacitacion', methods=['POST'])
 def updateTipoCapacitacion():
@@ -371,7 +375,7 @@ def readTipoEvaluacion(idTipoEvaluacion):
     t = control.readTipoEvaluacion(int(idTipoEvaluacion))
     if (t == None):
         return jsonify("No existe")
-    return json.dumps(t.__dict__)
+    return jsonify(t.toList())
 
 @app.route('/updateTipoEvaluacion', methods=['POST'])
 def updateTipoEvaluacion():
@@ -404,7 +408,7 @@ def readUsuario(idUsuario):
     u = control.readUsuario(int(idUsuario))
     if (u == None):
         return jsonify("No existe")
-    return json.dumps(u.__dict__)
+    return jsonify(u.toList())
 
 @app.route('/updateUsuario', methods=['POST'])
 def updateUsuario():
@@ -434,6 +438,49 @@ def consultarPapelera():
     if (l == []):
         return jsonify("vacia")
     return json.dumps(l.__dict__)
+
+
+#funciones de los documentos
+@app.route('/saveDoc', methods=['POST'])
+def saveDoc():
+    if 'doc' in request.files:
+        doc = request.files['doc']
+        print(doc)
+        control.saveDoc(1, doc)
+        print ("Archivo guardado exitosamente") 
+    else:
+        print ("No se proporcionó ningún archivo")
+    return "Done"
+    
+
+@app.route('/downloadDocs/<id>', methods=['GET'])
+def downloadDocs(id):
+    d = control.getDoc(int(id))
+    carpeta_descargas = os.path.expanduser("~" + os.sep + "Downloads")
+    ruta_archivos_relacionados = os.path.join(carpeta_descargas, "archivosRelacionados.zip")
+    with zipfile.ZipFile(ruta_archivos_relacionados, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for nombre_archivo, archivo_binario in d.items():
+            if nombre_archivo != "archivosRelacionados.zip":
+                ruta_archivo = os.path.join(carpeta_descargas, nombre_archivo)
+                with open(ruta_archivo, 'wb') as archivo_local:
+                    archivo_local.write(archivo_binario)
+                zipf.write(ruta_archivo, nombre_archivo)
+    print(f"Archivos comprimidos en '{ruta_archivos_relacionados}'")
+    return jsonify("Done")
+
+@app.route('/getDocs/<id>', methods=['GET'])
+def getDocs(id):
+    d = control.getDoc(int(id))
+    for clave, valor in d.items():
+        d[clave] = str(valor)
+    #print(d)
+    return jsonify(d)
+
+@app.route('/blop/<nombreDoc>/<idMongo>', methods=['GET'])
+def blop(nombreDoc, idMongo):
+    print("AAAAAAAAAAAAAAAAAAAAA", nombreDoc, idMongo)
+    control.download(idMongo)
+    return jsonify("Done")
 
 # inicia el servidor
 if __name__ == "__main__":

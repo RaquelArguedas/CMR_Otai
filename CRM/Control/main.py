@@ -1,8 +1,43 @@
 from MainController import *
+import os
+import zipfile
 
 if __name__ == "__main__":
     dao = SingletonDAO()
-    fun = [2]
+    # fun = [2]
+    # mi_dict = {}
+    # mi_dict["nombre"] = "Juan"
+    # mi_dict["edad"] = 30
+    # mi_dict["ciudad"] = "Ejemploville"
+    # print(mi_dict)
+
+    d = dao.getDoc(1)
+    l=list(d)
+    print(d)
+    # carpeta_descargas = os.path.expanduser("~" + os.sep + "Downloads")
+    # l = list(d)
+    # clave = l[0]
+    # #print(d[clave])
+    # ruta_archivo = os.path.join(carpeta_descargas, clave)
+    # with open(ruta_archivo, 'wb') as archivo_local:
+    #     archivo_local.write(d[clave])
+
+    # print(f"Archivos descargados en la carpeta '{carpeta_descargas}'")
+
+    # d = dao.getDoc(1)
+    # carpeta_descargas = os.path.expanduser("~" + os.sep + "Downloads")
+    # ruta_archivos_relacionados = os.path.join(carpeta_descargas, "archivosRelacionados.zip")
+
+    # with zipfile.ZipFile(ruta_archivos_relacionados, "w", zipfile.ZIP_DEFLATED) as zipf:
+    #     for nombre_archivo, archivo_binario in d.items():
+    #         ruta_archivo = os.path.join(carpeta_descargas, nombre_archivo)
+    #         with open(ruta_archivo, 'wb') as archivo_local:
+    #             archivo_local.write(archivo_binario)
+    #         zipf.write(ruta_archivo, nombre_archivo)
+
+    # print(f"Archivos comprimidos en '{ruta_archivos_relacionados}'")
+
+
     # fun += [dao.readFuncionario(1)]
     # fun += [dao.readFuncionario(3)]
     # dao.updateProyecto("PRO007", None, None,None,None, None,None,None,None,fun)
@@ -26,9 +61,9 @@ if __name__ == "__main__":
     #     print("Cotizacion:", item.toList())
     # print("\n")
     # Evaluacion
-    for item in dao.evaluacion:
-        print("Evaluacion:", item.toList())
-    print("\n")
+    # for item in dao.evaluacion:
+    #     print("Evaluacion:", item.toList())
+    # print("\n")
     # # Funcionario
     # for item in dao.funcionario:
     #     print("Funcionario:", item.toList())

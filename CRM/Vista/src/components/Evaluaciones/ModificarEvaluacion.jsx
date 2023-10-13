@@ -30,7 +30,6 @@ export const ModificarEvaluacion = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();  
         //Es para enviar informacion al backend
-        
         //Para enviar los datos de la fecha es inputValue
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
   
@@ -47,7 +46,8 @@ export const ModificarEvaluacion = () => {
             
             if (result.isConfirmed) {
               Swal.fire('La evaluación se ha modificado satisfactoriamente')
-              gotoMenu();
+              
+              //gotoMenu();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }
@@ -85,17 +85,30 @@ export const ModificarEvaluacion = () => {
         // Luego, establece esa fecha en el estado fechaEjecucion
         setFechaEjecucion(fechaDesdeBaseDatos);
 
+        const res2 = await fetch(`${API}/getDocs/${1}`);
+        const data2 = await res2.json();
+        const files = Object.keys(data2);
+        console.log(files);
+
+        const modifiedData = Object.keys(data2).map(nombre => ({
+            nombre: nombre,
+            url: data2[nombre]
+          }));
+          
+        
+        setSelectedFiles(modifiedData);
+
         // Para modificar los archivos
-        setSelectedFiles([
-            {
-              nombre: 'Carnet e Informe de matrícula.pdf',
-              url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
-            },
-            {
-              nombre: 'logo192.png',
-              url: 'CRMFrontend/public/logo192.png'
-            }
-          ]);
+        // setSelectedFiles([
+        //     {
+        //       nombre: 'Carnet e Informe de matrícula.pdf',
+        //       url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
+        //     },
+        //     {
+        //       nombre: 'logo192.png',
+        //       url: 'CRMFrontend/public/logo192.png'
+        //     }
+        //   ]);
     };
     const handleFileChange = (e) => {
         const files = e.target.files;
@@ -143,6 +156,16 @@ export const ModificarEvaluacion = () => {
     };
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
+      };
+
+    const handleFileClick = async (e, nombre, url) => {
+        e.preventDefault(); // Evita la navegación predeterminada
+        // Ahora puedes manejar la descarga del archivo, por ejemplo, mediante una solicitud AJAX
+        // Utiliza la URL y otros datos según sea necesario
+        //console.log("Hacer algo con el archivo:", nombre, url);
+        const res = await fetch(`${API}/blop/${nombre}/${url}`);
+        const data = await res.json();
+        console.log(data)
       };
     const Title = styled.h1`
     font-size: 24px;
@@ -221,8 +244,10 @@ export const ModificarEvaluacion = () => {
                                 />
                                 <ul style={{ marginLeft: '80px' }}>
                                     {selectedFiles.map((file) => (
-                                        <li key={file.nombre}> {/* Cambia key a file.url si es único */}
-                                        {file.nombre} {/* Muestra el nombre del archivo */}
+                                        <li key={file.nombre}>
+                                        <a href={`${API}/blop/${file.nombre}/${file.url}`} target="_blank" onClick={(e) => handleFileClick(e, file.nombre, file.url)}>
+                                            {file.nombre} {/* Muestra el nombre del archivo */}
+                                        </a>
                                         <button
                                             style={{
                                                 marginLeft: '10px',
