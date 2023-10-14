@@ -17,6 +17,14 @@ VALUES ('Catalina', 'Espinach', '1990-01-15', 123456789, 88888888, 'cat.esp@itcr
 INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso, idPerfil)
 VALUES ('Mario', 'Chacón', '1985-09-25', 987654321, 88888888, 'mar.cha@itcr.com', 5, '2020-08-20', 3);
 
+-- Sentencias INSERT para la tabla Perfil
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,1);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,2);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,3);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,1);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,2);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,3);
+
 -- Sentencias INSERT para la tabla Modalidad
 INSERT INTO Modalidad (nombre, descripcion)
 VALUES ('presencial', 'Modalidad de capacitación presencial.');

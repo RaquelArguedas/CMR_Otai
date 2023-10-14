@@ -1,0 +1,49 @@
+/* Estilos para el componente Text */
+label {
+    color: #000;
+    font-size: 20px;
+    font-weight: 800;
+    margin-top: 100px;
+    margin-right: 70px;
+    margin-bottom: 40px; 
+  }
+  
+  /* Estilos para el componente Control */
+  input {
+    width: 500px; /* Establece el ancho deseado para el input */
+    height: 30px; 
+    margin-right: 20px; 
+    margin-bottom: 40px; 
+  }
+  select {
+    height: 30px;
+
+    margin-right: 60px; 
+    
+    margin-bottom: 40px; 
+  }
+  .icon {
+    float: right;
+  }
+  .button1 {
+    /* box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); */
+    background-color: #12959E;
+    border: 1px solid #233D4D;
+    display: flex;
+    align-items: center; 
+    border-radius: 5px;
+    /* padding: 10px 20px; */
+
+    color: #FFF;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    cursor: pointer;
+
+    width: 195px;
+    height: 47px;
+    flex-shrink: 0;
+    
+    margin-right: 60px; 
+} 

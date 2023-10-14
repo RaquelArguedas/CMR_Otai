@@ -7,6 +7,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import './CSSClientes/Clientes.css'
 
 import Swal from 'sweetalert2';
+const API = "http://127.0.0.1:5000";
 export const DetalleCliente = () => {
     
     let navigate = useNavigate();
@@ -23,14 +24,33 @@ export const DetalleCliente = () => {
 
     const handleSearch = async () => {
         //Buscamos la informacion del backend
-        
-        setIdCliente('E1231')
-        setNombre('Ministerio de salud')
-        setCedula('123129131')
-        setFechaIngreso('20/09/2023')
-        setTelefono('25486963')
-        setCorreo('ministeriosalud@gmail.com')
-        setEstado('Activo')
+
+        console.log(1)
+        const res = await fetch(`${API}/readCliente/${1}`); // cambiar por el id
+        const data = await res.json();//resultado de la consulta
+        console.log(data)
+
+        setIdCliente(data[0])
+        setCedula(data[1])
+        setNombre(data[2])
+        setTelefono(data[3])
+        setCorreo(data[4])
+        setFechaIngreso(data[5])
+
+        // ELIMINADO = 1
+        // EN_PROGRESO = 2
+        // SOLICITADO = 3
+        // EN_PLANEACION = 4
+        // ACTIVO = 5
+        // INACTIVO = 6
+        var est = ''
+        if (data[6] === 1) { est = 'Eliminado' }
+        if (data[6] === 2) { est = 'En progreso' }
+        if (data[6] === 3) { est = 'Solicitado' }
+        if (data[6] === 4) { est = 'En planeacion' }
+        if (data[6] === 5) { est = 'Activo' }
+        if (data[6] === 6) { est = 'Inactivo' }
+        setEstado(est)
     };
     const Title = styled.h1`
     font-size: 24px;
@@ -51,6 +71,7 @@ export const DetalleCliente = () => {
             
             if (result.isConfirmed) {
               Swal.fire('El cliente se ha eliminado satisfactoriamente')
+              const res = fetch(`${API}/deleteCliente/${1}`); // cambiar por el id
               gotoCliente();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')

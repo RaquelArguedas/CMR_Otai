@@ -11,6 +11,7 @@ import mimetypes
 import io
 import os
 import zipfile
+from datetime import datetime
 
 # Instantiation
 app = Flask(__name__)
@@ -70,14 +71,16 @@ def deleteCapacitacion(idCapacitacion):
 #CRUD Cliente
 @app.route('/createCliente', methods=['POST'])
 def createCliente():
-    id = control.createCliente(
-        request.json['cedJuridica'],
-        request.json['nombre'],
-        request.json['numTelefono'],
-        request.json['correo'],
-        request.json['fechaIngreso'],
-        request.json['estado']
-    )
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')
+    print(fecha_actual)
+
+    # Accede a los datos del formulario en lugar de request.json
+    cedJuridica = request.form.get('cedula')
+    nombre = request.form.get('nombre')
+    numTelefono = request.form.get('telefono')
+    correo = request.form.get('correo')
+
+    id = control.createCliente(cedJuridica, nombre, numTelefono, correo, fecha_actual, 5)
     return jsonify(str(id))
 
 @app.route('/readCliente/<idCliente>', methods=['GET'])
@@ -87,22 +90,36 @@ def readCliente(idCliente):
         return jsonify("No existe")
     return jsonify(c.toList())
 
-@app.route('/updateCliente', methods=['POST'])
-def updateCliente():
-    id = control.updateCliente(
-        request.json['idCliente'],
-        request.json['cedJuridica'],
-        request.json['nombre'],
-        request.json['numTelefono'],
-        request.json['correo'],
-        request.json['estado']
-    )
+@app.route('/updateCliente/<idCliente>', methods=['POST'])
+def updateCliente(idCliente):
+    print("update")
+
+    # Accede a los datos del formulario en lugar de request.json
+    cedJuridica = request.form.get('cedula')
+    nombre = request.form.get('nombre')
+    numTelefono = request.form.get('telefono')
+    correo = request.form.get('correo')
+    estado = request.form.get('estado')
+    #print(idCliente, cedJuridica, nombre, numTelefono, correo, estado)
+    id = control.updateCliente(idCliente, cedJuridica, nombre, numTelefono, correo, estado)
+
     return jsonify(str(id))
 
-@app.route('/deleteCliente/<idCliente>', methods=['POST'])
+@app.route('/deleteCliente/<idCliente>', methods=['GET'])
 def deleteCliente(idCliente):
-    id = control.updateCliente( idCliente, None, None, None, None, 1)
+    print(idCliente)
+    id = control.updateCliente(idCliente, None, None, None, None, 6)
+    print(id)
     return jsonify(str(id))
+
+@app.route('/getClientes', methods=['GET'])
+def getClientes():
+    clientes = control.cliente
+    lista = []
+    for cliente in clientes:
+        lista += [cliente.toList()]
+    print(lista)
+    return jsonify(lista)
 
 #CRUD Cotizacion
 @app.route('/createCotizacion', methods=['POST'])
@@ -238,6 +255,15 @@ def updateFuncionario():
 def deleteFuncionario(idFuncionario):
     id = control.updateFuncionario(idFuncionario,None,None,None,None,None,None,1,None,None)
     return jsonify(str(id))
+
+@app.route('/getFuncionarios', methods=['GET'])
+def getFuncionarios():
+    funcionarios = control.funcionario
+    lista = []
+    for funcionario in funcionarios:
+        lista += [funcionario.toList()]
+    print(lista)
+    return jsonify(lista)
 
 
 #CRUD Perfil

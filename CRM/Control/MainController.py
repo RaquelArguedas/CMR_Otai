@@ -301,10 +301,11 @@ class SingletonDAO(metaclass=SingletonMeta):
         return None
 
     def updateCliente(self, idCliente, cedJuridica, nombre, numTelefono, correo, estado):
-        c = self.readCliente(idCliente)
+        c = self.readCliente(int(idCliente))
         if c is not None:
             c.editar(cedJuridica, nombre, numTelefono, correo, estado)
-            self.executeCommit(f"EXEC updateCliente {c.idCliente}, {c.cedJuridica}, '{c.nombre}', {c.numTelefono}, '{c.correo}', {c.estado.value}")
+            
+            self.executeCommit(f"EXEC updateCliente {c.idCliente}, {c.cedJuridica}, '{c.nombre}', {c.numTelefono}, '{c.correo}', null, {c.estado.value}")
         else:
             return -1
 

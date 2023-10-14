@@ -24,7 +24,7 @@ class Cliente:
             if correo is not None:
                 self.correo = str(correo)
             if estado is not None:
-                self.estado = Estado(estado)
+                self.estado = Estado(int(estado))
         except (ValueError, TypeError):
             raise TypeError("Tipos de atributos no válidos")
 

@@ -7,9 +7,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { Navbar } from '../Navbar/Navbar';
-import './CrearEvaluacion.css';
+import './CrearCotizacion.css';
 import Swal from 'sweetalert2';
-export  const CrearEvaluacion = () => {
+export  const CrearCotizacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [costo, setCosto] = useState('');
@@ -17,7 +17,7 @@ export  const CrearEvaluacion = () => {
     const [fechaEjecucion, setFechaEjecucion] = useState(new Date());
     const [inputValue, setInputValue] = useState('');
     const [estado, setEstado] = useState("");
-    const [tipoEvalaucion, setTipoEvaluacion] = useState("");
+    const [tipoCotizacion, setTipoCotizacion] = useState("");
     const [fileInputKey, setFileInputKey] = useState('');
     //Esto va parte de la tabla que aun no esta creada
     const [cedula, setCedula] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
@@ -32,7 +32,7 @@ export  const CrearEvaluacion = () => {
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         Swal.fire({
             title: 'Confirmación',
-            text: 'La evaluación se ha creado exitosamente',
+            text: 'La cotización se ha creado exitosamente',
             icon: 'success',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
@@ -63,8 +63,8 @@ export  const CrearEvaluacion = () => {
     const handleEstadoChange = (event) => {
         setEstado(event.target.value);
     };
-    const handleTipoEvaluacionChange = (event) => {
-        setTipoEvaluacion(event.target.value);
+    const handleTipoCotizacionChange = (event) => {
+        setTipoCotizacion(event.target.value);
     };
     const handleNameChange = (event) => {
         setNombre(event.target.value);
@@ -111,7 +111,7 @@ export  const CrearEvaluacion = () => {
         <Navbar />
             <div class="row">
                     <div class="col-sm-3">
-                        <Title>Crear Evaluaciones</Title>
+                        <Title>Crear Cotizaciones</Title>
                     </div>
                     <form onSubmit={handleSubmit}>
                     <div class="mb-3">
@@ -123,18 +123,18 @@ export  const CrearEvaluacion = () => {
                     <div class="mb-3">
                         <label  style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción</label>
                         <input type="text" class="form-control custom-margin-right" id="descripInput"
-                         placeholder="Ingrese la descripcion de la evaluación" value={descripcion} onChange={handleDescripcionChange}/>
+                         placeholder="Ingrese la descripcion de la cotización" value={descripcion} onChange={handleDescripcionChange}/>
                         
                     </div>
                     <div class="mb-3">
                         
                         <select id="mySelect" value={estado} onChange={handleEstadoChange}>
-                            <option value="">Seleccione el estado de la evaluación</option>
+                            <option value="">Seleccione el estado de la cotización</option>
                             <option value="1">Activo</option>
                             <option value="2">Inactivo</option>
                         </select>
-                        <select id="mySelect2" value={tipoEvalaucion} onChange={handleTipoEvaluacionChange}>
-                            <option value="">Seleccione el tipo evaluación</option>
+                        <select id="mySelect2" value={tipoCotizacion} onChange={handleTipoCotizacionChange}>
+                            <option value="">Seleccione el tipo cotización</option>
                             <option value="1">Automática Aleatoria</option>
                             <option value="2">Automática Específica</option>
                             <option value="2">Manual Específica</option>
@@ -148,7 +148,7 @@ export  const CrearEvaluacion = () => {
                         </label>
                         <label  style={{ marginRight: '40px' }} for="costInput" class="form-label">Costo:</label>
                         <input type="text" class="form-control custom-margin-right" id="costInput"
-                         placeholder="Ingrese el costo de la evaluación" value={costo} onChange={handleCostoChange}/>
+                         placeholder="Ingrese el costo de la cotización" value={costo} onChange={handleCostoChange}/>
                         
                         </div>
                         <div className="mb-3" style={{ display: 'flex',alignItems: 'flex-start',  }}>
@@ -181,17 +181,24 @@ export  const CrearEvaluacion = () => {
                                 </ul>
                             </div>
                         </div>
+                        
+                            
                             <div className="mb-3" 
                                 style={{ marginTop:  '100px' }} >
                             <button type="submit" className='button1' >
                                 <AiOutlinePlusCircle style={{
                                             fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'// Tamaño del icono
-                                        }} /> Crear evaluación
+                                        }} /> Crear cotización
                             </button>
+                            
                             </div>
+        
+
                     </form>
+
             </div>
         </div>
+
     </Fragment>
      );
 };

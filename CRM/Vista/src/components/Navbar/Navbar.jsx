@@ -24,7 +24,7 @@ export const Navbar = ({ children }) => {
   };
   const menuServicios = [
     {
-      path: '/a',
+      path: '/cotizaciones',
       name: 'Cotizaciones',
       icon: <AiIcons.AiOutlineDollarCircle />
     },
@@ -34,7 +34,7 @@ export const Navbar = ({ children }) => {
       icon: <AiIcons.AiOutlineFileSearch />
     },
     {
-      path: '/analytics',
+      path: '/capacitacion',
       name: 'Capacitaciones',
       icon: <FaBookReader />
     }, {
@@ -46,12 +46,12 @@ export const Navbar = ({ children }) => {
     const meunuAnalisis = [
     
     {
-      path: '/product',
+      path: '/reportesFinancieros',
       name: 'Reporte financiero',
       icon: <VcsIcons.VscGraph />
     },
     {
-      path: '/productList',
+      path: '/reportesRendimiento',
       name: 'Reportes de rendimiento',
       icon: <VcsIcons.VscGraphLine />
     }
@@ -76,7 +76,7 @@ export const Navbar = ({ children }) => {
   const menuHerramientas = [
     
     {
-      path: '/product',
+      path: '/papelera',
       name: 'Papelera',
       icon: <FaTrashAlt />
     }

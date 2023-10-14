@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import './CSSClientes/Clientes.css'
 
 import { BsFillPencilFill } from 'react-icons/bs';
-
+const API = "http://127.0.0.1:5000";
 export const ModificarCliente = () => {
     let navigate = useNavigate();
     const gotoCliente = () => { navigate('/clientes'); }
@@ -34,6 +34,16 @@ export const ModificarCliente = () => {
             
             if (result.isConfirmed) {
               Swal.fire('El cliente se ha modificado satisfactoriamente')
+              const formData = new FormData();
+                formData.append('correo', correo);
+                formData.append('telefono', telefono);
+                formData.append('cedula', cedula);
+                formData.append('nombre', nombre);
+                formData.append('estado', estado);
+                const res = fetch(`${API}/updateCliente/${1}`, {
+                    method: 'POST',
+                    body: formData
+                });
               gotoCliente();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
@@ -44,12 +54,24 @@ export const ModificarCliente = () => {
   
     const handleSearch = async () => {
         //Buscamos la informacion del backend
-        
-        setNombreCliente('Ministerio de salud')
-        setCedula('123129131')
-        setTelefono('27826112')
-        setCorreo('ministeriosalud@gmail.com')
-        setEstado(1)
+
+        console.log(1)
+        const res = await fetch(`${API}/readCliente/${1}`); // cambiar por el id
+        const data = await res.json();//resultado de la consulta
+        console.log(data)
+
+        setCedula(data[1])
+        setNombreCliente(data[2])
+        setTelefono(data[3])
+        setCorreo(data[4])
+
+        // ELIMINADO = 1
+        // EN_PROGRESO = 2
+        // SOLICITADO = 3
+        // EN_PLANEACION = 4
+        // ACTIVO = 5
+        // INACTIVO = 6
+        setEstado(data[6] )
     };
     const Title = styled.h1`
     font-size: 24px;
@@ -113,8 +135,8 @@ export const ModificarCliente = () => {
                             <label style={{ marginRight: '150px' }} for="nameInput" class="form-label">Estado:</label>
                             <select id="mySelect" value={estado} onChange={handleEstadoChange}>
                                 <option value="">Seleccione el estado del cliente</option>
-                                <option value="1">Activo</option>
-                                <option value="2">Inactivo</option>
+                                <option value="6">Inactivo</option>
+                                <option value="5">Activo</option>
                             </select>
                         </div>
                             

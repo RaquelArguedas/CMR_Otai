@@ -74,6 +74,14 @@ CREATE TABLE Proyecto (
     FOREIGN KEY (idEstado) REFERENCES Estado(idEstado)
 );
 
+CREATE TABLE PerfilXFuncionario ( 
+	PerfilXFuncionario INT IDENTITY(1,1) PRIMARY KEY,
+    idPerfil INT,
+    idFuncionario INT, 
+	FOREIGN KEY (idPerfil) REFERENCES Perfil(idPerfil),
+    FOREIGN KEY (idFuncionario) REFERENCES Funcionario(idFuncionario)
+);
+
 -- Tabla Evaluacion
 CREATE TABLE Evaluacion (
     id INT IDENTITY(1,1) PRIMARY KEY,

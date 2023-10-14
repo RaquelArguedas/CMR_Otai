@@ -11,7 +11,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 
 export const DetalleEvaluacion = () => {
     let navigate = useNavigate();
-    const gotoModificarEvaluacion = () => { navigate('/modficarEvaluacion'); }
+    const gotoModificarEvaluacion = () => { navigate('/modificarEvaluacion'); }
     const gotoEvaluacion = () => { navigate('/'); }
 
     const [idevaluacion, setidEvaluacion] = useState('');
