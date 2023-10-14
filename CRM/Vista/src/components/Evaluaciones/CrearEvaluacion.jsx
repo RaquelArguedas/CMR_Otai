@@ -9,6 +9,8 @@ import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { Navbar } from '../Navbar/Navbar';
 import './CrearEvaluacion.css';
 import Swal from 'sweetalert2';
+import { Table, columns, data, Styles } from './TablaSelectClientes';  // Importa Table, columns y data desde Tabla.jsxy
+const API = "http://127.0.0.1:5000";
 export  const CrearEvaluacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
@@ -22,6 +24,7 @@ export  const CrearEvaluacion = () => {
     //Esto va parte de la tabla que aun no esta creada
     const [cedula, setCedula] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     const [nombreCliente, setNombreCliente] = useState('');
+    const [clientes, setClientes] = useState([]);//Meter los datos de los clientes ahi
     let navigate = useNavigate();
 
     const gotoMenu = () => { navigate('/', {}); }
@@ -47,8 +50,35 @@ export  const CrearEvaluacion = () => {
     }
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
-        //A esto me refiero a la tabla de los clientes
+        //A esto me refiero recuperar los datos del cliente
+        console.log(1)
+        const res = await fetch(`${API}/getClientes`);
+        const data = await res.json();//resultado de la consulta
+        console.log(data)
+         // Realiza la conversión de datos aquí
+      const formattedData = data.map((item) => ({
+        cedula: item[1],
+        idCliente: item[0],
+        nombre: item[2],
+      }));
+
+      setClientes(formattedData);
+    
+
+        //(7), Array(7)]
+        // 0 :  Array(7)
+        // 0 :  1
+        // 1 :  123456789
+        // 2 :  "ICE"
+        // 3 :  22223333
+        // 4 :  "ice@gmail.com"
+        // 5 :  "2023-10-05"
+        // 6 :  5
+        // length  :  7
     }; 
+    React.useEffect(() => {
+      handleSearch()
+    }, []);
   
     const handleFileChange = (e) => {
       const files = e.target.files;
@@ -181,6 +211,14 @@ export  const CrearEvaluacion = () => {
                                 </ul>
                             </div>
                         </div>
+                        <div className="mb-3" 
+                                style={{ marginTop:  '100px' }} >
+                                <div style={{ display: 'flex' }}>
+                                <Styles> 
+                                <Table columns={columns} data={clientes} />
+                                </Styles>
+                                </div>     
+                            </div>
                             <div className="mb-3" 
                                 style={{ marginTop:  '100px' }} >
                             <button type="submit" className='button1' >
@@ -189,6 +227,7 @@ export  const CrearEvaluacion = () => {
                                         }} /> Crear evaluación
                             </button>
                             </div>
+                            
                     </form>
             </div>
         </div>

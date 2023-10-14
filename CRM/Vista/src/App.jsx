@@ -67,13 +67,13 @@ export function App() {
 
             <Route exact path= "/clientes" element = {<Clientes/>} />
             <Route exact path= "/crearClientes" element = {<CrearCliente/>} />
-            <Route exact path= "/detalleClientes" element = {<DetalleCliente/>} />
-            <Route exact path= "/modificarCliente" element = {<ModificarCliente/>} />
+            <Route path="/detalleClientes/:idCliente" element={<DetalleCliente />} />
+            <Route exact path= "/modificarCliente/:idCliente" element = {<ModificarCliente/>} />
 
             <Route exact path= "/funcionarios" element = {<Funcionarios/>} />
             <Route exact path= "/crearFuncionarios" element = {<CrearFuncionarios/>} />
-            <Route exact path= "/detalleFuncionario" element = {<DetalleFuncionario/>} />
-            <Route exact path= "/modificarFuncionario" element = {<ModificarFuncionario/>} />
+            <Route exact path= "/detalleFuncionario/:idFuncionario" element = {<DetalleFuncionario/>} />
+            <Route exact path= "/modificarFuncionario/:idFuncionario" element = {<ModificarFuncionario/>} />
             
             <Route exact path= "/crearUsuario" element = {<CrearUsuario/>} />
             <Route exact path= "/detalleMiCuenta" element = {<DetalleMiCuenta/>} />

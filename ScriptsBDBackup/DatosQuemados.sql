@@ -12,18 +12,16 @@ INSERT INTO Estado (nombre) VALUES ('Activo');
 INSERT INTO Estado (nombre) VALUES ('Inactivo');
 
 -- Sentencias INSERT para la tabla Funcionario
-INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso, idPerfil)
-VALUES ('Catalina', 'Espinach', '1990-01-15', 123456789, 88888888, 'cat.esp@itcr.com', 5, '2021-05-10', 3);
-INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso, idPerfil)
-VALUES ('Mario', 'Chacón', '1985-09-25', 987654321, 88888888, 'mar.cha@itcr.com', 5, '2020-08-20', 3);
+INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso)
+VALUES ('Catalina', 'Espinach', '1990-01-15', 123456789, 88888888, 'cat.esp@itcr.com', 5, '2021-05-10');
+INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso)
+VALUES ('Mario', 'Chacón', '1985-09-25', 987654321, 88888888, 'mar.cha@itcr.com', 5, '2020-08-20');
 
 -- Sentencias INSERT para la tabla Perfil
 INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,1);
 INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,2);
-INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,3);
 INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,1);
 INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,2);
-INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,3);
 
 -- Sentencias INSERT para la tabla Modalidad
 INSERT INTO Modalidad (nombre, descripcion)

@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -10,7 +10,7 @@ const API = "http://127.0.0.1:5000";
 export const ModificarCliente = () => {
     let navigate = useNavigate();
     const gotoCliente = () => { navigate('/clientes'); }
-
+    const { idCliente } = useParams();
 
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
@@ -40,7 +40,7 @@ export const ModificarCliente = () => {
                 formData.append('cedula', cedula);
                 formData.append('nombre', nombre);
                 formData.append('estado', estado);
-                const res = fetch(`${API}/updateCliente/${1}`, {
+                const res = fetch(`${API}/updateCliente/${idCliente}`, {
                     method: 'POST',
                     body: formData
                 });
@@ -56,7 +56,7 @@ export const ModificarCliente = () => {
         //Buscamos la informacion del backend
 
         console.log(1)
-        const res = await fetch(`${API}/readCliente/${1}`); // cambiar por el id
+        const res = await fetch(`${API}/readCliente/${idCliente}`); // cambiar por el id
         const data = await res.json();//resultado de la consulta
         console.log(data)
 

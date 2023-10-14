@@ -105,12 +105,11 @@ CREATE PROCEDURE createFuncionario
     @numTelefono INT,
     @correo VARCHAR(50),
     @idEstado INT,
-    @fechaIngreso DATE,
-    @idPerfil INT
+    @fechaIngreso DATE
 AS
 BEGIN
-    INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso, idPerfil)
-    VALUES (@nombre, @apellido, @fechaNacimiento, @cedula, @numTelefono, @correo, @idEstado, @fechaIngreso, @idPerfil);
+    INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso)
+    VALUES (@nombre, @apellido, @fechaNacimiento, @cedula, @numTelefono, @correo, @idEstado, @fechaIngreso);
 END
 GO
 
@@ -120,7 +119,7 @@ CREATE PROCEDURE readFuncionario
     @idFuncionario INT
 AS
 BEGIN
-    SELECT idFuncionario, nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso, idPerfil
+    SELECT idFuncionario, nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso
     FROM Funcionario
     WHERE idFuncionario = @idFuncionario;
 END
@@ -137,8 +136,7 @@ CREATE PROCEDURE updateFuncionario
     @numTelefono INT,
     @correo VARCHAR(50),
     @idEstado INT,
-    @fechaIngreso DATE,
-    @idPerfil INT
+    @fechaIngreso DATE
 AS
 BEGIN
     UPDATE Funcionario
@@ -149,8 +147,7 @@ BEGIN
         numTelefonno = ISNULL(@numTelefono, numTelefonno),
         correo = ISNULL(@correo, correo),
         idEstado = ISNULL(@idEstado, idEstado),
-        fechaIngreso = ISNULL(@fechaIngreso, fechaIngreso),
-        idPerfil = ISNULL(@idPerfil, idPerfil)
+        fechaIngreso = ISNULL(@fechaIngreso, fechaIngreso)
     WHERE idFuncionario = @idFuncionario;
 END
 GO

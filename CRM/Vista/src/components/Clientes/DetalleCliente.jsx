@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams  } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import styled  from 'styled-components';
 import { BsFillPencilFill } from 'react-icons/bs';
@@ -11,10 +11,11 @@ const API = "http://127.0.0.1:5000";
 export const DetalleCliente = () => {
     
     let navigate = useNavigate();
-    const gotoModificarCliente= () => { navigate('/modificarCliente'); }
+    const { idCliente } = useParams();
+    
+    const gotoModificarCliente= () => { navigate(`/modificarCliente/${idCliente}`); }
     const gotoCliente = () => { navigate('/clientes'); }
-
-    const [idCliente, setIdCliente] = useState('');
+    const [idClientes, setIdCliente] = useState('');
     const [nombre, setNombre] = useState('');
     const [cedula, setCedula] = useState('');
     const [fechaIngreso, setFechaIngreso] = useState('');
@@ -24,9 +25,8 @@ export const DetalleCliente = () => {
 
     const handleSearch = async () => {
         //Buscamos la informacion del backend
-
-        console.log(1)
-        const res = await fetch(`${API}/readCliente/${1}`); // cambiar por el id
+        console.log(idCliente)
+        const res = await fetch(`${API}/readCliente/${idCliente}`); // cambiar por el id
         const data = await res.json();//resultado de la consulta
         console.log(data)
 
@@ -71,7 +71,7 @@ export const DetalleCliente = () => {
             
             if (result.isConfirmed) {
               Swal.fire('El cliente se ha eliminado satisfactoriamente')
-              const res = fetch(`${API}/deleteCliente/${1}`); // cambiar por el id
+              const res = fetch(`${API}/deleteCliente/${idCliente}`); // cambiar por el id
               gotoCliente();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
@@ -94,7 +94,7 @@ export const DetalleCliente = () => {
                     </div>
                     <div class="mb-3" >
                         <label style={{ marginRight: '145px'}} for="idClienteInput" class="form-label">ID Cliente:</label>
-                        <label  style={{ marginLeft: '130px' }}for="idCliente" class="form-label">{idCliente}</label>
+                        <label  style={{ marginLeft: '130px' }}for="idCliente" class="form-label">{idClientes}</label>
                         
                     </div>
                     <div class="mb-3" style={{ marginTop: '50px'}}>

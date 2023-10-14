@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import styled, { keyframes } from 'styled-components';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
 import  { matchSorter } from 'match-sorter'
@@ -227,18 +226,21 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 }
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
+
 export const Table = ({ columns, data }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
 
-    const gotoDetalle = (idFuncionario) => {
-      navigate(`/detalleFuncionario/${idFuncionario}`); // Reemplaza con tu URL de destino
-      // navigate(`/detalleFuncionario/${idFuncionario}`); // Usar el idFuncionario en la URL
+    const [selectedClientId, setSelectedClientId] = useState(null);
+
+    const handleSelectClient = (clientId) => {
+    setSelectedClientId(clientId);
     };
+
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, overridFuncionario the default text filter to use
+      // Or, overridCliente the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
@@ -309,22 +311,20 @@ export const Table = ({ columns, data }) => {
             prepareRow(row)
             return (
               <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  if (cell.column.id === 'detalle') {
-                    // En caso de que sea la columna "Detalle", renderiza un enlace
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        style={{ cursor: 'pointer', color: 'blue' }}
-                        // onClick={gotoDetalle} ///Mandar el id de que toco
-                        onClick={() => gotoDetalle(row.original.idFuncionario)} // Pasar idFuncionario
-                      >
-                        Ver más
-                      </td>
-                    );
-                  }
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                })}
+                 {row.cells.map((cell) => (
+                  <td {...cell.getCellProps()}>
+                    {cell.column.id === 'select' ? (
+                      // Aquí agregamos la lógica para los checkboxes
+                      <input
+                        type="checkbox"
+                        checked={row.original.idCliente === selectedClientId}
+                        onChange={() => handleSelectClient(row.original.idCliente)}
+                      />
+                    ) : (
+                      cell.render('Cell')
+                    )}
+                  </td>
+                ))}
               </tr>
             );
           })}
@@ -371,13 +371,13 @@ export const Table = ({ columns, data }) => {
 // Define las columnas de la tabla
 export const columns = [
     {
-    Header: 'Cédula',
+    Header: 'Cédula Jurídica',
     accessor: 'cedula',
     filter: 'fuzzyText',
   },
   {
-    Header: 'ID Funcionario',
-    accessor: 'idFuncionario',
+    Header: 'ID Cliente',
+    accessor: 'idCliente',
     filter: 'fuzzyText',
   },
   {
@@ -385,21 +385,12 @@ export const columns = [
     accessor: 'nombre',
     filter: 'fuzzyText',
   },
+  
   {
-    Header: 'Teléfono',
-    accessor: 'telefono',
-    
+    Header: 'Seleccionar',
+    accessor: 'select',
     disableFilters: true,
   },
-  {
-    Header: 'Correo',
-    accessor: 'correo',
-    filter: 'fuzzyText',
-  },
-  {
-    Header: 'Detalle',
-    accessor: 'detalle',
-    disableFilters: true,
-  },
+  
 ];
 

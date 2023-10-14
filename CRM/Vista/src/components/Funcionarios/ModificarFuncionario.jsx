@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , useParams } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import styled  from 'styled-components';
 import { BsFillPencilFill } from 'react-icons/bs';
@@ -9,10 +9,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../Clientes/CSSClientes/Clientes.css';
 import Select from 'react-select';
+const API = "http://127.0.0.1:5000";
 export const ModificarFuncionario = () => {
     let navigate = useNavigate();
     const gotoFuncionario = () => { navigate('/funcionarios'); }
-
+    const { idFuncionario } = useParams();
 
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
@@ -23,6 +24,7 @@ export const ModificarFuncionario = () => {
     
     const [selectedOption, setSelectedOption] = useState([]);
     const [options, setOptions] = useState([]);
+
 
     const fechaNacimientoInicial = new Date();
     const [inputValue, setInputValue] = useState('');
@@ -57,24 +59,44 @@ export const ModificarFuncionario = () => {
   
     const handleSearch = async () => {
         //Buscamos la informacion del backend
-       
-        setNombre('Rodolfo')
-        setApellido('Solis')
-        setCedula('123129131')
-        setTelefono('25486963')
-        setCorreo('ministeriosalud@gmail.com')
-        setEstado(1)
-        //La fecha ano-mes-dia
-        const fechaBaseDatos = "2013-11-12T00:00:00Z"; // Ejemplo
+        console.log(idFuncionario)
+        const res = await fetch(`${API}/readFuncionario/${idFuncionario}`); // cambiar por el id
+        const data = await res.json();//resultado de la consulta
+        console.log(data)
+
+        setNombre(data[1])
+        setApellido(data[2])
+        setCedula(data[4])
+        setTelefono(data[5])
+        setCorreo(data[6])
+
+        // ELIMINADO = 1
+        // EN_PROGRESO = 2
+        // SOLICITADO = 3
+        // EN_PLANEACION = 4
+        // ACTIVO = 5
+        // INACTIVO = 6
+        setEstado(data[7])
+        //setFechaNacimiento(data[3])
+        const fechaDesdeBackend = data[3];
+        console.log(fechaDesdeBackend)
+        //La fecha
+        // const fechaBaseDatos = "2023-11-08T00:00:00Z"; // Ejemplo
         // Parsear la fecha de la base de datos en un objeto Date
         // Convertir la cadena de fecha en un objeto Date en zona horaria UTC
         //Tiene que se como el de abajo ya que es necesario la zona horaria entoces se agrega lo de T
         // const fechaDesdeBaseDatos = new Date(fechaSoloFecha + "T00:00:00Z");
-        const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
-        // // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
+        const fechaDesdeBaseDatos = new Date(fechaDesdeBackend);
+        // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
         fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
         // Luego, establece esa fecha en el estado fechaEjecucion
         setFechaNacimiento(fechaDesdeBaseDatos);
+
+        // data[9] = [[1, 'programador'],[2, 'disenhador']]
+        const response = await fetch(`${API}/getPerfiles`); // cambiar por el id
+        const perfiles = await response.json();//resultado de la consulta
+        console.log(perfiles)
+       
         const opcionesDesdeBackend = [
             { id: 1, nombre: 'Opción 1' },
             { id: 2, nombre: 'Opción 2' },
@@ -131,7 +153,7 @@ export const ModificarFuncionario = () => {
     };
     const handleFechaNacimientoChange = (date) => {
         setFechaNacimiento(date);
-
+        
         const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
         const day = date.getDate(); // Obtener el día
         const year = date.getFullYear(); // Obtener el año
@@ -199,8 +221,8 @@ export const ModificarFuncionario = () => {
                             <label style={{ marginRight: '160px' }} for="nameInput" class="form-label">Estado:</label>
                             <select id="mySelect" value={estado} onChange={handleEstadoChange}>
                                 <option value="">Seleccione el estado del cliente</option>
-                                <option value="1">Activo</option>
-                                <option value="2">Inactivo</option>
+                                <option value="5">Activo</option>
+                                <option value="6">Inactivo</option>
                             </select>
                         </div>
                         <div className="mb-3"style={{ marginBottom:  '50px' }}>

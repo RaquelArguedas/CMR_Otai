@@ -26,7 +26,7 @@ export function Evaluacion() {
         setCedula(event.target.value);
     };
     let navigate = useNavigate();
-    const gotoCrearFuncionario = () => { navigate('/crearFuncionarios'); }
+    const gotoCrearFuncionario = () => { navigate('/crearEvaluacion'); }
     const gotoPerfiles = () => { navigate('/perfiles')}
    
     const Title = styled.h1`

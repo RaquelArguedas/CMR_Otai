@@ -30,46 +30,18 @@ export const Funcionarios = () => {
         const res = await fetch(`${API}/getFuncionarios`);
         const data = await res.json();//resultado de la consulta
         console.log(data)
+        // Realiza la conversión de datos aquí
+        const formattedData = data.map((item) => ({
+          cedula: item[4],
+          idFuncionario: item[0],
+          nombre: item[1] + " " + item[2],
+          telefono: item[5],
+          correo: item[6],
+          detalle: 'Ver más',
+        }));
 
-        setFuncionarios( [
-            {
-              cedula: 12517,
-              idFuncionario: 1,
-              nombre: 'Evaluación A',
-              telefono: 'Activa',
-              correo: 'prueba@gmail.com',
-              detalle: 'Ver más',
-            },
-            {cedula: 12517,
-              idFuncionario: 2,
-              nombre: 'Evaluación B',
-              telefono: 'Inactiva',
-              correo: 'quePereza@gmail.com',
-              detalle: 'Ver más',
-            },
-            {cedula: 2518,
-              idFuncionario: 3,
-              nombre: 'Evaluación C',
-              telefono: 'Activa',
-              correo: 'tel@gmail.com',
-              detalle: 'Ver más',
-            },
-            {cedula: 15745,
-              idFuncionario: 4,
-              nombre: 'Evaluación D',
-              telefono: 'Inactiva',
-              correo: 'ahh@gmail.com',
-              detalle: 'Ver más',
-            },
-            {cedula: 214841,
-              idFuncionario: 5,
-              nombre: 'Evaluación E',
-              telefono: 'Activa',
-              correo: 'ser@gmail.com',
-              detalle: 'Ver más',
-            },
-            
-          ]);
+        setFuncionarios(formattedData);
+
     }; 
     React.useEffect(() => {
         handleSearch()

@@ -21,9 +21,7 @@ CREATE TABLE Funcionario (
     correo VARCHAR(50),
     idEstado INT,
     fechaIngreso DATE,
-    idPerfil INT,
-    FOREIGN KEY (idEstado) REFERENCES Estado(idEstado),
-    FOREIGN KEY (idPerfil) REFERENCES Perfil(idPerfil)
+    FOREIGN KEY (idEstado) REFERENCES Estado(idEstado)
 );
 
 -- Tabla Modalidad

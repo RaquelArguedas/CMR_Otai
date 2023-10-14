@@ -11,9 +11,12 @@ if __name__ == "__main__":
     # mi_dict["ciudad"] = "Ejemploville"
     # print(mi_dict)
 
-    d = dao.getDoc(1)
-    l=list(d)
-    print(d)
+    #dao.createFuncionario('nombre222', 'apellido', '2023-10-10', 1212, 888888, 'correo', 1, '2023-10-10', [1])
+    dao.updateFuncionario(6, 'nombreupdate', None, None, None, None, None, None, None, [2])
+    print("MMMMMMMMMMMMMMMMMMMMMMMMMM")
+    # d = dao.getDoc(1)
+    # l=list(d)
+    # print(d)
     # carpeta_descargas = os.path.expanduser("~" + os.sep + "Downloads")
     # l = list(d)
     # clave = l[0]
@@ -65,9 +68,9 @@ if __name__ == "__main__":
     #     print("Evaluacion:", item.toList())
     # print("\n")
     # # Funcionario
-    # for item in dao.funcionario:
-    #     print("Funcionario:", item.toList())
-    # print("\n")
+    for item in dao.funcionario:
+        print("Funcionario:", item.toList())
+    print("\n")
     # # Perfil
     # for item in dao.perfil:
     #     print("Perfil:", item.toList())

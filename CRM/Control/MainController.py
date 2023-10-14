@@ -50,8 +50,8 @@ class SingletonDAO(metaclass=SingletonMeta):
         self.cliente = self.setFromBD("Cliente")
         self.cotizacion = self.setFromBD("Cotizacion")
         self.evaluacion = self.setFromBD("Evaluacion")
-        self.funcionario = self.setFromBD("Funcionario")
         self.perfil = self.setFromBD("Perfil")
+        self.funcionario = self.setFromBD("Funcionario")
         self.porcentaje = self.setFromBD("Porcentajes")
         self.proyecto = self.setFromBD("Proyecto")
         self.tipoCapacitacion = self.setFromBD("TipoCapacitacion")
@@ -156,10 +156,10 @@ class SingletonDAO(metaclass=SingletonMeta):
             objeto = Cotizacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], lista[7], lista[8])
         if (tablaBD == "Evaluacion"):
             objeto = Evaluacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], [], lista[8], lista[9], lista[10], lista[11])
-        if (tablaBD == "Funcionario"):
-            objeto = Funcionario(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], lista[7], lista[8], lista[9])
         if (tablaBD == "Perfil"):
             objeto = Perfil(lista[0], lista[1])
+        if (tablaBD == "Funcionario"):
+            objeto = Funcionario(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], lista[7], lista[8], self.getListaPerfiles(lista[0]))
         if (tablaBD == "Porcentajes"):
             objeto = Porcentaje(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6])
         if (tablaBD == "Proyecto"):
@@ -184,7 +184,18 @@ class SingletonDAO(metaclass=SingletonMeta):
                 if (idFunc[0]  == funcionario.idFuncionario):
                     lista += [funcionario]
         return lista
-
+    
+    #devuelve una lista de perfiles segun el funcionario 
+    def getListaPerfiles(self, idFuncionario):
+        salida = self.execute(f"SELECT idPerfil FROM PerfilXFuncionario WHERE idFuncionario = {idFuncionario}")
+        #print(salida, self.perfil)
+        lista = []
+        for idPerfil in salida:
+            for perfil in self.perfil:
+                #print(idPerfil[0], perfil.idPerfil)
+                if (idPerfil[0]  == perfil.idPerfil):
+                    lista += [perfil]
+        return lista
 
     #CRUDS Capacitacion
     def createCapacitacion(self, idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, documentos, idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente):
@@ -336,16 +347,23 @@ class SingletonDAO(metaclass=SingletonMeta):
             return -1
 
     #CRUDS Funcionario
-    def createFuncionario(self, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfil):
-        if nombre is None or apellido is None or fechaNacimiento is None or cedula is None or numTelefono is None or correo is None or estado is None or fechaIngreso is None or perfil is None:
+    def createFuncionario(self, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfilesIds):
+        if nombre is None or apellido is None or fechaNacimiento is None or cedula is None or numTelefono is None or correo is None or estado is None or fechaIngreso is None or perfilesIds is None:
             return -1  # No se puede crear un funcionario con atributos nulos
 
-        self.executeCommit(f"EXEC createFuncionario '{nombre}', '{apellido}', '{fechaNacimiento}', {cedula}, {numTelefono}, '{correo}', {estado}, '{fechaIngreso}', {perfil}")
+        self.executeCommit(f"EXEC createFuncionario '{nombre}', '{apellido}', '{fechaNacimiento}', {cedula}, {numTelefono}, '{correo}', {estado}, '{fechaIngreso}'")
         idFuncionario = self.execute(f"SELECT MAX(idFuncionario) FROM Funcionario")
 
         # Si hay una lista y no existe el idFuncionario en los datos, se crea
         if self.readFuncionario(idFuncionario[0][0]) is None:
-            self.funcionario += [Funcionario(idFuncionario[0][0], nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfil)]
+            perfiles = []
+            for pId in perfilesIds:
+                p = self.readPerfil(int(pId))
+                if p is not None:
+                    perfiles += [p]
+                    self.executeCommit(f"INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES ({pId}, {idFuncionario[0][0]})")
+            self.funcionario += [Funcionario(idFuncionario[0][0], nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfiles)]
+
 
     def readFuncionario(self, idFuncionario):
         for f in self.funcionario:
@@ -353,11 +371,22 @@ class SingletonDAO(metaclass=SingletonMeta):
                 return f
         return None
 
-    def updateFuncionario(self, idFuncionario, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfil):
+    def updateFuncionario(self, idFuncionario, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfilesIds):
         f = self.readFuncionario(idFuncionario)
         if f is not None:
-            f.editar(nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfil)
-            self.executeCommit(f"EXEC updateFuncionario {f.idFuncionario}, '{f.nombre}', '{f.apellido}', '{f.fechaNacimiento}', {f.cedula}, {f.numTelefono}, '{f.correo}', {f.estado.value}, '{f.fechaIngreso}', {f.perfil}")
+            if perfilesIds != None:
+                perfiles = []
+                self.executeCommit(f"delete from PerfilXFuncionario where idFuncionario = {f.idFuncionario}")
+                for pId in perfilesIds:
+                    p = self.readPerfil(int(pId))
+                    if p is not None:
+                        perfiles += [p]
+                        self.executeCommit(f"INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES ({pId}, {f.idFuncionario})")
+            else:
+                perfiles = None
+            f.editar(nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfiles)
+            print(f.toList())
+            self.executeCommit(f"EXEC updateFuncionario {f.idFuncionario}, '{f.nombre}', '{f.apellido}', '{f.fechaNacimiento}', {f.cedula}, {f.numTelefono}, '{f.correo}', {f.estado.value}, '{f.fechaIngreso}'")
         else:
             return -1
 

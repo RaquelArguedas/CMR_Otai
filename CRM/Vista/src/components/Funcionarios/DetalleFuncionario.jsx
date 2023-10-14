@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import styled  from 'styled-components';
 import { BsFillPencilFill } from 'react-icons/bs';
@@ -9,10 +9,10 @@ import Swal from 'sweetalert2';
 const API = "http://127.0.0.1:5000";
 export const DetalleFuncionario = () => {
     let navigate = useNavigate();
-    const gotoModificarFuncionario= () => { navigate('/modificarFuncionario'); }
-    const gotoCliente = () => { navigate('/clientes'); }
-
-    const [idFuncionario, setidFuncionario] = useState('');
+    const gotoModificarFuncionario= () => { navigate(`/modificarFuncionario/${idFuncionario}`); }
+    const gotoFuncionario = () => { navigate('/funcionarios'); }
+    const { idFuncionario } = useParams();
+    const [idFuncionari, setidFuncionario] = useState('');
     const [nombre, setNombre] = useState('');
     const [cedula, setCedula] = useState('');
     const [fechaNacimineto, setfechaNacimineto] = useState('');
@@ -26,73 +26,70 @@ export const DetalleFuncionario = () => {
 
     const handleSearch = async () => {
         //Buscamos la informacion del backend
-
-        //Buscamos la informacion del backend
-
-        console.log(1)
-        const res = await fetch(`${API}/readFuncionario/${1}`); // cambiar por el id
+        console.log(idFuncionario)
+        const res = await fetch(`${API}/readFuncionario/${idFuncionario}`); // cambiar por el id
         const data = await res.json();//resultado de la consulta
         console.log(data)
 
-        // setIdCliente(data[0])
-        // setCedula(data[1])
-        // setNombre(data[2])
-        // setTelefono(data[3])
-        // setCorreo(data[4])
-        // setFechaIngreso(data[5])
+        setidFuncionario(data[0])
+        setNombre(data[1] + " " + data[2])
+        setCedula(data[4])
+        setfechaNacimineto(data[3])
+        setfechaIngreso(data[8])
+        setTelefono(data[5])
+        setCorreo(data[6])
 
-        // // ELIMINADO = 1
-        // // EN_PROGRESO = 2
-        // // SOLICITADO = 3
-        // // EN_PLANEACION = 4
-        // // ACTIVO = 5
-        // // INACTIVO = 6
-        // var est = ''
-        // if (data[6] === 1) { est = 'Eliminado' }
-        // if (data[6] === 2) { est = 'En progreso' }
-        // if (data[6] === 3) { est = 'Solicitado' }
-        // if (data[6] === 4) { est = 'En planeacion' }
-        // if (data[6] === 5) { est = 'Activo' }
-        // if (data[6] === 6) { est = 'Inactivo' }
-        // setEstado(est)
-        
-        setidFuncionario('E1231')
-        setNombre('Ministerio de salud')
-        setCedula('123129131')
-        setfechaNacimineto('20/09/2023')
-        setfechaIngreso('15/10/2005')
-        setTelefono('25486963')
-        setCorreo('ministeriosalud@gmail.com')
-        setEstado('Activo')
-        const opcionesDesdeBackend = [
-            { id: 1, nombre: 'Opción 1' },
-            { id: 2, nombre: 'Opción 2' },
-            { id: 3, nombre: 'Opción 3' },
+        // ELIMINADO = 1
+        // EN_PROGRESO = 2
+        // SOLICITADO = 3
+        // EN_PLANEACION = 4
+        // ACTIVO = 5
+        // INACTIVO = 6
+        var est = ''
+        if (data[7] === 1) { est = 'Eliminado' }
+        if (data[7] === 2) { est = 'En progreso' }
+        if (data[7] === 3) { est = 'Solicitado' }
+        if (data[7] === 4) { est = 'En planeacion' }
+        if (data[7] === 5) { est = 'Activo' }
+        if (data[7] === 6) { est = 'Inactivo' }
+        setEstado(est)
+
+        // data[9] = [[1, 'programador'],[2, 'disenhador']]
+        const opcionesDesdeBackend = data[9];
+        console.log(opcionesDesdeBackend)
+        // [ 
+        //     { id: 1, nombre: 'Opción 1' },
+        //     { id: 2, nombre: 'Opción 2' },
+        //     { id: 3, nombre: 'Opción 3' },
             
-            { id: 4, nombre: 'Opción 4' },
-            { id: 5, nombre: 'Opción 5' },
-            { id: 6, nombre: 'Opción 6' },
-            { id: 7, nombre: 'Opción 7' },
-            { id: 8, nombre: 'Opción 8' },
-            { id: 9, nombre: 'Opción 9' },
-          ];
+        //     { id: 4, nombre: 'Opción 4' },
+        //     { id: 5, nombre: 'Opción 5' },
+        //     { id: 6, nombre: 'Opción 6' },
+        //     { id: 7, nombre: 'Opción 7' },
+        //     { id: 8, nombre: 'Opción 8' },
+        //     { id: 9, nombre: 'Opción 9' },
+        //   ];
             // Mapeamos las opciones desde el backend al formato que utiliza react-select
-            const opcionesFormateadas = opcionesDesdeBackend.map((opcion) => ({
-                value: opcion.id,
-                label: opcion.nombre,
-            }));
-        
-            setOptions(opcionesFormateadas);
+            if (Array.isArray(opcionesDesdeBackend)) {
+                const opcionesFormateadas = opcionesDesdeBackend.map((opcion) => ({
+                  value: opcion[0],
+                  label: opcion[1],
+                }));
+                
+                setSelectedOption(opcionesFormateadas);
+              } else {
+                console.error('opcionesDesdeBackend no es una matriz válida');
+              }
           // Supongamos que las opciones seleccionadas anteriormente están en un array de IDs
-            const opcionesSeleccionadasAnteriormente = [1, 2,3]; // IDs de opciones seleccionadas
+            // const opcionesSeleccionadasAnteriormente = [1, 2,3]; // IDs de opciones seleccionadas
 
-            // Mapeamos las IDs a objetos de opciones seleccionadas
-            const opcionesSeleccionadas = opcionesSeleccionadasAnteriormente.map((value) =>
-                opcionesFormateadas.find((opcion) => opcion.value === value)
-            );
+            // // Mapeamos las IDs a objetos de opciones seleccionadas
+            // const opcionesSeleccionadas = opcionesSeleccionadasAnteriormente.map((value) =>
+            //     opcionesFormateadas.find((opcion) => opcion.value === value)
+            // );
 
-            // Establecer las opciones seleccionadas
-            setSelectedOption(opcionesSeleccionadas);
+            // // Establecer las opciones seleccionadas
+            // setSelectedOption(opcionesSeleccionadas);
     };
     const Title = styled.h1`
     font-size: 24px;
@@ -113,7 +110,8 @@ export const DetalleFuncionario = () => {
             
             if (result.isConfirmed) {
               Swal.fire('El funcionario se ha eliminado satisfactoriamente')
-              gotoCliente();
+              const res = fetch(`${API}/deleteFuncionario/${idFuncionario}`); // cambiar por el id
+              gotoFuncionario();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }

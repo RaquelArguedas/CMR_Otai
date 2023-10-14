@@ -229,9 +229,9 @@ fuzzyTextFilterFn.autoRemove = val => !val
 export const Table = ({ columns, data }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
 
-    const gotoDetalle = () => {
-      navigate('/detalleClientes'); // Reemplaza con tu URL de destino
-      // navigate(`/detalleClientes/${idCliente}`); // Usar el idCliente en la URL
+    const gotoDetalle = (idCliente) => {
+      // navigate('/detalleClientes'); // Reemplaza con tu URL de destino
+      navigate(`/detalleClientes/${idCliente}`); // Usar el idCliente en la URL
     };
   const filterTypes = React.useMemo(
     () => ({
@@ -315,8 +315,8 @@ export const Table = ({ columns, data }) => {
                       <td
                         {...cell.getCellProps()}
                         style={{ cursor: 'pointer', color: 'blue' }}
-                        onClick={gotoDetalle} ///Mandar el id de que toco
-                        //onClick={() => gotoDetalle(row.original.idCliente)} // Pasar idCliente
+                        //onClick={gotoDetalle} ///Mandar el id de que toco
+                        onClick={() => gotoDetalle(row.original.idCliente)} // Pasar idCliente
                       >
                         Ver más
                       </td>

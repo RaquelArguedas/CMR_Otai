@@ -251,10 +251,12 @@ def updateFuncionario():
     )
     return jsonify(str(id))
 
-@app.route('/deleteFuncionario/<idFuncionario>', methods=['POST'])
+@app.route('/deleteFuncionario/<idFuncionario>', methods=['GET'])
 def deleteFuncionario(idFuncionario):
-    id = control.updateFuncionario(idFuncionario,None,None,None,None,None,None,1,None,None)
+    id = control.updateFuncionario(int(idFuncionario),None,None,None,None,None,None,6,None,None)
+    print(id)
     return jsonify(str(id))
+
 
 @app.route('/getFuncionarios', methods=['GET'])
 def getFuncionarios():
@@ -265,6 +267,14 @@ def getFuncionarios():
     print(lista)
     return jsonify(lista)
 
+@app.route('/getPerfiles', methods=['GET'])
+def getPerfiles():
+    perfiles = control.perfil
+    lista = []
+    for perfil in perfiles:
+        lista += [perfil.toList()]
+    print(lista)
+    return jsonify(lista)
 
 #CRUD Perfil
 @app.route('/createPerfil', methods=['POST'])
