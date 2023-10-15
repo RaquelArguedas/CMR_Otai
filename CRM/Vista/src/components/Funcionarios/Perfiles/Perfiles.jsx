@@ -12,6 +12,7 @@ import { Table, columns, data, Styles } from './TablaPerfiles';  // Importa Tabl
 const API = "http://127.0.0.1:5000";
 
 export const Perfiles = () => {
+    let navigate = useNavigate();
     const gotoPerfiles = () => { navigate('/perfiles'); }
     const [id, setIdPerfil] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     const [perfiles, setPerfiles] =  useState([]);;//Meter los datos de los clientes ahi
@@ -42,12 +43,6 @@ export const Perfiles = () => {
       })
       // Elimina el perfil del estado de perfiles
       
-    };
-    const handleEliminarPerfil= async (event, idPerfil) => {
-      event.preventDefault();  
-      const res = fetch(`${API}/deletePerfil/${idPerfil}`, {
-          method: 'POST'
-      });
     };
     const handleEliminarPerfil= async (event, idPerfil) => {
       event.preventDefault();  

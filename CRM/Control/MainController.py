@@ -6,7 +6,7 @@ from bson import ObjectId
 import os
 
 import sys
-sys.path.append('C:/Users/STACY/Documents/GitHub/Proyecto aseguramineto/CMR_Otai/CRM/Modelo')
+sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo')
 from Capacitacion import *
 from Cliente import *
 from Cotizacion import *
@@ -63,7 +63,7 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-AKI22R4'  # Nombre del servidor local
+        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
 
@@ -276,20 +276,24 @@ class SingletonDAO(metaclass=SingletonMeta):
                 return p
         return None
     
+    
     def updateProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
         p = self.readProyecto(idProyecto)
+        #print("desde be: ", p.toList())
         if p != None:
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            
+            funcionarios = []
             if funcionariosIds != None:
-                funcionarios = []
                 self.executeCommit(f"delete from ProyectoXFuncionario where idProyecto = {p.id}")
                 for fId in funcionariosIds:
                     f = self.readFuncionario(int(fId))
                     if f is not None:
                         funcionarios += [f]
                         self.executeCommit(f"EXEC createProyectoXFuncionario {p.id}, {fId}")
-            p.editar(idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
-            self.executeCommit(f"EXEC updateProyecto {p.id}, {p.idProyecto}, {p.nombre}, {p.descripcion}, '{p.idCliente}',  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
+            p.editar(None, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
+            print(f"EXEC updateProyecto {p.id}, {p.idProyecto}, {p.nombre}, {p.descripcion}, '{p.idCliente}',  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
+            self.executeCommit(f"EXEC updateProyecto {p.id}, '{p.idProyecto}', '{p.nombre}', '{p.descripcion}', {p.idCliente},  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
         else:
             return -1
     

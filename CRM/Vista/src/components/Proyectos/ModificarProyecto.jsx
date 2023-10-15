@@ -57,7 +57,24 @@ export const ModificarProyecto = () => {
             
             if (result.isConfirmed) {
               Swal.fire('El proyecto se ha modificado satisfactoriamente')
-              gotoProyecto();
+              //crea el proyecto
+              console.log("AAAAAAAAAAAAAAAAAAAA")
+              //archivos por agregar
+              const selectedFilesModified = selectedFiles.map((item) => { 
+                if (item.url instanceof File) {
+                  return item.url;
+                }else {
+                    return null; // O cualquier otro valor que desees en lugar de null
+                  }
+                }).filter((item) => item !== null); // Eliminar elementos nulos
+              // console.log(selectedFilesModified)
+               formData.append('doc', selectedFilesModified);
+               // Realiza la solicitud al servidor para guardar los datos y los archivos
+              fetch(`${API}/saveDoc`, {
+                  method: 'POST',
+                  body: formData, // Utiliza el objeto FormData que contiene archivos
+              });
+              //gotoProyecto();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }
@@ -69,66 +86,94 @@ export const ModificarProyecto = () => {
         // const res = await fetch(`${API}/getProfesorCodigo/${codigoRef.current.value}`);
         // const data = await res.json();//resultado de la consulta
         // console.log(data) // imprime en consola web
-        setNombre('Evaluacion para el Ministerio de salud')
-        setDescripcion('Evaluacion de accesibilidad')
-        //setFechaEjecucion('20/09/2023')
-        setTipoEvaluacion(1)
+        console.log(idProyecto)
+        const res1 = await fetch(`${API}/readProyecto/${idProyecto}`); // cambiar por el id
+        const data1 = await res1.json();//resultado de la consulta
+        console.log(data1)
+        setDescripcion(data1[3])
+        setEstado(data1[9])
+        setCosto(data1[8])
+        setNombre(data1[2])
         
-        setEstado(1)
-        setCosto(230000)
-        setCedula('123129131')
-        setNombreCliente('Ministerio de hacienda')
-        
-        //La fecha
-        const fechaBaseDatos = "2023-11-08T00:00:00Z"; // Ejemplo
-        // Parsear la fecha de la base de datos en un objeto Date
-        // Convertir la cadena de fecha en un objeto Date en zona horaria UTC
         //Tiene que se como el de abajo ya que es necesario la zona horaria entoces se agrega lo de T
-        // const fechaDesdeBaseDatos = new Date(fechaSoloFecha + "T00:00:00Z");
-        const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
-        // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
+        const fechaDesdeBaseDatos = new Date(data1[6] + "T00:00:00Z");
         fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
-        // Luego, establece esa fecha en el estado fechaEjecucion
         setfechaIncio(fechaDesdeBaseDatos);
-        setfechaFinalizacion(fechaDesdeBaseDatos);
-        // Para modificar los archivos
-        setSelectedFiles([
-            {
-              nombre: 'Carnet e Informe de matrícula.pdf',
-              url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
-            },
-            {
-              nombre: 'logo192.png',
-              url: 'CRMFrontend/public/logo192.png'
-            }
-          ]);
+        
+        const fechaDesdeBaseDatos2 = new Date(data1[7] + "T00:00:00Z");
+        fechaDesdeBaseDatos2.setDate(fechaDesdeBaseDatos2.getDate() + 1);
+        setfechaFinalizacion(fechaDesdeBaseDatos2);
+
+        
+        // setSelectedFiles([
+        //     {
+        //       nombre: 'Carnet e Informe de matrícula.pdf',
+        //       url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
+        //     },
+        //     {
+        //       nombre: 'logo192.png',
+        //       url: 'CRMFrontend/public/logo192.png'
+        //     }
+        //   ]);
+
+          const res2 = await fetch(`${API}/getDocs/${data1[1]}`);
+        const data2 = await res2.json();
+        const files = Object.keys(data2);
+        console.log("FILEEEEEEEEEEEEEEEES")
+        console.log(files);
+
+        const modifiedData = Object.keys(data2).map(nombre => ({
+            nombre: nombre,
+            url: data2[nombre]
+          }));
+          console.log(modifiedData);
+        
+          setSelectedFiles(modifiedData);
 
           console.log(1)
+
+
+
           //Se supoene que ahi abajo mandamos a llamar a todos los servicios
-          const res = await fetch(`${API}/getClientes`);
+          const res = await fetch(`${API}/getServicios`);
           const data = await res.json();//resultado de la consulta
           console.log(data)
            // Realiza la conversión de datos aquí
            const formattedData = data.map((item) => ({
-              idServicio: item[0],
+              idServicio: item[1],
               nombre: item[2],
             }));
-            const slicedData = formattedData.slice(0, 2); // Obtiene los dos primeros elementos
+            console.log("data1[0]",data1[0]);
+            const response = await fetch(`${API}/getServiciosProyecto/${data1[0]}`);
+            const serviciosCorrespondientes = await response.json();//resultado de la consulta
+            console.log(serviciosCorrespondientes)
+            const slicedData = serviciosCorrespondientes; // Obtiene los dos primeros elementos
 
             // Extraer solo los IDs de los elementos
-            const slicedIds = slicedData.map((item) => item.idServicio);
+            const slicedIds = serviciosCorrespondientes.map((item) => item[1]);
 
             console.log(slicedIds); // Aquí tienes un array con los IDs de los dos primeros elementos
 
             // setIdServicios(slicedData); // Esto mantendría los objetos originales con nombre e ID
             setIdServicios(slicedIds); // Esto establecerá solo los IDs en idServicio
             setServicios(formattedData);
+           
     };
+    // const handleFileChange = (e) => {
+    //     const files = e.target.files;
+    //     setSelectedFiles([...selectedFiles, ...Array.from(files)]);
+    //     setFileInputKey(Date.now()); // Para restablecer el input y permitir la selección del mismo archivo nuevamente
+    //   };
+    //   const handleRemoveFile = (index) => {
+    //     const newSelectedFiles = [...selectedFiles];
+    //     newSelectedFiles.splice(index, 1);
+    //     setSelectedFiles(newSelectedFiles);
+    //   };
     const handleFileChange = (e) => {
         const files = e.target.files;
         const newFiles = Array.from(files).map((file) => ({
           nombre: file.name, // Asigna el nombre del archivo
-          url: URL.createObjectURL(file), // Genera una URL para el archivo (puedes usar otra lógica aquí)
+          url: file, // Genera una URL para el archivo (puedes usar otra lógica aquí)
         }));
       
         // Concatena los nuevos archivos con los archivos existentes
@@ -221,8 +266,12 @@ export const ModificarProyecto = () => {
                         
                         <select id="mySelect" value={estado} onChange={handleEstadoChange} style={{ marginRight: '95px'}} >
                             <option value="">Seleccione el estado del proyecto</option>
-                            <option value="1">Activo</option>
-                            <option value="2">Inactivo</option>
+                            <option value="1">Eliminado</option>
+                            <option value="2">En progreso</option>
+                            <option value="3">Solicitado</option>
+                            <option value="4">En planeación</option>
+                            <option value="5">Activo</option>
+                            <option value="6">Inactivo</option>
                         </select>
                         
                         <label  style={{ marginRight: '40px'}} for="costInput" class="form-label">Sub Total:</label>

@@ -28,12 +28,8 @@ export const DetalleEvaluacion = () => {
     const [cedula, setCedula] = useState('');
     const [nombreCliente, setNombreCliente] = useState('');
     const [nombreProyecto, setNombreProyecto] = useState('');
-    //const [archivosAdjuntos, setArchivosAdjuntos] = useState([]);
+    const [archivosAdjuntos, setArchivosAdjuntos] = useState([]);
 
-    const archivosAdjuntos = [
-        { nombre: 'Carnet e Infrome de matricula.pdf', url: 'CRMFrontend\public\Carnet e Infrome de matricula.pdf' },
-        { nombre: 'logo192.png', url: 'CRMFrontend/public/logo192.png' },
-      ];
     
     const handleSearch = async () => {
         //Buscamos la informacion del backend
@@ -43,6 +39,8 @@ export const DetalleEvaluacion = () => {
         const datac = await resp.json();//resultado de la consulta
         const respu = await fetch(`${API}/readCliente/${data[11]}`); // cambiar por el id
         const datap = await respu.json();//resultado de la consulta
+        const respue = await fetch(`${API}/readTipoEvaluacion/${data[5]}`); // cambiar por el id
+        const dataT = await respue.json();//resultado de la consulta
         console.log(data)
         console.log(datac)
         console.log(datap)
@@ -50,13 +48,38 @@ export const DetalleEvaluacion = () => {
         setNombre(data[2])
         setDescripcion(data[3])
         setFechaEjecucion(data[4])
-        setTipoEvaluacion('Automatica')
-        
-        setEstado('En proceso')
+
+        setTipoEvaluacion(dataT[1])
+        var est = ''
+        if (data[8] === 1) { est = 'Eliminado' }
+        if (data[8] === 2) { est = 'En progreso' }
+        if (data[8] === 3) { est = 'Solicitado' }
+        if (data[8] === 4) { est = 'En planeacion' }
+        if (data[8] === 5) { est = 'Activo' }
+        if (data[8] === 6) { est = 'Inactivo' }
+        console.log('est: ', est)
+        setEstado(est)
         setCosto(data[9])
         setCedula(datac[1])
         setNombreCliente(datac[2])
         setNombreProyecto(datap[2])// Si es nulo no se mete 
+
+
+        
+        const res2 = await fetch(`${API}/getDocs/${data[1]}`);
+        const data2 = await res2.json();
+        const files = Object.keys(data2);
+        console.log("FILEEEEEEEEEEEEEEEES")
+        console.log(files);
+
+        const modifiedData = Object.keys(data2).map(nombre => ({
+            nombre: nombre,
+            url: data2[nombre]
+          }));
+          console.log(modifiedData);
+        
+          setArchivosAdjuntos(modifiedData);
+
     };
 
     const handleDelete = async () =>{
@@ -81,6 +104,15 @@ export const DetalleEvaluacion = () => {
 
 
     }
+    const handleFileClick = async (e, nombre, url) => {
+        e.preventDefault(); // Evita la navegación predeterminada
+        // Ahora puedes manejar la descarga del archivo, por ejemplo, mediante una solicitud AJAX
+        // Utiliza la URL y otros datos según sea necesario
+        //console.log("Hacer algo con el archivo:", nombre, url);
+        const res = await fetch(`${API}/blop/${nombre}/${url}`);
+        const data = await res.json();
+        console.log(data)
+      };
     const Title = styled.h1`
     font-size: 24px;
     color: #000000;
@@ -126,11 +158,11 @@ export const DetalleEvaluacion = () => {
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
                         <label for="idEvLave" class="form-label">Documentos adjuntos: </label>
                         <ul>
-                            {archivosAdjuntos.map((archivo, index) => (
-                                <li key={index}>
-                                    <a href={archivo.url} download>
-                                        {archivo.nombre}
-                                    </a>
+                            {archivosAdjuntos.map((file) => (
+                                        <li key={file.nombre}>
+                                        <a href={`${API}/blop/${file.nombre}/${file.url}`} target="_blank" onClick={(e) => handleFileClick(e, file.nombre, file.url)}>
+                                            {file.nombre} {/* Muestra el nombre del archivo */}
+                                        </a>
                                 </li>
                             ))}
                         </ul>

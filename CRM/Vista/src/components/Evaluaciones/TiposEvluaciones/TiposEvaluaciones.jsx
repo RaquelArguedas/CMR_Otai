@@ -6,6 +6,8 @@ import { Navbar } from '../../Navbar/Navbar';
 import styled from 'styled-components';
 import '../../Clientes/CSSClientes/Clientes.css'
 import { Table, columns, data, Styles } from './TablaTiposEvaluaciones'; 
+
+const API = "http://127.0.0.1:5000";
 export const TiposEvaluaciones = () => {
     const [idTiposEvaluaciones, setidTiposEvaluaciones] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     //Esto es para enviarlo a detalles
@@ -25,24 +27,14 @@ export const TiposEvaluaciones = () => {
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
         //A esto me refiero recuperar los datos del cliente
-        setTiposEvaluaciones( [
-            {
-              idTipoEvaluacion: 1,
-              costo:30000,
-              nombre: 'Evaluación A',
-            },
-            {
-              idTipoEvaluacion: 2,
-              costo:30000,
-              nombre: 'Evaluación B',
-            },
-            {
-              idTipoEvaluacion: 3,
-              costo:30000,
-              nombre: 'Evaluación C',
-            },
-            
-          ]);
+        const resultado = await fetch(`${API}/getTipoEvaluaciones`);
+        const datos = await resultado.json();
+        const formatted = datos.map((item) => ({
+            idTipoEvaluacion: item[0],
+            nombre: item[1],
+            costo:item[2],
+          }))
+        setTiposEvaluaciones( formatted);
     };
     React.useEffect(() => {
         handleSearch()

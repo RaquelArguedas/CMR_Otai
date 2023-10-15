@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import '../../Clientes/CSSClientes/Clientes.css'
 import { AiOutlinePlusCircle } from 'react-icons/ai';
+
+const API = "http://127.0.0.1:5000";
 export const CrearTipoEvaluacion = () => {
     let navigate = useNavigate();
     const gotoTipoEvaluacion = () => { navigate('/tiposEvaluaciones'); }
@@ -26,6 +28,13 @@ export const CrearTipoEvaluacion = () => {
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
           }).then((result) => {
             if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('precio', costo);
+                formData.append('nombre', nombre);
+                const res = fetch(`${API}/createTipoEvaluacion`, {
+                    method: 'POST',
+                    body: formData
+                });
               // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
               gotoTipoEvaluacion();
             }

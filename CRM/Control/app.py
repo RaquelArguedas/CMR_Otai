@@ -361,47 +361,62 @@ def createProyecto():
 
 @app.route('/readProyecto/<idProyecto>', methods=['GET'])
 def readProyecto(idProyecto):
-    p = control.readProyecto(int(idProyecto))
+    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', idProyecto)
+    p = None
+    for proyecto in control.proyecto:
+        if proyecto.idProyecto == idProyecto:
+            p = proyecto
     if (p == None):
         return jsonify("No existe")
+    print(p.toList())
     return jsonify(p.toList())
 
 @app.route('/getServiciosProyecto/<idProyecto>', methods=['GET'])
 def getServiciosProyecto(idProyecto):
+    print("________________________________________")
+    print(idProyecto, type(idProyecto))
     capacitaciones = control.capacitacion
     evaluaciones = control.evaluacion
     lista = []
 
     for cap in capacitaciones:
-        if cap.idProyecto == idProyecto:
+        if cap.idProyecto == int(idProyecto):
             lista += [cap.toList()]
     
     for eval in evaluaciones:
-        if eval.idProyecto == idProyecto:
+        if eval.idProyecto == int(idProyecto):
             lista += [eval.toList()]
         
     print(lista)
     return jsonify(lista)
 
-@app.route('/updateProyecto', methods=['POST'])
-def updateProyecto():
+@app.route('/updateProyecto/<idProyecto>', methods=['POST'])
+def updateProyecto(idProyecto):
+    print("updateProyecto")
     id = control.updateProyecto(
-        request.json['idProyecto'],
-        request.json['nombre'],
-        request.json['descripcion'],
-        request.json['idCliente'],
-        request.json['documentos'],
-        request.json['fechaInicio'],
-        request.json['fechaFinalizacion'],
-        request.json['subTotal'],
-        request.json['estado'],
-        request.json['funcionarios'] #recibe una lista con ids de funcionarios
+        idProyecto,
+        request.form.get('nombre'),
+        request.form.get('descripcion'),
+        None,
+        None,
+        request.form.get('fechaInicio'),
+        request.form.get('fechaFinalizacion'),
+        request.form.get('subTotal'),
+        request.form.get('estado'),
+        None #recibe una lista con ids de funcionarios
     )
+    for servicio in request.form.get('servicios'):
+        for c in control.capacitacion:
+            if c
     return jsonify(str(id))
 
-@app.route('/deleteProyecto/<idProyecto>', methods=['POST'])
+
+@app.route('/deleteProyecto/<idProyecto>', methods=['GET'])
 def deleteProyecto(idProyecto):
+    print("11111111111111111111111")
     id = control.updateProyecto(idProyecto,None,None,None,None,None,None,None,1,None)
+    print("EOOOOOOOOOOOO")
+    print(id)
     return jsonify(str(id))
 
 
@@ -571,7 +586,7 @@ def saveDoc():
 
 @app.route('/downloadDocs/<id>', methods=['GET'])
 def downloadDocs(id):
-    d = control.getDoc(int(id))
+    d = control.getDoc(id)
     carpeta_descargas = os.path.expanduser("~" + os.sep + "Downloads")
     ruta_archivos_relacionados = os.path.join(carpeta_descargas, "archivosRelacionados.zip")
     with zipfile.ZipFile(ruta_archivos_relacionados, "w", zipfile.ZIP_DEFLATED) as zipf:
@@ -586,7 +601,7 @@ def downloadDocs(id):
 
 @app.route('/getDocs/<id>', methods=['GET'])
 def getDocs(id):
-    d = control.getDoc(int(id))
+    d = control.getDoc(id)
     for clave, valor in d.items():
         d[clave] = str(valor)
     #print(d)
@@ -603,8 +618,12 @@ def blop(nombreDoc, idMongo):
 def getProyectos():
     proyectos = control.proyecto
     lista = []
+    nombreCliente = ""
     for pro in proyectos:
-        lista += [pro.toList()]
+        for cliente in control.cliente:
+            if pro.idCliente == cliente.idCliente:
+                nombreCliente = cliente.nombre
+        lista += [pro.toList()+[nombreCliente]]
     print(lista)
     return jsonify(lista)
 
@@ -614,7 +633,13 @@ def getEvaluaciones():
     evaluaciones = control.evaluacion
     lista = []
     for eval in evaluaciones:
-        lista += [eval.toList()]
+        for cliente in control.cliente:
+            if eval.idCliente == cliente.idCliente:
+                nombreCliente = cliente.nombre
+        for tipo in control.tipoEvaluacion:
+            if eval.tipoEvaluacion == tipo.idTipoEvaluacion:
+                nombreTipo = tipo.nombre
+        lista += [eval.toList()+[nombreCliente]+[nombreTipo]]
     print(lista)
     return jsonify(lista)
 
@@ -643,6 +668,8 @@ def getServicios():
         
     print(lista)
     return jsonify(lista)
+
+
 
 # inicia el servidor
 if __name__ == "__main__":

@@ -20,7 +20,8 @@ export const ModificarEvaluacion = () => {
     const [fechaEjecucion, setFechaEjecucion] = useState(new Date());
     const [inputValue, setInputValue] = useState('');
     const [estado, setEstado] = useState("");
-    const [tipoEvalaucion, setTipoEvaluacion] = useState("");
+    const [tiposEvaluacion, setTiposEvaluacion] = useState([]); // Estado para almacenar los tipos de evaluación
+    const [tipoEvaluacion, setTipoEvaluacion] = useState(''); // Estado para el tipo de evaluación seleccionado
     const [cedula, setCedula] = useState('');
     const [IdCliente, setIdCliente] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     
@@ -60,6 +61,13 @@ export const ModificarEvaluacion = () => {
         
     }
     const handleSearch = async () => { 
+        const resultado = await fetch(`${API}/getTipoEvaluaciones`);
+        const datos = await resultado.json();
+        const formatted = datos.map((item) => ({
+            id: item[0],
+            nombre: item[1],
+          }))
+        setTiposEvaluacion(formatted);
         //Obtener infromacion existente en la base de datos
         console.log(1) // imprime en consola web
         const res = await fetch(`${API}/readEvaluacion/${idEvaluacion}`);
@@ -77,8 +85,7 @@ export const ModificarEvaluacion = () => {
         setTipoEvaluacion(data[5])
         setEstado(data[8])
 
-        setCosto(230000)
-        setCedula('123129131')
+        setCosto(data[9])
        
         
         //La fecha
@@ -93,7 +100,7 @@ export const ModificarEvaluacion = () => {
         // Luego, establece esa fecha en el estado fechaEjecucion
         setFechaEjecucion(fechaDesdeBaseDatos);
 
-        const res2 = await fetch(`${API}/getDocs/${1}`);
+        const res2 = await fetch(`${API}/getDocs/${data[1]}`);
         const data2 = await res2.json();
         const files = Object.keys(data2);
         console.log(files);
@@ -106,18 +113,6 @@ export const ModificarEvaluacion = () => {
         
         setSelectedFiles(modifiedData);
 
-        // Para modificar los archivos
-        // setSelectedFiles([
-        //     {
-        //       nombre: 'Carnet e Informe de matrícula.pdf',
-        //       url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
-        //     },
-        //     {
-        //       nombre: 'logo192.png',
-        //       url: 'CRMFrontend/public/logo192.png'
-        //     }
-        //   ]);
-
         const rest = await fetch(`${API}/getClientes`);
         const dat = await rest.json();//resultado de la consulta
         console.log(dat)
@@ -129,6 +124,7 @@ export const ModificarEvaluacion = () => {
       }))
       setClientes(formattedData);
     };
+
     const handleFileChange = (e) => {
         const files = e.target.files;
         const newFiles = Array.from(files).map((file) => ({
@@ -144,10 +140,12 @@ export const ModificarEvaluacion = () => {
     const handleRemoveFile = (urlToRemove) => {
         const updatedFiles = selectedFiles.filter((file) => file.url !== urlToRemove);
         setSelectedFiles(updatedFiles);
-      };
+    };
+
     const handleEstadoChange = (event) => {
         setEstado(event.target.value);
     };
+
     const handleTipoEvaluacionChange = (event) => {
         setTipoEvaluacion(event.target.value);
     };
@@ -229,12 +227,20 @@ export const ModificarEvaluacion = () => {
                             <option value="1">Activo</option>
                             <option value="2">Inactivo</option>
                         </select>
-                        <select id="mySelect2" value={tipoEvalaucion} onChange={handleTipoEvaluacionChange}>
+                        {/* <select id="mySelect2" value={tipoEvalaucion} onChange={handleTipoEvaluacionChange}>
                             <option value="">Seleccione el tipo evaluación</option>
                             <option value="1">Automática Aleatoria</option>
                             <option value="2">Automática Específica</option>
                             <option value="2">Manual Específica</option>
                             <option value="2">Completa Aleatoria</option>
+                        </select> */}
+                          <select id="mySelect2" value={tipoEvaluacion} onChange={handleTipoEvaluacionChange}>
+                            <option value="">Seleccione el tipo evaluación</option>
+                            {tiposEvaluacion.map((tipo) => (
+                            <option key={tipo.id} value={tipo.id}>
+                                {tipo.nombre}
+                            </option>
+                            ))}
                         </select>
                     </div>
                         

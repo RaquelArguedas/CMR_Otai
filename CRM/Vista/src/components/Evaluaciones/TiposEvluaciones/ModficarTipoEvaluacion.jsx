@@ -32,8 +32,16 @@ export const ModficarTipoEvaluacion = () => {
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             
-            if (result.isConfirmed) {
+            if (result.isConfirmed) {  
               Swal.fire('El tipo de evaluación se ha modificado satisfactoriamente')
+              const formData = new FormData();
+              
+              formData.append('precio', costo);
+              formData.append('nombre', nombre);
+              const res = fetch(`${API}/updateTipoEvaluacion/${idTipoEvaluacion}`, {
+                  method: 'POST',
+                  body: formData
+              });
               gotoTipoEvaluacion();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')

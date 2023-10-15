@@ -17,10 +17,10 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-
+const API = "http://127.0.0.1:5000";
 export const Evaluacion = () => {
   const [cedula, setCedula] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
-    const [funcionarios, setFuncionarios] = useState([[]]);//Meter los datos de los clientes ahi
+    const [evaluaciones, setEvaluaciones] = useState([[]]);//Meter los datos de los clientes ahi
     //Esto es para enviarlo a detalles
     const handleCedulaChange = (event) => {
         setCedula(event.target.value);
@@ -38,46 +38,50 @@ export const Evaluacion = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const handleSearch = async () => { 
     //Obtener infromacion existente en la base de datos
-    //A esto me refiero recuperar los datos de los funcionarios
-    setFuncionarios( [
-        {
-          cliente: 12517,
-          idEvaluacion: 'EVAL001',
-          nombre: 'Evaluación A',
-          estado: 'Activa',
-          tipoE: 'accesibilidad',
-          detalle: 'Ver más',
-        },
-        {cliente: 12517,
-          idEvaluacion: 'EVAL002',
-          nombre: 'Evaluación B',
-          estado: 'Inactiva',
-          tipoE: 'accesibilidad',
-          detalle: 'Ver más',
-        },
-        {cliente: 2518,
-          idEvaluacion: 3,
-          nombre: 'Evaluación C',
-          estado: 'Activa',
-          tipoE: 'accesibilidad',
-          detalle: 'Ver más',
-        },
-        {cliente: 15745,
-          idEvaluacion: 4,
-          nombre: 'Evaluación D',
-          estado: 'Inactiva',
-          tipoE: 'accesibilidad',
-          detalle: 'Ver más',
-        },
-        {cliente: 214841,
-          idEvaluacion: 5,
-          nombre: 'Evaluación E',
-          estado: 'Inactiva',
-          tipoE: 'accesibilidad',
-          detalle: 'Ver más',
-        },
-        
-      ]);
+    const res = await fetch(`${API}/getEvaluaciones`);
+    const data = await res.json();//resultado de la consulta
+   console.log(data)
+    const rest = await fetch(`${API}/readCliente/${data[0][5]}`);
+  const dato = await rest.json();
+  console.log(data[0][5])
+    const formattedData = data.map((item) => {
+      
+      var estado = '';
+      switch (item[9]) {
+      case 1:
+          estado = 'Eliminado';
+          break;
+      case 2:
+          estado = 'En progreso';
+          break;
+      case 3:
+          estado = 'Solicitado';
+          break;
+      case 4:
+          estado = 'En planeacion';
+          break;
+      case 5:
+          estado = 'Activo';
+          break;
+      case 6:
+          estado = 'Inactivo';
+          break;
+      default:
+          estado = 'Estado no reconocido';
+      }
+      
+      return {
+        idEvaluacion: item[1],
+        nombre: item[2],
+        idcliente: item[5],
+        nombreCliente: item[12],
+        estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
+        fecha: item[4],
+        tipoE:item[13],
+        detalle: 'Ver más',
+      };
+    });
+    setEvaluaciones(formattedData);
   }; 
   React.useEffect(() => {
     handleSearch()
@@ -117,7 +121,7 @@ export const Evaluacion = () => {
              <div className="mb-3" style={{ marginTop: '70px', marginLeft: '20px'}}>
                 <div style={{ display: 'flex' }}>
                 <Styles> 
-                    <Table columns={columns} data={funcionarios} />
+                    <Table columns={columns} data={evaluaciones} />
                 </Styles>
                 </div>
             </div>

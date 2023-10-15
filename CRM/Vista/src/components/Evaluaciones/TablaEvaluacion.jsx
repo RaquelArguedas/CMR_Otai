@@ -359,8 +359,14 @@ export const Table = ({ columns, data }) => {
     filter: 'fuzzyText',
   },
   {
-    Header: 'Cliente',
-    accessor: 'cliente',
+    Header: 'ID Cliente',
+    accessor: 'idcliente',
+    filter: 'fuzzyText',
+  },
+  
+  {
+    Header: 'Nombre cliente',
+    accessor: 'nombreCliente',
     filter: 'fuzzyText',
   },
   {

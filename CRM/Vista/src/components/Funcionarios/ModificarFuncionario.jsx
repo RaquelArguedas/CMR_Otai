@@ -38,7 +38,7 @@ export const ModificarFuncionario = () => {
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
         //Para enviar la fecha es inputValue
         Swal.fire({
-            title: '¿Está seguro que desea modificar el cliente?',
+            title: '¿Está seguro que desea modificar el funcionario?',
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
