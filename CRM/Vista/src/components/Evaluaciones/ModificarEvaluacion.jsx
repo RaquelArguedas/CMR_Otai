@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -26,6 +26,7 @@ export const ModificarEvaluacion = () => {
     
     const [clientes, setClientes] = useState([]);//Meter los datos de los clientes ahi
     
+    const { idEvaluacion } = useParams();
     let navigate = useNavigate();
 
     const gotoMenu = () => { navigate('/', {}); }
@@ -48,8 +49,9 @@ export const ModificarEvaluacion = () => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
+                
               Swal.fire('La evaluación se ha modificado satisfactoriamente')
-              
+              gotoMenu()
               //gotoMenu();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
@@ -60,7 +62,7 @@ export const ModificarEvaluacion = () => {
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
         console.log(1) // imprime en consola web
-        const res = await fetch(`${API}/readEvaluacion/${'EVAL001'}`);
+        const res = await fetch(`${API}/readEvaluacion/${idEvaluacion}`);
         console.log(2) // imprime en consola web
         const data = await res.json();//resultado de la consulta
         console.log(3) // imprime en consola web
@@ -69,23 +71,23 @@ export const ModificarEvaluacion = () => {
         
         console.log("idCliente:", data[11]);
         setIdCliente(data[11])
-        setNombre('Evaluacion para el Ministerio de salud')
-        setDescripcion('Evaluacion de accesibilidad')
+        setNombre(data[2])
+        setDescripcion(data[3])
         //setFechaEjecucion('20/09/2023')
-        setTipoEvaluacion(1)
-        
-        setEstado(1)
+        setTipoEvaluacion(data[5])
+        setEstado(data[8])
+
         setCosto(230000)
         setCedula('123129131')
        
         
         //La fecha
-        const fechaBaseDatos = "2023-11-08T00:00:00Z"; // Ejemplo
+        // const fechaBaseDatos = "2023-11-08T00:00:00Z"; // Ejemplo
         // Parsear la fecha de la base de datos en un objeto Date
         // Convertir la cadena de fecha en un objeto Date en zona horaria UTC
         //Tiene que se como el de abajo ya que es necesario la zona horaria entoces se agrega lo de T
-        // const fechaDesdeBaseDatos = new Date(fechaSoloFecha + "T00:00:00Z");
-        const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
+        const fechaDesdeBaseDatos = new Date(data[6] + "T00:00:00Z");
+        // const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
         // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
         fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
         // Luego, establece esa fecha en el estado fechaEjecucion

@@ -7,17 +7,40 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import '../../Clientes/CSSClientes/Clientes.css'
 import { Table, columns, data, Styles } from './TablaPerfiles';  // Importa Table, columns y data desde Tabla.jsxy
+
+
+const API = "http://127.0.0.1:5000";
+
 export const Perfiles = () => {
     const [id, setIdPerfil] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     const [perfiles, setPerfiles] =  useState([]);;//Meter los datos de los clientes ahi
     const [deletedPerfiles, setDeletedPerfiles] = useState([]); // Almacena perfiles eliminados
-
+    
     const showNotification = async (event, idPerfil) => {
       event.preventDefault();
+      Swal.fire({
+        title: '¿Está seguro que desea eliminar el cliente seleccionado?',
+        showDenyButton: true,
+        confirmButtonText: 'Aceptar',
+        denyButtonText: `Cancelar`,
+        allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
+        allowEscapeKey: false, 
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        
+        if (result.isConfirmed) {
+          Swal.fire('El cliente se ha eliminado satisfactoriamente')
+          const updatedPerfiles = perfiles.filter((perfil) => perfil.idPerfil !== idPerfil);
+          console.log(idPerfil)
+          setPerfiles(updatedPerfiles);
+          // const res = fetch(`${API}/deleteCliente/${idCliente}`); // cambiar por el id
+          
+        } else if (result.isDenied) {
+          Swal.fire('No se guaron los cambios')
+        }
+      })
       // Elimina el perfil del estado de perfiles
-      const updatedPerfiles = perfiles.filter((perfil) => perfil.idPerfil !== idPerfil);
-      console.log(idPerfil)
-      setPerfiles(updatedPerfiles);
+      
     };
     const handleModificarPerfil= async (event, idPerfil, nombre) => {
       event.preventDefault();  
@@ -42,10 +65,12 @@ export const Perfiles = () => {
           if (nombreNuevo !== '') {
             if (nombreNuevo !== nombre) {
               // Actualiza el nombre en la lista de perfiles en el estado
+              // se debe mandar ha actualizar aqui
               const updatedPerfiles = perfiles.map((perfil) =>
                 perfil.idPerfil === idPerfil ? { ...perfil, nombre: nombreNuevo } : perfil
               );
               setPerfiles(updatedPerfiles);
+              
             }
             Swal.fire('Se actualizó correctamente: ');
           } else {
@@ -68,25 +93,16 @@ export const Perfiles = () => {
     `;
     const handleSearch = async () => { 
       //Obtener infromacion existente en la base de datos
-      //A esto me refiero recuperar los datos de los funcionarios
-      setPerfiles( [
-          {
-            idPerfil: 1,
-            nombre: 'Evaluación A',
-            detalle: 'Ver más',
-          },
-          {
-            idPerfil: 2,
-            nombre: 'Evaluación B',
-            detalle: 'Ver más',
-          },
-          {
-            idPerfil: 3,
-            nombre: 'Evaluación C',
-            detalle: 'Ver más',
-          },
-          
-        ]);
+      const res = await  fetch(`${API}/getPerfiles`);
+      const data = await res.json();//resultado de la consulta
+      console.log(data)
+      const formattedData = data.map((item) => ({
+        idPerfil: item[0],
+        nombre: item[1],
+      }));
+
+
+      setPerfiles(formattedData);
   }; 
   React.useEffect(() => {
       handleSearch()

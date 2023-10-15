@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -8,7 +8,9 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { Navbar } from '../Navbar/Navbar';
 import '../Evaluaciones/CrearEvaluacion.css';
 import Swal from 'sweetalert2';
+import { Table, columns, data, Styles } from './TablaReSelect'; 
 
+const API = "http://127.0.0.1:5000";
 export const ModificarProyecto = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
@@ -23,11 +25,18 @@ export const ModificarProyecto = () => {
     const [tipoEvalaucion, setTipoEvaluacion] = useState("");
     const [cedula, setCedula] = useState('');
     const [nombreCliente, setNombreCliente] = useState('');
+    
+    const [servicios, setServicios] = useState([]); ///Esto son todos los servicios
+    const [idServicio, setIdServicios] = useState([]); //Estos son los servicios seleccionados anteriormente
+
     let navigate = useNavigate();
 
-    
+    const { idProyecto } = useParams();
     const gotoProyecto = () => { navigate('/proyectos'); }
-    
+    const handleidServicioChange = ( idServicios) => {
+        console.log('Array de idServicios:', idServicios);
+        setIdServicios(idServicios);
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();  
         //Es para enviar informacion al backend
@@ -93,6 +102,27 @@ export const ModificarProyecto = () => {
               url: 'CRMFrontend/public/logo192.png'
             }
           ]);
+
+          console.log(1)
+          //Se supoene que ahi abajo mandamos a llamar a todos los servicios
+          const res = await fetch(`${API}/getClientes`);
+          const data = await res.json();//resultado de la consulta
+          console.log(data)
+           // Realiza la conversión de datos aquí
+           const formattedData = data.map((item) => ({
+              idServicio: item[0],
+              nombre: item[2],
+            }));
+            const slicedData = formattedData.slice(0, 2); // Obtiene los dos primeros elementos
+
+            // Extraer solo los IDs de los elementos
+            const slicedIds = slicedData.map((item) => item.idServicio);
+
+            console.log(slicedIds); // Aquí tienes un array con los IDs de los dos primeros elementos
+
+            // setIdServicios(slicedData); // Esto mantendría los objetos originales con nombre e ID
+            setIdServicios(slicedIds); // Esto establecerá solo los IDs en idServicio
+            setServicios(formattedData);
     };
     const handleFileChange = (e) => {
         const files = e.target.files;
@@ -263,7 +293,14 @@ export const ModificarProyecto = () => {
 
                             </div>
                         </div>
-                        
+                        <div className="mb-3" 
+                                style={{ marginTop:  '100px' }} >
+                                <div style={{ display: 'flex' }}>
+                                <Styles> 
+                                <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio}/>
+                                </Styles>
+                                </div>     
+                            </div>
                             
                             <div className="mb-3" 
                                 style={{ marginTop:  '100px' }} >

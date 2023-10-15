@@ -57,8 +57,8 @@ export function App() {
             <Route exact path= "/recuperar" element = {<Recuperar/>} /> */}
             <Route exact path= "/" element = {<Evaluacion/>} />
             <Route exact path= "/crearEvaluacion" element = {<CrearEvaluacion/>} />
-            <Route exact path= "/detalleEvaluacion" element = {<DetalleEvaluacion/>} />
-            <Route exact path= "/modificarEvaluacion" element = {<ModificarEvaluacion/>} />
+            <Route exact path= "/detalleEvaluacion/:idEvaluacion" element = {<DetalleEvaluacion/>} />
+            <Route exact path= "/modificarEvaluacion/:idEvaluacion" element = {<ModificarEvaluacion/>} />
 
             <Route exact path= "/capacitacion" element = {<Capacitacion/>} />
             <Route exact path= "/crearCapacitacion" element = {<CrearCapacitacion/>} />
@@ -100,7 +100,7 @@ export function App() {
             <Route exact path= "/proyectos" element = {<Proyectos/>} />
             <Route exact path= "/crearProyectos" element = {<CrearProyectos/>} />
             <Route exact path= "/detalleProyecto/:idProyecto" element = {<DetalleProyecto/>} />
-            <Route exact path= "/modificarProyecto" element = {<ModificarProyecto/>} />
+            <Route exact path= "/modificarProyecto/:idProyecto" element = {<ModificarProyecto/>} />
 
             </Routes>
         </div>

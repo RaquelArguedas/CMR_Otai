@@ -8,12 +8,15 @@ import Swal from 'sweetalert2';
 
 import { BsFillPencilFill } from 'react-icons/bs';
 import { RiDeleteBinLine } from 'react-icons/ri';
+
+const API = "http://127.0.0.1:5000";
 export const DetalleProyecto = () => {
     let navigate = useNavigate();
-    const gotoModificarProyecto = () => { navigate('/modificarProyecto'); }
+    const { idProyecto } = useParams();
+    const gotoModificarProyecto = () => { navigate(`/modificarProyecto/${idProyecto}`); }
     const gotoProyecto = () => { navigate('/proyectos'); }
     
-    const { idProyecto } = useParams();
+   
     const [idProyect, setidProyecto] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [fechaCreacion, setFechaCreacion] = useState('');
@@ -35,7 +38,8 @@ export const DetalleProyecto = () => {
     
     const handleSearch = async () => {
         //Buscamos la informacion del backend
-        
+        const res = await fetch(`${API}/readProyecto/${idProyecto}`); // cambiar por el id
+        const data = await res.json();//resultado de la consulta
         setidProyecto('E1231')
         setDescripcion('Evaluacion de accesibilidad')
         setFechaCreacion('20/09/2022')
@@ -80,6 +84,7 @@ export const DetalleProyecto = () => {
             
             if (result.isConfirmed) {
               Swal.fire('La evaluación se ha eliminado satisfactoriamente')
+
               gotoProyecto();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')

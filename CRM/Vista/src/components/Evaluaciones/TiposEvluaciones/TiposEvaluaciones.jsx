@@ -63,6 +63,7 @@ export const TiposEvaluaciones = () => {
                 const updatedTipos = tiposEvaluaciones.filter((tiposEvaluaciones) => tiposEvaluaciones.idTipoEvaluacion !== idTipoEvaluacion);
                 setTiposEvaluaciones(updatedTipos);
               Swal.fire('El tipo de evaluación se ha eliminado satisfactoriamente')
+              //Aqui se debe enviar a eliminar
             //   gotoTipoEvaluacion();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
