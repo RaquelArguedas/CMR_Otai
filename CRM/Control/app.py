@@ -392,7 +392,9 @@ def getServiciosProyecto(idProyecto):
 
 @app.route('/updateProyecto/<idProyecto>', methods=['POST'])
 def updateProyecto(idProyecto):
-    print("updateProyecto")
+    #print("updateProyecto", request.form.get('doc'))
+    print("updateProyecto", request.form.get('fechaInicio'))
+    print("updateProyecto", request.form.get('fechaFinalizacion'))
     id = control.updateProyecto(
         idProyecto,
         request.form.get('nombre'),
@@ -405,9 +407,20 @@ def updateProyecto(idProyecto):
         request.form.get('estado'),
         None #recibe una lista con ids de funcionarios
     )
-    for servicio in request.form.get('servicios'):
-        for c in control.capacitacion:
-            if c
+    #print("__________________")
+    if id==None: #si sale bien, crea los archivos y hace los cambios en servicios
+        mi_lista = (request.form.get('servicios')).split(',')
+        for servicio in mi_lista:
+            #print(servicio, "AAA")
+            for c in control.capacitacion:
+                if c.idCapacitacion == servicio:
+                    c.idProyecto = idProyecto
+                    #print("cambie cap")
+            for c in control.evaluacion:
+                if c.idEvaluacion == servicio:
+                    c.idProyecto = idProyecto
+                    #print("cambie eval")
+        
     return jsonify(str(id))
 
 
@@ -572,12 +585,12 @@ def consultarPapelera():
 
 
 #funciones de los documentos
-@app.route('/saveDoc', methods=['POST'])
-def saveDoc():
+@app.route('/saveDoc/<id>', methods=['POST'])
+def saveDoc(id):
     if 'doc' in request.files:
         doc = request.files['doc']
         print(doc)
-        control.saveDoc(1, doc)
+        control.saveDoc(id, doc)
         print ("Archivo guardado exitosamente") 
     else:
         print ("No se proporcionó ningún archivo")
@@ -669,6 +682,21 @@ def getServicios():
     print(lista)
     return jsonify(lista)
 
+#getNewIdProyecto
+@app.route('/getNewIdProyecto', methods=['GET'])
+def getNewIdProyecto():
+    string = (control.proyecto[-1]).idProyecto
+    numero_str = string[3:]  # Desde el cuarto carácter en adelante
+    numero = int(numero_str)
+
+    # Incrementa el número en 1
+    numero += 1
+
+    # Formatea el resultado nuevamente en el formato deseado
+    nueva_cadena = f"PRO{numero:03}"  # El :03 indica que debe tener al menos 3 dígitos, rellenando con ceros si es necesario
+
+    print(nueva_cadena)
+    return jsonify(nueva_cadena)
 
 
 # inicia el servidor

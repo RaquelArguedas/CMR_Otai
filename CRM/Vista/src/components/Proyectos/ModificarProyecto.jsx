@@ -60,21 +60,42 @@ export const ModificarProyecto = () => {
               //crea el proyecto
               console.log("AAAAAAAAAAAAAAAAAAAA")
               //archivos por agregar
+              const formData2 = new FormData();
               const selectedFilesModified = selectedFiles.map((item) => { 
                 if (item.url instanceof File) {
-                  return item.url;
+                    formData2.append('doc', item.url);
+                    fetch(`${API}/saveDoc/${idProyecto}`, {
+                        method: 'POST',
+                        body: formData2, // Utiliza el objeto FormData que contiene archivos
+                    });
+                    formData2.delete('*');
                 }else {
                     return null; // O cualquier otro valor que desees en lugar de null
                   }
                 }).filter((item) => item !== null); // Eliminar elementos nulos
               // console.log(selectedFilesModified)
-               formData.append('doc', selectedFilesModified);
-               // Realiza la solicitud al servidor para guardar los datos y los archivos
-              fetch(`${API}/saveDoc`, {
-                  method: 'POST',
-                  body: formData, // Utiliza el objeto FormData que contiene archivos
-              });
-              //gotoProyecto();
+
+
+              const formData = new FormData();
+              const añoN = fechaIncio.getFullYear();
+            const mesN = String(fechaIncio.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+            const diaN = String(fechaIncio.getDate()).padStart(2, "0");
+            const año = fechaFinalizacion.getFullYear();
+            const mes = String(fechaFinalizacion.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+            const dia = String(fechaFinalizacion.getDate()).padStart(2, "0");
+                formData.append('nombre', nombre);
+                formData.append('descripcion', descripcion);
+                formData.append('fechaInicio', `${añoN}-${mesN}-${diaN}`);
+                formData.append('fechaFinalizacion', `${año}-${mes}-${dia}`);
+                formData.append('subTotal', estado);
+                formData.append('estado', estado);
+                formData.append('servicios', idServicio);
+                formData.append('doc', selectedFilesModified);
+                const res = fetch(`${API}/updateProyecto/${idProyecto}`, {
+                    method: 'POST',
+                    body: formData
+                });
+              gotoProyecto();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }

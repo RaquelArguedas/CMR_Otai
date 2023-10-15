@@ -33,6 +33,10 @@ export const CrearProyectos = () => {
 
 
     const handleSubmit = async (event) => {
+        const res = await fetch(`${API}/getNewIdProyecto`);
+        const data = await res.json();//resultado de la consulta
+        console.log("dataaaaaaaaaaaaaaa")
+        console.log(data)
         event.preventDefault();  
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
@@ -46,7 +50,43 @@ export const CrearProyectos = () => {
           }).then((result) => {
             if (result.isConfirmed) {
               // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
-              gotoMenu();
+            //   const formData2 = new FormData();
+            //   const selectedFilesModified = selectedFiles.map((item) => { 
+            //     if (item.url instanceof File) {
+            //         formData2.append('doc', item.url);
+            //         fetch(`${API}/saveDoc/${idProyecto}`, {
+            //             method: 'POST',
+            //             body: formData2, // Utiliza el objeto FormData que contiene archivos
+            //         });
+            //         formData2.delete('*');
+            //     }else {
+            //         return null; // O cualquier otro valor que desees en lugar de null
+            //       }
+            //     }).filter((item) => item !== null); // Eliminar elementos nulos
+            //   // console.log(selectedFilesModified)
+
+
+            //   const formData = new FormData();
+            //   const añoN = fechaIncio.getFullYear();
+            // const mesN = String(fechaIncio.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+            // const diaN = String(fechaIncio.getDate()).padStart(2, "0");
+            // const año = fechaFinalizacion.getFullYear();
+            // const mes = String(fechaFinalizacion.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+            // const dia = String(fechaFinalizacion.getDate()).padStart(2, "0");
+            //     formData.append('nombre', nombre);
+            //     formData.append('descripcion', descripcion);
+            //     formData.append('fechaInicio', `${añoN}-${mesN}-${diaN}`);
+            //     formData.append('fechaFinalizacion', `${año}-${mes}-${dia}`);
+            //     formData.append('subTotal', estado);
+            //     formData.append('estado', estado);
+            //     formData.append('servicios', idServicio);
+            //     formData.append('doc', selectedFilesModified);
+            //     const res = fetch(`${API}/updateProyecto/${idProyecto}`, {
+            //         method: 'POST',
+            //         body: formData
+            //     });
+              
+              //gotoMenu();
             }
           });
         
@@ -61,12 +101,13 @@ export const CrearProyectos = () => {
           //Obtener infromacion existente en la base de datos
         //A esto me refiero recuperar los datos del cliente
         console.log(1)
-        const res = await fetch(`${API}/getClientes`);
+        //Se supoene que ahi abajo mandamos a llamar a todos los servicios
+        const res = await fetch(`${API}/getServicios`);
         const data = await res.json();//resultado de la consulta
         console.log(data)
          // Realiza la conversión de datos aquí
          const formattedData = data.map((item) => ({
-            idServicio: item[0],
+            idServicio: item[1],
             nombre: item[2],
           }));
 

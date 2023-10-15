@@ -279,7 +279,7 @@ class SingletonDAO(metaclass=SingletonMeta):
     
     def updateProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
         p = self.readProyecto(idProyecto)
-        #print("desde be: ", p.toList())
+        print("desde be: ", p.toList())
         if p != None:
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
             
