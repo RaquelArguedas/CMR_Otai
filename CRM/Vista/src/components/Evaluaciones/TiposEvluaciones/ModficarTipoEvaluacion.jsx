@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../../Navbar/Navbar';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -11,7 +11,7 @@ export const ModficarTipoEvaluacion = () => {
 
     const [nombre, setNombre] = useState('');
     const [costo, setCosto] = useState('');
-   
+    const { idTipoEvaluacion } = useParams(); //Para buscar
     const handleSubmit = async (event) => {
         event.preventDefault();  
         //Es para enviar informacion al backend

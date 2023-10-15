@@ -27,7 +27,7 @@ export function Evaluacion() {
     };
     let navigate = useNavigate();
     const gotoCrearFuncionario = () => { navigate('/crearEvaluacion'); }
-    const gotoPerfiles = () => { navigate('/perfiles')}
+    const gotoTiposEvaluaciones = () => { navigate('/tiposEvaluaciones')}
    
     const Title = styled.h1`
     font-size: 24px;
@@ -102,7 +102,7 @@ export function Evaluacion() {
                         Crear<br />Evaluación
                     </div>
                  </button>
-                 <button  className="button3" style={{marginLeft: '140px', height: '50px', width: '180px'}} onClick={gotoPerfiles}>
+                 <button  className="button3" style={{marginLeft: '140px', height: '50px', width: '180px'}} onClick={gotoTiposEvaluaciones}>
                      <FiClipboard style={{
                      fontSize: '25px',
                      color: '#12959E', // Tamaño del icono

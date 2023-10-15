@@ -60,9 +60,6 @@ export const Perfiles = () => {
     const handleIdPerfilChange = (event) => {
         setIdPerfil(event.target.value);
     };
-    let navigate = useNavigate();
-    const gotoCrearFuncionario = () => { navigate('/crearFuncionarios'); }
-    
     const Title = styled.h1`
     font-size: 24px;
     color: #000000;

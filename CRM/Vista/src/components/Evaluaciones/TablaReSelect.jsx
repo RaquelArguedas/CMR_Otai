@@ -1,4 +1,4 @@
-import React, { useState,  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
@@ -227,17 +227,19 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
 
-export const Table = ({ columns, data, handleIdClienteChange }) => {
+export const Table = ({ columns, data, handleIdClienteChange, idCliente }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
     
-    const [selectedClientId, setSelectedClientId] = useState(null);
+    const [selectedClientId, setSelectedClientId] = useState(idCliente);
 
     const handleSelectClient = ( idCliente) => {
       console.log(idCliente)
     setSelectedClientId(idCliente);
     handleIdClienteChange(idCliente)
     };
-
+    useEffect(() => {
+        setSelectedClientId(idCliente);
+      }, [idCliente]);
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -317,21 +319,18 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
                     {cell.column.id === 'select' ? (
                       // Aquí agregamos la lógica para los checkboxes
                       <input
-                        type="checkbox"
-                        checked={row.original.idCliente === selectedClientId}
-                        onChange={() => {
-                           handleSelectClient( row.original.idCliente)
-                            
-                        
-                          }}
-                          
+                      type="checkbox"
+                      checked={row.original.idCliente === selectedClientId}
+                      onChange={() => {
+                        handleSelectClient(row.original.idCliente);
+                      }}
                       style={{ width: '30px',
                       height: '30px',  // Establece la altura del checkbox para centrarlo verticalmente
                       display: 'flex',
                       alignItems: 'center', // Centra verticalmente
                       justifyContent: 'center', margin: '0', // Establece el margen a 0 para eliminar cualquier espaciado no deseado
                       padding: '0', }} 
-                      />
+                    />
                       
                     ) : (
                       cell.render('Cell')

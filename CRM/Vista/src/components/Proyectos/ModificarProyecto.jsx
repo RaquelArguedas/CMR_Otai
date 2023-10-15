@@ -6,39 +6,38 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { Navbar } from '../Navbar/Navbar';
-import './CrearEvaluacion.css';
+import '../Evaluaciones/CrearEvaluacion.css';
 import Swal from 'sweetalert2';
-import { Table, columns, data, Styles } from './TablaReSelect';  // Importa Table, columns y data desde Tabla.jsxy
-const API = "http://127.0.0.1:5000";
 
-export const ModificarEvaluacion = () => {
+export const ModificarProyecto = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [costo, setCosto] = useState('');
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [fileInputKey, setFileInputKey] = useState('');
-    const [fechaEjecucion, setFechaEjecucion] = useState(new Date());
+    const [fechaIncio, setfechaIncio] = useState(new Date());
+    const [fechaFinalizacion, setfechaFinalizacion] = useState(new Date());
     const [inputValue, setInputValue] = useState('');
+    const [outValue, setOutValue] = useState('');
     const [estado, setEstado] = useState("");
     const [tipoEvalaucion, setTipoEvaluacion] = useState("");
     const [cedula, setCedula] = useState('');
-    const [IdCliente, setIdCliente] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
-    
-    const [clientes, setClientes] = useState([]);//Meter los datos de los clientes ahi
-    
+    const [nombreCliente, setNombreCliente] = useState('');
     let navigate = useNavigate();
 
-    const gotoMenu = () => { navigate('/', {}); }
+    
+    const gotoProyecto = () => { navigate('/proyectos'); }
     
     const handleSubmit = async (event) => {
         event.preventDefault();  
         //Es para enviar informacion al backend
+        
         //Para enviar los datos de la fecha es inputValue
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
   
         //Notificacion de que se realizaron los cambios
         Swal.fire({
-            title: '¿Está seguro desea modificar la evaluación?',
+            title: '¿Está seguro que desea modificar el proyecto?',
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
@@ -48,9 +47,8 @@ export const ModificarEvaluacion = () => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
-              Swal.fire('La evaluación se ha modificado satisfactoriamente')
-              
-              //gotoMenu();
+              Swal.fire('El proyecto se ha modificado satisfactoriamente')
+              gotoProyecto();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }
@@ -59,16 +57,9 @@ export const ModificarEvaluacion = () => {
     }
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
-        console.log(1) // imprime en consola web
-        const res = await fetch(`${API}/readEvaluacion/${'EVAL001'}`);
-        console.log(2) // imprime en consola web
-        const data = await res.json();//resultado de la consulta
-        console.log(3) // imprime en consola web
-        console.log(data) // imprime en consola web
-        console.log("idEvaluacion:", data[0]);
-        
-        console.log("idCliente:", data[11]);
-        setIdCliente(data[11])
+        // const res = await fetch(`${API}/getProfesorCodigo/${codigoRef.current.value}`);
+        // const data = await res.json();//resultado de la consulta
+        // console.log(data) // imprime en consola web
         setNombre('Evaluacion para el Ministerio de salud')
         setDescripcion('Evaluacion de accesibilidad')
         //setFechaEjecucion('20/09/2023')
@@ -77,7 +68,7 @@ export const ModificarEvaluacion = () => {
         setEstado(1)
         setCosto(230000)
         setCedula('123129131')
-       
+        setNombreCliente('Ministerio de hacienda')
         
         //La fecha
         const fechaBaseDatos = "2023-11-08T00:00:00Z"; // Ejemplo
@@ -89,43 +80,19 @@ export const ModificarEvaluacion = () => {
         // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
         fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
         // Luego, establece esa fecha en el estado fechaEjecucion
-        setFechaEjecucion(fechaDesdeBaseDatos);
-
-        const res2 = await fetch(`${API}/getDocs/${1}`);
-        const data2 = await res2.json();
-        const files = Object.keys(data2);
-        console.log(files);
-
-        const modifiedData = Object.keys(data2).map(nombre => ({
-            nombre: nombre,
-            url: data2[nombre]
-          }));
-          
-        
-        setSelectedFiles(modifiedData);
-
+        setfechaIncio(fechaDesdeBaseDatos);
+        setfechaFinalizacion(fechaDesdeBaseDatos);
         // Para modificar los archivos
-        // setSelectedFiles([
-        //     {
-        //       nombre: 'Carnet e Informe de matrícula.pdf',
-        //       url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
-        //     },
-        //     {
-        //       nombre: 'logo192.png',
-        //       url: 'CRMFrontend/public/logo192.png'
-        //     }
-        //   ]);
-
-        const rest = await fetch(`${API}/getClientes`);
-        const dat = await rest.json();//resultado de la consulta
-        console.log(dat)
-         // Realiza la conversión de datos aquí
-      const formattedData = dat.map((item) => ({
-        cedula: item[1],
-        idCliente: item[0],
-        nombre: item[2],
-      }))
-      setClientes(formattedData);
+        setSelectedFiles([
+            {
+              nombre: 'Carnet e Informe de matrícula.pdf',
+              url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
+            },
+            {
+              nombre: 'logo192.png',
+              url: 'CRMFrontend/public/logo192.png'
+            }
+          ]);
     };
     const handleFileChange = (e) => {
         const files = e.target.files;
@@ -158,8 +125,8 @@ export const ModificarEvaluacion = () => {
     const handleCostoChange = (event) => {
         setCosto(event.target.value);
     };
-    const handleFechaEjecucionChange = (date) => {
-        setFechaEjecucion(date);
+    const handleIncioChange = (date) => {
+        setfechaIncio(date);
 
         const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
         const day = date.getDate(); // Obtener el día
@@ -171,21 +138,21 @@ export const ModificarEvaluacion = () => {
         setInputValue(formattedDate);
         
     };
+    const handleFinalizacionChange = (date) => {
+        setfechaFinalizacion(date);
+
+        const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
+        const day = date.getDate(); // Obtener el día
+        const year = date.getFullYear(); // Obtener el año
+        // Construir la cadena en el formato deseado (aaaa/dd/mm)
+        const formattedDate = `${year}-${month}-${day}`;
+        //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
+
+        setOutValue(formattedDate);
+        
+    };
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
-      };
-      const handleIdClienteChange = ( idCliente) => {
-        console.log(idCliente + 'Por aqui en handle')
-        setIdCliente(idCliente);
-    };
-    const handleFileClick = async (e, nombre, url) => {
-        e.preventDefault(); // Evita la navegación predeterminada
-        // Ahora puedes manejar la descarga del archivo, por ejemplo, mediante una solicitud AJAX
-        // Utiliza la URL y otros datos según sea necesario
-        //console.log("Hacer algo con el archivo:", nombre, url);
-        const res = await fetch(`${API}/blop/${nombre}/${url}`);
-        const data = await res.json();
-        console.log(data)
       };
     const Title = styled.h1`
     font-size: 24px;
@@ -205,7 +172,7 @@ export const ModificarEvaluacion = () => {
         <Navbar />
             <div class="row">
                     <div class="col-sm-3">
-                        <Title>Modificar Evaluación</Title>
+                        <Title>Modificar proyecto</Title>
                     </div>
                     <form onSubmit={handleSubmit}>
                     <div class="mb-3">
@@ -222,52 +189,59 @@ export const ModificarEvaluacion = () => {
                     </div>
                     <div class="mb-3">
                         
-                        <select id="mySelect" value={estado} onChange={handleEstadoChange}>
-                            <option value="">Seleccione el estado de la evaluación</option>
+                        <select id="mySelect" value={estado} onChange={handleEstadoChange} style={{ marginRight: '95px'}} >
+                            <option value="">Seleccione el estado del proyecto</option>
                             <option value="1">Activo</option>
                             <option value="2">Inactivo</option>
                         </select>
-                        <select id="mySelect2" value={tipoEvalaucion} onChange={handleTipoEvaluacionChange}>
-                            <option value="">Seleccione el tipo evaluación</option>
-                            <option value="1">Automática Aleatoria</option>
-                            <option value="2">Automática Específica</option>
-                            <option value="2">Manual Específica</option>
-                            <option value="2">Completa Aleatoria</option>
-                        </select>
+                        
+                        <label  style={{ marginRight: '40px'}} for="costInput" class="form-label">Sub Total:</label>
+                        <input type="text" class="form-control custom-margin-right" id="costInput"
+                         placeholder="Ingrese el costo del proyecto" value={costo} onChange={handleCostoChange}/>
                     </div>
                         
-                    <div className="mb-3">
+                    <div className="mb-3" style={{marginBottom: '50px'}}>
                         <label  for="inputDate" className="form-label">
-                            Seleccione la fecha de ejecución:
+                            Seleccione la fecha de inicio:
                         </label>
-                        <label  style={{ marginRight: '40px' }} for="costInput" class="form-label">Costo:</label>
-                        <input type="text" class="form-control custom-margin-right" id="costInput"
-                         placeholder="Ingrese el costo de la evaluación" value={costo} onChange={handleCostoChange}/>
-                        
+                        <label  for="inputDate" className="form-label">
+                            Seleccione la fecha de finalización:
+                        </label>
+                        <label  for="inputDate" className="form-label">
+                            Seleccione los archivos adjuntos:
+                        </label>
                         </div>
                         <div className="mb-3" style={{ display: 'flex',alignItems: 'flex-start',  }}>
                             <DatePicker
-                                selected={fechaEjecucion}
-                                onChange={handleFechaEjecucionChange}
+                                selected={fechaIncio}
+                                onChange={handleIncioChange}
                                 dateFormat="dd/MM/yyyy"
                                 inline
                                 showYearDropdown
                                 showMonthDropdown
                             />
+                            <div style={{ marginLeft: '90px' }}>
+                            <DatePicker
+                                selected={fechaFinalizacion}
+                                onChange={handleFinalizacionChange}
+                                dateFormat="dd/MM/yyyy"
+                                inline
+                                showYearDropdown
+                                showMonthDropdown
+                            />
+                        </div>
                             <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px' }}>
                                 <input
-                                    style={{ marginLeft: '70px' }}
+                                    style={{ marginLeft: '110px' }}
                                     type="file"
                                     key={fileInputKey}
                                     onChange={handleFileChange}
                                     multiple
                                 />
-                                <ul style={{ marginLeft: '80px' }}>
+                                <ul style={{ marginLeft: '130px' }}>
                                     {selectedFiles.map((file) => (
-                                        <li key={file.nombre}>
-                                        <a href={`${API}/blop/${file.nombre}/${file.url}`} target="_blank" onClick={(e) => handleFileClick(e, file.nombre, file.url)}>
-                                            {file.nombre} {/* Muestra el nombre del archivo */}
-                                        </a>
+                                        <li key={file.nombre}> {/* Cambia key a file.url si es único */}
+                                        {file.nombre} {/* Muestra el nombre del archivo */}
                                         <button
                                             style={{
                                                 marginLeft: '10px',
@@ -289,21 +263,14 @@ export const ModificarEvaluacion = () => {
 
                             </div>
                         </div>
-                        <div className="mb-3" 
-                                style={{ marginTop:  '100px' }} >
-                                <div style={{ display: 'flex' }}>
-                                <Styles> 
-                                <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange} idCliente={IdCliente}/>
-                                </Styles>
-                                </div>     
-                            </div>
+                        
                             
                             <div className="mb-3" 
                                 style={{ marginTop:  '100px' }} >
                             <button type="submit" className="button1" >
                                 <BsFillPencilFill style={{
                                             fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'// Tamaño del icono
-                                        }} /> Modificar evaluación
+                                        }} /> Modificar proyecto
                                 </button>
                             
                             </div>

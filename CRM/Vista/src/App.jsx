@@ -32,7 +32,6 @@ import { ModificarFuncionario } from "./components/Funcionarios/ModificarFuncion
 import { CrearUsuario } from "./components/Usuarios/CrearUsuario";
 import { DetalleMiCuenta } from "./components/Usuarios/DetalleMiCuenta";
 import { ModficarMiCuenta } from "./components/Usuarios/ModficarMiCuenta";
-import { Proyectos } from "./components/Proyectos/Proyectos";
 import { Perfiles } from "./components/Funcionarios/Perfiles/Perfiles";
 
 import { TiposEvaluaciones } from "./components/Evaluaciones/TiposEvluaciones/TiposEvaluaciones";
@@ -42,6 +41,12 @@ import { ModficarTipoEvaluacion } from "./components/Evaluaciones/TiposEvluacion
 import { TiposCapacitaciones } from "./components/Capacitaciones/TiposCapacitaciones/TiposCapacitaciones";
 import { CrearTipoCapacitacion } from "./components/Capacitaciones/TiposCapacitaciones/CrearTipoCapacitacion";
 import { ModficarTipoCapacitacion } from "./components/Capacitaciones/TiposCapacitaciones/ModficarTipoCapacitacion";
+
+import { Proyectos } from "./components/Proyectos/Proyectos";
+import { CrearProyectos } from "./components/Proyectos/CrearProyectos";
+import { DetalleProyecto } from "./components/Proyectos/DetalleProyecto";
+import { ModificarProyecto } from "./components/Proyectos/ModificarProyecto";
+
 export function App() {
     return (
     <Router>
@@ -79,8 +84,6 @@ export function App() {
             <Route exact path= "/detalleMiCuenta" element = {<DetalleMiCuenta/>} />
             <Route exact path= "/modficarMiCuenta" element = {<ModficarMiCuenta/>} />
 
-            <Route exact path= "/proyectos" element = {<Proyectos/>} />
-
             <Route exact path= "/reportesRendimiento" element = {<ReporteRendimiento/>} />
             <Route exact path= "/reportesFinancieros" element = {<ReporteFinanciero/>} />
 
@@ -88,11 +91,17 @@ export function App() {
 
             <Route exact path= "/tiposEvaluaciones" element = {<TiposEvaluaciones/>} />
             <Route exact path= "/crearTiposEvaluaciones" element = {<CrearTipoEvaluacion/>} />
-            <Route exact path= "/modificarTiposEvaluaciones" element = {<ModficarTipoEvaluacion/>} />
+            <Route exact path= "/modificarTiposEvaluaciones/:idTipoEvaluacion" element = {<ModficarTipoEvaluacion/>} />
 
             <Route exact path= "/tiposCapacitaciones" element = {<TiposCapacitaciones/>} />
             <Route exact path= "/crearTipoCapacitacion" element = {<CrearTipoCapacitacion/>} />
             <Route exact path= "/modficarTipoCapacitacion" element = {<ModficarTipoCapacitacion/>} />
+
+            <Route exact path= "/proyectos" element = {<Proyectos/>} />
+            <Route exact path= "/crearProyectos" element = {<CrearProyectos/>} />
+            <Route exact path= "/detalleProyecto/:idProyecto" element = {<DetalleProyecto/>} />
+            <Route exact path= "/modificarProyecto" element = {<ModificarProyecto/>} />
+
             </Routes>
         </div>
     </Router>

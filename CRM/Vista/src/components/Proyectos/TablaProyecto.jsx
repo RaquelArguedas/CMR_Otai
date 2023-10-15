@@ -1,19 +1,10 @@
-import React, { useState,  } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
+import React, { useState, useEffect, Fragment } from 'react';
 import  { matchSorter } from 'match-sorter'
 
-
-// Define un componente de título estilizado
-export const Title = styled.h1`
-  font-size: 24px;
-  color: #000000;
-  margin-bottom: 50px;
-  margin-top: 25px;
-`;
-// Define un componente de select estilizado para filtros
- const FilterSelect = styled.select`
+const FilterSelect = styled.select`
   width: 100px;
   height: 35px;
   background-color: #FFFFFF;
@@ -26,18 +17,7 @@ export const Title = styled.h1`
   margin-left: 0px;
   box-shadow: 0 0 1px 0 #000000;
 `;
-// Define un componente de botón estilizado
-export const Button = styled.button`
-  background-color: #ffffff;
-  border: 1px solid #000000;
-  align-items: center; 
-  border-radius: 5px;
-  padding: 10px 20px;
-  color: #000000;
-  font-size: 16px;
-  cursor: pointer;
-`;
-// Define otro componente de botón estilizado para la tabla
+
 const ButtonTbl = styled.button`
   background-color: #ffffff;
   border: 1px solid #000000;
@@ -48,7 +28,7 @@ const ButtonTbl = styled.button`
   font-size: 12px;
   cursor: pointer;
 `;
-// Define un componente de entrada de búsqueda estilizado
+
 const SearchInput = styled.input`
   padding: 10px;
   border: 1px solid #000000;
@@ -61,7 +41,7 @@ const SearchInput = styled.input`
   height: 15px;
   box-shadow: 0 0 1px 0 #000000;
 `;
-// Define un contenedor de estilos para la tabla
+
 export const Styles = styled.div`
   padding: 0.1rem;
   margin-left: 0px;
@@ -96,7 +76,6 @@ export const Styles = styled.div`
   }
 `
 // Define a default UI for filtering
-// Define un filtro de columna por defecto
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
 }) {
@@ -112,7 +91,7 @@ function DefaultColumnFilter({
     />
   )
 }
-// Define un filtro de columna para selección
+
 function SelectColumnFilter({
   column: { filterValue, setFilter, preFilteredRows, id },
 }) {
@@ -143,7 +122,7 @@ function SelectColumnFilter({
     </FilterSelect>
   )
 }
-// Define una función personalizada para filtrar fechas en un rango
+
 export function dateBetweenFilterFn(rows, id, filterValues) {
   const sd = filterValues[0] ? new Date(filterValues[0]) : undefined;
   const ed = filterValues[1] ? new Date(filterValues[1]) : undefined;
@@ -171,7 +150,6 @@ export function dateBetweenFilterFn(rows, id, filterValues) {
   }
 }
 
-// Define un filtro de columna para rango de fechas
 export function DateRangeColumnFilter({
   column: { filterValue = [], preFilteredRows, setFilter, id }
 }) {
@@ -220,29 +198,24 @@ export function DateRangeColumnFilter({
     </div>
   );
 }
-// Define una función de filtro de texto difuso
 function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
 }
 fuzzyTextFilterFn.autoRemove = val => !val
-// Define un componente de tabla
 
-export const Table = ({ columns, data, handleIdClienteChange }) => {
+export const Table = ({ columns, data }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
-    
-    const [selectedClientId, setSelectedClientId] = useState(null);
 
-    const handleSelectClient = ( idCliente) => {
-      console.log(idCliente)
-    setSelectedClientId(idCliente);
-    handleIdClienteChange(idCliente)
+    const gotoDetalle = (idProyecto) => {
+      // navigate('/detalleClientes'); // Reemplaza con tu URL de destino
+      navigate(`/detalleProyecto/${idProyecto}`); // Usar el idCliente en la URL
     };
 
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, overridCliente the default text filter to use
+      // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
@@ -287,57 +260,48 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
       data,
       defaultColumn,
       filterTypes,
-      initialState: { pageIndex: 0 , pageSize: 3},
+      initialState: { pageIndex: 0 },
     },
     useFilters,
     usePagination
   )
+
     return (
       <>
         <table {...getTableProps()}>
           <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
                   {column.render('Header')}
                   <div>{column.canFilter ? column.render('Filter') : null}</div>
                 </th>
-              ))}
-            </tr>
-          ))}
+                ))}
+              </tr>
+            ))}
           </thead>
           <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
             prepareRow(row)
             return (
               <tr {...row.getRowProps()}>
-                 {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>
-                    {cell.column.id === 'select' ? (
-                      // Aquí agregamos la lógica para los checkboxes
-                      <input
-                        type="checkbox"
-                        checked={row.original.idCliente === selectedClientId}
-                        onChange={() => {
-                           handleSelectClient( row.original.idCliente)
-                            
-                        
-                          }}
-                          
-                      style={{ width: '30px',
-                      height: '30px',  // Establece la altura del checkbox para centrarlo verticalmente
-                      display: 'flex',
-                      alignItems: 'center', // Centra verticalmente
-                      justifyContent: 'center', margin: '0', // Establece el margen a 0 para eliminar cualquier espaciado no deseado
-                      padding: '0', }} 
-                      />
-                      
-                    ) : (
-                      cell.render('Cell')
-                    )}
-                  </td>
-                ))}
+                {row.cells.map(cell => {
+                  if (cell.column.id === 'detalle') {
+                    // En caso de que sea la columna "Detalle", renderiza un enlace
+                    return (
+                        <td
+                          {...cell.getCellProps()}
+                          style={{ cursor: 'pointer', color: 'blue' }}
+                          //onClick={gotoDetalle} ///Mandar el id de que toco
+                          onClick={() => gotoDetalle(row.original.idProyecto)} // Pasar idCliente
+                        >
+                          Ver más
+                        </td>
+                      );
+                    }
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                })}
               </tr>
             );
           })}
@@ -363,30 +327,33 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
             </strong>{' '}
           </span>{' '}
           <select
-  style={{ marginLeft: '10px', borderRadius: '5px' }}
-  value={pageSize}
-  onChange={(e) => {
-    setPageSize(Number(e.target.value));
-  }}
->
-  {[3, 10, 20, 50].map((size) => ( // Aquí define varias opciones de tamaño de página
-    <option key={size} value={size}>
-      Mostrar {size}
-    </option>
-  ))}
-</select>
-
+            style={{ marginLeft: '10px' , borderRadius: '5px' }} 
+            value={pageSize}
+            onChange={e => {
+              setPageSize(Number(e.target.value))
+            }}
+          >
+            {[10, 20, 30, 40, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Mostrar {pageSize}
+              </option>
+            ))}
+          </select>
         </div>
       </>
     )
   }
   
 
-// Define las columnas de la tabla
-export const columns = [
-    {
-    Header: 'Cédula Jurídica',
-    accessor: 'cedula',
+  export const columns = [
+  {
+    Header: 'ID Proyecto',
+    accessor: 'idProyecto',
+    filter: 'fuzzyText',
+  },
+  {
+    Header: 'Nombre',
+    accessor: 'nombre',
     filter: 'fuzzyText',
   },
   {
@@ -395,16 +362,26 @@ export const columns = [
     filter: 'fuzzyText',
   },
   {
-    Header: 'Nombre',
-    accessor: 'nombre',
+    Header: 'Nombre Cliente',
+    accessor: 'nombreCliente',
     filter: 'fuzzyText',
+  },
+  {
+    Header: 'Estado',
+    accessor: 'estado',
+    Filter: SelectColumnFilter,
+    filter: 'includes',
+  },
+  {
+    Header: 'Fecha de Ejecución',
+    accessor: 'fecha',
+    Filter: DateRangeColumnFilter,
+    filter: dateBetweenFilterFn,
   },
   
   {
-    Header: 'Seleccionar',
-    accessor: 'select',
+    Header: 'Detalle',
+    accessor: 'detalle',
     disableFilters: true,
   },
-  
 ];
-

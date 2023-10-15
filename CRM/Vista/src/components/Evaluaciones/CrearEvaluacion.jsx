@@ -22,7 +22,7 @@ export  const CrearEvaluacion = () => {
     const [tipoEvalaucion, setTipoEvaluacion] = useState("");
     const [fileInputKey, setFileInputKey] = useState('');
     //Esto va parte de la tabla que aun no esta creada
-    const [cedula, setCedula] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
+    const [IdCliente, setIdCliente] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     const [nombreCliente, setNombreCliente] = useState('');
     const [clientes, setClientes] = useState([]);//Meter los datos de los clientes ahi
     let navigate = useNavigate();
@@ -46,6 +46,8 @@ export  const CrearEvaluacion = () => {
               gotoMenu();
             }
           });
+
+          console.log(IdCliente)
         
     }
     const handleSearch = async () => { 
@@ -108,8 +110,9 @@ export  const CrearEvaluacion = () => {
     const handleClienteNombreChange = (event) => {
         setNombreCliente(event.target.value);
     };
-    const handleCedulaChange = (event) => {
-        setCedula(event.target.value);
+    const handleIdClienteChange = ( idCliente) => {
+        console.log(idCliente + 'Por aqui en handle')
+        setIdCliente(idCliente);
     };
     const handleFechaEjecucionChange = (date) => {
         setFechaEjecucion(date);
@@ -215,7 +218,7 @@ export  const CrearEvaluacion = () => {
                                 style={{ marginTop:  '100px' }} >
                                 <div style={{ display: 'flex' }}>
                                 <Styles> 
-                                <Table columns={columns} data={clientes} />
+                                <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange}/>
                                 </Styles>
                                 </div>     
                             </div>
