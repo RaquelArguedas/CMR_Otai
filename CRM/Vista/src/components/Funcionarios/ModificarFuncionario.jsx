@@ -49,6 +49,27 @@ export const ModificarFuncionario = () => {
             
             if (result.isConfirmed) {
               Swal.fire('El funcionario se ha modificado satisfactoriamente')
+
+              const formData = new FormData();
+              console.log("stuf")
+            const año = fechaNacimiento.getFullYear();
+            const mes = String(fechaNacimiento.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+            const dia = String(fechaNacimiento.getDate()).padStart(2, "0");
+              console.log(idFuncionario, nombre, apellido,fechaNacimiento, cedula, telefono, correo, estado, selectedOption)
+                formData.append('nombre', nombre);
+                formData.append('apellido', apellido);
+                formData.append('fechaNacimiento', `${año}-${mes}-${dia}`);
+                formData.append('cedula', cedula);
+                formData.append('numTelefono', telefono);
+                formData.append('correo', correo);
+                formData.append('estado', estado);
+                const opcionesSeleccionadasAnteriormente =selectedOption.map((opcion) => opcion.value);
+                console.log(opcionesSeleccionadasAnteriormente, typeof(opcionesSeleccionadasAnteriormente))
+                formData.append('perfilesIds', opcionesSeleccionadasAnteriormente);
+                const res = fetch(`${API}/updateFuncionario/${idFuncionario}`, {
+                    method: 'POST',
+                    body: formData
+                });
               gotoFuncionario();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
@@ -97,27 +118,19 @@ export const ModificarFuncionario = () => {
         const perfiles = await response.json();//resultado de la consulta
         console.log(perfiles)
        
-        const opcionesDesdeBackend = [
-            { id: 1, nombre: 'Opción 1' },
-            { id: 2, nombre: 'Opción 2' },
-            { id: 3, nombre: 'Opción 3' },
-            
-            { id: 4, nombre: 'Opción 4' },
-            { id: 5, nombre: 'Opción 5' },
-            { id: 6, nombre: 'Opción 6' },
-            { id: 7, nombre: 'Opción 7' },
-            { id: 8, nombre: 'Opción 8' },
-            { id: 9, nombre: 'Opción 9' },
-          ];
+        const opcionesDesdeBackend = perfiles;
             // Mapeamos las opciones desde el backend al formato que utiliza react-select
             const opcionesFormateadas = opcionesDesdeBackend.map((opcion) => ({
-                value: opcion.id,
-                label: opcion.nombre,
+                value: opcion[0],
+                label: opcion[1],
             }));
         
             setOptions(opcionesFormateadas);
           // Supongamos que las opciones seleccionadas anteriormente están en un array de IDs
-            const opcionesSeleccionadasAnteriormente = [1, 2,3]; // IDs de opciones seleccionadas
+            // data[9]
+            // const opcionesSeleccionadasAnteriormente = [1, 2,3]; // IDs de opciones seleccionadas
+
+            const opcionesSeleccionadasAnteriormente = data[9].map((opcion) => opcion[0]);
 
             // Mapeamos las IDs a objetos de opciones seleccionadas
             const opcionesSeleccionadas = opcionesSeleccionadasAnteriormente.map((value) =>

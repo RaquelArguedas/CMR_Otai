@@ -5,9 +5,12 @@ import { FiClipboard } from 'react-icons/fi';
 import { Navbar } from '../../Navbar/Navbar';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import '../../Clientes/CSSClientes/Clientes.css'
+import '../../Clientes/CSSClientes/Clientes.css';
 import { Table, columns, data, Styles } from './TablaPerfiles';  // Importa Table, columns y data desde Tabla.jsxy
+
+const API = "http://127.0.0.1:5000";
 export const Perfiles = () => {
+    const gotoPerfiles = () => { navigate('/perfiles'); }
     const [id, setIdPerfil] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     const [perfiles, setPerfiles] =  useState([]);;//Meter los datos de los clientes ahi
     const [deletedPerfiles, setDeletedPerfiles] = useState([]); // Almacena perfiles eliminados
@@ -18,6 +21,12 @@ export const Perfiles = () => {
       const updatedPerfiles = perfiles.filter((perfil) => perfil.idPerfil !== idPerfil);
       console.log(idPerfil)
       setPerfiles(updatedPerfiles);
+    };
+    const handleEliminarPerfil= async (event, idPerfil) => {
+      event.preventDefault();  
+      const res = fetch(`${API}/deletePerfil/${idPerfil}`, {
+          method: 'POST'
+      });
     };
     const handleModificarPerfil= async (event, idPerfil, nombre) => {
       event.preventDefault();  
@@ -38,7 +47,9 @@ export const Perfiles = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           const nombreNuevo = result.value; // Obtén el valor del input
-      
+          const res = fetch(`${API}/updatePerfil/${idPerfil}/${nombreNuevo}`, {
+              method: 'POST'
+          });
           if (nombreNuevo !== '') {
             if (nombreNuevo !== nombre) {
               // Actualiza el nombre en la lista de perfiles en el estado
@@ -60,6 +71,12 @@ export const Perfiles = () => {
     const handleIdPerfilChange = (event) => {
         setIdPerfil(event.target.value);
     };
+    const getPerfiles = async () => { 
+      const response = await fetch(`${API}/getPerfiles`); // cambiar por el id
+      const perfiles = await response.json();//en perfiles se guardan los perfiles que hay hasta el momento
+      //console.log('perfiles: ', perfiles)
+      return perfiles
+    };
     let navigate = useNavigate();
     const gotoCrearFuncionario = () => { navigate('/crearFuncionarios'); }
     
@@ -72,24 +89,14 @@ export const Perfiles = () => {
     const handleSearch = async () => { 
       //Obtener infromacion existente en la base de datos
       //A esto me refiero recuperar los datos de los funcionarios
-      setPerfiles( [
-          {
-            idPerfil: 1,
-            nombre: 'Evaluación A',
-            detalle: 'Ver más',
-          },
-          {
-            idPerfil: 2,
-            nombre: 'Evaluación B',
-            detalle: 'Ver más',
-          },
-          {
-            idPerfil: 3,
-            nombre: 'Evaluación C',
-            detalle: 'Ver más',
-          },
-          
-        ]);
+      const response = await fetch(`${API}/getPerfiles`); // cambiar por el id
+      const perfiles = await response.json();//en perfiles se guardan los perfiles que hay hasta el momento
+      const perfilesFormateadas = perfiles.map((perfil) => ({
+        idPerfil: perfil[0],
+        nombre: perfil[1],
+        detalle: 'Ver más',
+      }));
+      setPerfiles(perfilesFormateadas);
   }; 
   React.useEffect(() => {
       handleSearch()
@@ -111,21 +118,16 @@ export const Perfiles = () => {
             allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,
           }).then((result) => {
+            
             if (result.isConfirmed) {
               const nombre = result.value; // Obtener el valor del input
               if (nombre !== '') {
-                //Enviar al backend
-                const nuevoPerfil = {
-                  idPerfil: 4, // Asegúrate de generar un nuevo ID si es necesario
-                  nombre: nombre,
-                };
-        
-                // Crea una copia actualizada de la lista de perfiles y agrega el nuevo perfil.
-                const updatedPerfiles = [...perfiles, nuevoPerfil];
-                
-                // Actualiza el estado con la lista de perfiles actualizada.
-                setPerfiles(updatedPerfiles);
+                //Enviar al backend el nombre del perfil creado
+                const res = fetch(`${API}/createPerfil/${nombre}`, {
+                    method: 'POST'
+                });
                 Swal.fire('Se ingresó correctamente: ' + nombre);
+                window.location.reload();
               } else {
                 Swal.fire('Incorrecto', 'Debe ingresar el nombre', 'error');
               }

@@ -8,7 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import Select from 'react-select';
-
+const API = "http://127.0.0.1:5000";
 export const CrearUsuario = () => {
     let navigate = useNavigate();
     const gotoCliente = () => { navigate('/funcionarios'); }
@@ -72,16 +72,53 @@ export const CrearUsuario = () => {
         event.preventDefault();  
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
+
+        // en data se guarda si existe o no el correo
+        const res2 = await fetch(`${API}/existeUsuarioCorreo/${correo}`); 
+        const data = await res2.json();//resultado de la consulta
+        console.log(data)
+
+        if (data == 0){
+          const formData = new FormData();
+          console.log("stuf")
+          const año = fechaNacimiento.getFullYear();
+          const mes = String(fechaNacimiento.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+          const dia = String(fechaNacimiento.getDate()).padStart(2, "0");
+          const numeroAleatorio = Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000;
+          console.log(nombre, apellido,fechaNacimiento, cedula, telefono, correo)
+            formData.append('nombre', nombre);
+            formData.append('apellido', apellido);
+            formData.append('fechaNacimiento', `${año}-${mes}-${dia}`);
+            formData.append('cedula', cedula);
+            formData.append('numTelefono', telefono);
+            formData.append('correo', correo);
+            formData.append('contrasenha', numeroAleatorio);
+            const res = await fetch(`${API}/createUsuario`, {
+                method: 'POST',
+                body: formData
+            });
+            console.log("res:",res)
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
         //SE DEBE RECUPERAR LA CONTRASEÑA 
         Swal.fire({
             title: 'Confirmación',
-            html: 'El usuario se ha creado satisfactoriamente<br/><br/>La contraseña temporal es: 12345', // Cambia el texto según tus necesidades,
+            html: 'El usuario se ha creado satisfactoriamente<br/><br/>La contraseña temporal es:' + numeroAleatorio, // Cambia el texto según tus necesidades,
             icon: 'success',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
           });
+        }else{
+          Swal.fire({
+            title: 'Error',
+            html: 'El correo ya se encuentra ingresado', // Cambia el texto según tus necesidades,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
+            allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
+          });
+        }
+          
         
     };
    

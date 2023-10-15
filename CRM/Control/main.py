@@ -14,6 +14,7 @@ if __name__ == "__main__":
     #dao.createFuncionario('nombre222', 'apellido', '2023-10-10', 1212, 888888, 'correo', 1, '2023-10-10', [1])
     dao.updateFuncionario(6, 'nombreupdate', None, None, None, None, None, None, None, [2])
     print("MMMMMMMMMMMMMMMMMMMMMMMMMM")
+    dao.deletePerfil(25)
     # d = dao.getDoc(1)
     # l=list(d)
     # print(d)
@@ -68,13 +69,13 @@ if __name__ == "__main__":
     #     print("Evaluacion:", item.toList())
     # print("\n")
     # # Funcionario
-    for item in dao.funcionario:
-        print("Funcionario:", item.toList())
-    print("\n")
-    # # Perfil
-    # for item in dao.perfil:
-    #     print("Perfil:", item.toList())
+    # for item in dao.funcionario:
+    #     print("Funcionario:", item.toList())
     # print("\n")
+    # # Perfil
+    for item in dao.perfil:
+        print("Perfil:", item.toList())
+    print("\n")
     # # Porcentaje
     # for item in dao.porcentaje:
     #     print("Porcentaje:", item.toList())

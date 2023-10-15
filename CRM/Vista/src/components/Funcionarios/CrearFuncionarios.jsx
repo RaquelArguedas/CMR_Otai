@@ -8,7 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import Select from 'react-select';
-
+const API = "http://127.0.0.1:5000";
 export const CrearFuncionarios = () => {
     let navigate = useNavigate();
     const gotoCliente = () => { navigate('/funcionarios'); }
@@ -53,6 +53,10 @@ export const CrearFuncionarios = () => {
               const nombre = result.value; // Obtener el valor del input
               if (nombre !== '') {
                 //Enviar al backend
+                const res = fetch(`${API}/createPerfil/${nombre}`, {
+                  method: 'POST'
+              });
+                console.log(res)
                 //Recuperar opcion creada
                 setOptions((prevOptions) => [
                     ...prevOptions,
@@ -82,29 +86,39 @@ export const CrearFuncionarios = () => {
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
           }).then((result) => {
             if (result.isConfirmed) {
-              // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
+              const formData = new FormData();
+              console.log("stuf")
+            const año = fechaNacimiento.getFullYear();
+            const mes = String(fechaNacimiento.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+            const dia = String(fechaNacimiento.getDate()).padStart(2, "0");
+              console.log(nombre, apellido,fechaNacimiento, cedula, telefono, correo, selectedOption)
+                formData.append('nombre', nombre);
+                formData.append('apellido', apellido);
+                formData.append('fechaNacimiento', `${año}-${mes}-${dia}`);
+                formData.append('cedula', cedula);
+                formData.append('numTelefono', telefono);
+                formData.append('correo', correo);
+                const opcionesSeleccionadasAnteriormente =selectedOption.map((opcion) => opcion.value);
+                console.log(opcionesSeleccionadasAnteriormente, typeof(opcionesSeleccionadasAnteriormente))
+                formData.append('perfilesIds', opcionesSeleccionadasAnteriormente);
+                const res = fetch(`${API}/createFuncionario`, {
+                    method: 'POST',
+                    body: formData
+                });
               gotoCliente();
             }
           });
         
     };
+    
     const handleSearch = async () => {
-        const opcionesDesdeBackend = [
-            { id: 1, nombre: 'Opción 1' },
-            { id: 2, nombre: 'Opción 2' },
-            { id: 3, nombre: 'Opción 3' },
-            
-            { id: 4, nombre: 'Opción 4' },
-            { id: 5, nombre: 'Opción 5' },
-            { id: 6, nombre: 'Opción 6' },
-            { id: 7, nombre: 'Opción 7' },
-            { id: 8, nombre: 'Opción 8' },
-            { id: 9, nombre: 'Opción 9' },
-          ];
+        const response = await fetch(`${API}/getPerfiles`); // cambiar por el id
+        const perfiles = await response.json();//resultado de la consulta
+        const opcionesDesdeBackend = perfiles;
             // Mapeamos las opciones desde el backend al formato que utiliza react-select
             const opcionesFormateadas = opcionesDesdeBackend.map((opcion) => ({
-                value: opcion.id,
-                label: opcion.nombre,
+                value: opcion[0],
+                label: opcion[1],
             }));
         
             setOptions(opcionesFormateadas);

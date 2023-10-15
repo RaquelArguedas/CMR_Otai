@@ -215,17 +215,20 @@ def deleteEvaluacion(idEvaluacion):
 #CRUD Funcionario
 @app.route('/createFuncionario', methods=['POST'])
 def createFuncionario():
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')
+
     id = control.createFuncionario(
-        request.json['nombre'],
-        request.json['apellido'],
-        request.json['fechaNacimiento'],
-        request.json['cedula'],
-        request.json['numTelefono'],
-        request.json['correo'],
-        request.json['estado'],
-        request.json['fechaIngreso'],
-        request.json['perfil']
+        request.form.get('nombre'),
+        request.form.get('apellido'),
+        request.form.get('fechaNacimiento'),
+        request.form.get('cedula'),
+        request.form.get('numTelefono'),
+        request.form.get('correo'),
+        5,
+        fecha_actual,
+        [int(item) for item in (request.form.get('perfilesIds')).split(',')]
     )
+
     return jsonify(str(id))
 
 @app.route('/readFuncionario/<idFuncionario>', methods=['GET'])
@@ -235,20 +238,23 @@ def readFuncionario(idFuncionario):
         return jsonify("No existe")
     return jsonify(f.toList())
 
-@app.route('/updateFuncionario', methods=['POST'])
-def updateFuncionario():
+@app.route('/updateFuncionario/<idFuncionario>', methods=['POST'])
+def updateFuncionario(idFuncionario):
+    print("update", type(request.form.get('perfilesIds')),request.form.get('perfilesIds'))
+
     id = control.updateFuncionario(
-        request.json['idFuncionario'],
-        request.json['nombre'],
-        request.json['apellido'],
-        request.json['fechaNacimiento'],
-        request.json['cedula'],
-        request.json['numTelefono'],
-        request.json['correo'],
-        request.json['estado'],
-        request.json['fechaIngreso'],
-        request.json['perfil']
+        int(idFuncionario),
+        request.form.get('nombre'),
+        request.form.get('apellido'),
+        request.form.get('fechaNacimiento'),
+        request.form.get('cedula'),
+        request.form.get('numTelefono'),
+        request.form.get('correo'),
+        int(request.form.get('estado')),
+        None,
+        [int(item) for item in (request.form.get('perfilesIds')).split(',')]
     )
+    print(id)
     return jsonify(str(id))
 
 @app.route('/deleteFuncionario/<idFuncionario>', methods=['GET'])
@@ -277,9 +283,9 @@ def getPerfiles():
     return jsonify(lista)
 
 #CRUD Perfil
-@app.route('/createPerfil', methods=['POST'])
-def createPerfil():
-    id = control.createPerfil(request.json['nombre'])
+@app.route('/createPerfil/<nombre>', methods=['POST'])
+def createPerfil(nombre):
+    id = control.createPerfil(nombre)
     return jsonify(str(id))
 
 @app.route('/readPerfil/<idPerfil>', methods=['GET'])
@@ -289,14 +295,18 @@ def readPerfil(idPerfil):
         return jsonify("No existe")
     return jsonify(p.toList())
 
-@app.route('/updatePerfil', methods=['POST'])
-def updatePerfil():
-    id = control.updatePerfil(
-        request.json['idPerfil'],
-        request.json['nombre']
-    )
+@app.route('/updatePerfil/<idPerfil>/<nombre>', methods=['POST'])
+def updatePerfil(idPerfil,nombre):
+    print(idPerfil, nombre)
+    id = control.updatePerfil( int(idPerfil), nombre)
+    print(id)
     return jsonify(str(id))
 
+@app.route('/deletePerfil/<idPerfil>', methods=['POST'])
+def deletePerfil(idPerfil):
+    id = control.deletePerfil(int(idPerfil))
+    print(id)
+    return jsonify(str(id))
 
 #CRUD Porcentaje
 @app.route('/createPorcentaje', methods=['POST'])
@@ -356,6 +366,23 @@ def readProyecto(idProyecto):
         return jsonify("No existe")
     return jsonify(p.toList())
 
+@app.route('/getServiciosProyecto/<idProyecto>', methods=['GET'])
+def getServiciosProyecto(idProyecto):
+    capacitaciones = control.capacitacion
+    evaluaciones = control.evaluacion
+    lista = []
+
+    for cap in capacitaciones:
+        if cap.idProyecto == idProyecto:
+            lista += [cap.toList()]
+    
+    for eval in evaluaciones:
+        if eval.idProyecto == idProyecto:
+            lista += [eval.toList()]
+        
+    print(lista)
+    return jsonify(lista)
+
 @app.route('/updateProyecto', methods=['POST'])
 def updateProyecto():
     id = control.updateProyecto(
@@ -399,6 +426,20 @@ def updateTipoCapacitacion():
     )
     return jsonify(str(id))
 
+@app.route('/getTipoCapacitacion', methods=['GET'])
+def getTipoCapacitacion():
+    tiposCap = control.tipoCapacitacion
+    lista = []
+    for tipo in tiposCap:
+        lista += [tipo.toList()]
+    print(lista)
+    return jsonify(lista)
+
+@app.route('/deleteTipoCapacitacion/<idTipo>', methods=['POST'])
+def deleteTipoCapacitacion(idTipo):
+    id = control.deleteTipoCapacitacion(int(idTipo))
+    print(id)
+    return jsonify(str(id))
 
 #CRUD TipoEvaluacion
 @app.route('/createTipoEvaluacion', methods=['POST'])
@@ -422,22 +463,50 @@ def updateTipoEvaluacion():
     )
     return jsonify(str(id))
 
+@app.route('/getTipoEvaluaciones', methods=['GET'])
+def getTipoEvaluaciones():
+    tiposEval = control.tipoEvaluacion
+    lista = []
+    for tipo in tiposEval:
+        lista += [tipo.toList()]
+    print(lista)
+    return jsonify(lista)
+
+@app.route('/deleteTipoEvaluacion/<idTipo>', methods=['POST'])
+def deleteTipoEvaluacion(idTipo):
+    id = control.deleteTipoEvaluacion(int(idTipo))
+    print(id)
+    return jsonify(str(id))
 
 #CRUD Usuario
 @app.route('/createUsuario', methods=['POST'])
 def createUsuario():
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')
+    usuarios = control.usuario
+    for user in usuarios:
+        if user.correo == request.form.get('correo'):
+            return jsonify(str("Correo existente"))
     id = control.createUsuario(
-        request.json['nombre'],
-        request.json['apellido'],
-        request.json['fechaNacimiento'],
-        request.json['cedula'],
-        request.json['numTelefono'],
-        request.json['correo'],
-        request.json['fechaIngreso'],
-        request.json['contrasenha'],
-        request.json['estado']
+        request.form.get('nombre'),
+        request.form.get('apellido'),
+        request.form.get('fechaNacimiento'),
+        request.form.get('cedula'),
+        request.form.get('numTelefono'),
+        request.form.get('correo'),
+        fecha_actual,
+        request.form.get('contrasenha'),
+        5
     )
-    return jsonify(str(id))
+    print("id create usuario",id)
+    return str(id)
+
+@app.route('/existeUsuarioCorreo/<correo>', methods=['GET'])
+def existeUsuarioCorreo(correo):
+    usuarios = control.usuario
+    for user in usuarios:
+        if user.correo == correo:
+            return jsonify(str(1))
+    return jsonify(str(0))
 
 @app.route('/readUsuario/<idUsuario>', methods=['GET'])
 def readUsuario(idUsuario):
@@ -446,21 +515,32 @@ def readUsuario(idUsuario):
         return jsonify("No existe")
     return jsonify(u.toList())
 
-@app.route('/updateUsuario', methods=['POST'])
-def updateUsuario():
+@app.route('/updateUsuario/<idUsuario>', methods=['POST'])
+def updateUsuario(idUsuario):
     id = control.updateUsuario(
-        request.json['idUsuario'],
-        request.json['nombre'],
-        request.json['apellido'],
-        request.json['fechaNacimiento'],
-        request.json['cedula'],
-        request.json['numTelefono'],
-        request.json['correo'],
-        request.json['fechaIngreso'],
-        request.json['contrasenha'],
-        request.json['estado']
+        int(idUsuario),
+        request.form.get('nombre'),
+        request.form.get('apellido'),
+        request.form.get('fechaNacimiento'),
+        request.form.get('cedula'),
+        request.form.get('numTelefono'),
+        request.form.get('correo'),
+        None,
+        request.form.get('contrasenha'),
+        None
     )
+    print(id)
     return jsonify(str(id))
+
+@app.route('/getCorreosUsuarios', methods=['GET'])
+def getCorreosUsuarios():
+    usuarios = control.usuario
+    lista = []
+    for user in usuarios:
+        lista += [user.correo]
+
+    print(lista)
+    return jsonify(lista)
 
 @app.route('/deleteUsuario/<idUsuario>', methods=['POST'])
 def deleteUsuario(idUsuario):
@@ -517,6 +597,52 @@ def blop(nombreDoc, idMongo):
     print("AAAAAAAAAAAAAAAAAAAAA", nombreDoc, idMongo)
     control.download(idMongo)
     return jsonify("Done")
+
+#getProyectos
+@app.route('/getProyectos', methods=['GET'])
+def getProyectos():
+    proyectos = control.proyecto
+    lista = []
+    for pro in proyectos:
+        lista += [pro.toList()]
+    print(lista)
+    return jsonify(lista)
+
+#getEvaluaciones
+@app.route('/getEvaluaciones', methods=['GET'])
+def getEvaluaciones():
+    evaluaciones = control.evaluacion
+    lista = []
+    for eval in evaluaciones:
+        lista += [eval.toList()]
+    print(lista)
+    return jsonify(lista)
+
+#getCapacitaciones
+@app.route('/getCapacitaciones', methods=['GET'])
+def getCapacitaciones():
+    capacitaciones = control.capacitacion
+    lista = []
+    for cap in capacitaciones:
+        lista += [cap.toList()]
+    print(lista)
+    return jsonify(lista)
+
+#getServicios
+@app.route('/getServicios', methods=['GET'])
+def getServicios():
+    capacitaciones = control.capacitacion
+    evaluaciones = control.evaluacion
+    lista = []
+
+    for cap in capacitaciones:
+        lista += [cap.toList()]
+    
+    for eval in evaluaciones:
+        lista += [eval.toList()]
+        
+    print(lista)
+    return jsonify(lista)
 
 # inicia el servidor
 if __name__ == "__main__":

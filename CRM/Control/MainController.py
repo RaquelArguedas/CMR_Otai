@@ -378,6 +378,7 @@ class SingletonDAO(metaclass=SingletonMeta):
                 perfiles = []
                 self.executeCommit(f"delete from PerfilXFuncionario where idFuncionario = {f.idFuncionario}")
                 for pId in perfilesIds:
+                    print("pId:", pId)
                     p = self.readPerfil(int(pId))
                     if p is not None:
                         perfiles += [p]
@@ -414,6 +415,17 @@ class SingletonDAO(metaclass=SingletonMeta):
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
             p.editar(nombre)
             self.executeCommit(f"EXEC updatePerfil {p.idPerfil}, {p.nombre}")
+        else:
+            return -1
+        
+    def deletePerfil(self, idPerfil):
+        p = self.readPerfil(idPerfil)
+        if p != None:
+            #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            for p in self.perfil:
+                if p.idPerfil == idPerfil:
+                    self.perfil.remove(p)
+            self.executeCommit(f"DELETE FROM Perfil WHERE idPerfil = {p.idPerfil}")
         else:
             return -1
     
@@ -468,6 +480,17 @@ class SingletonDAO(metaclass=SingletonMeta):
             self.executeCommit(f"EXEC updateTipoCapacitacion {t.idTipoCapacitacion}, '{t.nombre}'")
         else:
             return -1
+        
+    def deleteTipoCapacitacion(self, idTipo):
+        p = self.readTipoCapacitacion(idTipo)
+        if p != None:
+            #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            for p in self.tipoCapacitacion:
+                if p.idTipoCapacitacion == idTipo:
+                    self.tipoCapacitacion.remove(p)
+            self.executeCommit(f"DELETE FROM TipoCapacitacion WHERE idTipo = {p.idTipo}")
+        else:
+            return -1
 
     #CRUDS TipoEvaluacion
     def createTipoEvaluacion(self, nombre, precio):
@@ -519,6 +542,17 @@ class SingletonDAO(metaclass=SingletonMeta):
             u.editar(nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, fechaIngreso, contrasenha, estado)
             self.executeCommit(f"EXEC updateUsuario {u.idUsuario}, '{u.nombre}', '{u.apellido}', '{u.fechaNacimiento}', {u.cedula}, {u.numTelefono}, '{u.correo}', '{u.fechaIngreso}', '{u.contrasenha}', {u.estado.value}")
         else:    
+            return -1
+
+    def deleteTipoEvaluacion(self, idTipo):
+        p = self.readTipoEvaluacion(idTipo)
+        if p != None:
+            #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            for p in self.tipoEvaluacion:
+                if p.idTipoEvaluacion == idTipo:
+                    self.tipoEvaluacion.remove(p)
+            self.executeCommit(f"DELETE FROM TipoEvaluacion WHERE idTipo = {p.idTipo}")
+        else:
             return -1
 
     #Consultar papelera

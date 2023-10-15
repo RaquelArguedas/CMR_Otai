@@ -6,7 +6,7 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import '../Clientes/CSSClientes/Clientes.css'
 import Swal from 'sweetalert2';
-
+const API = "http://127.0.0.1:5000";
 export const DetalleMiCuenta = () => {
         let navigate = useNavigate();
         const gotoCliente = () => { navigate('/clientes'); }
@@ -25,15 +25,34 @@ export const DetalleMiCuenta = () => {
     
         const handleSearch = async () => {
             //Buscamos la informacion del backend
+            const res = await fetch(`${API}/readUsuario/${1}`); // cambiar por el id
+            const data = await res.json();//resultado de la consulta
+            console.log(data)
+
+            setidFuncionario(data[0])
+            setNombre(data[1] + " " + data[2])
+            setCedula(data[4])
+            setfechaNacimineto(data[3])
+            setfechaIngreso(data[8])
+            setTelefono(data[5])
+            setCorreo(data[6])
+
+            // ELIMINADO = 1
+            // EN_PROGRESO = 2
+            // SOLICITADO = 3
+            // EN_PLANEACION = 4
+            // ACTIVO = 5
+            // INACTIVO = 6
+            var est = ''
+            if (data[7] === 1) { est = 'Eliminado' }
+            if (data[7] === 2) { est = 'En progreso' }
+            if (data[7] === 3) { est = 'Solicitado' }
+            if (data[7] === 4) { est = 'En planeacion' }
+            if (data[7] === 5) { est = 'Activo' }
+            if (data[7] === 6) { est = 'Inactivo' }
+            setEstado(est)
             
-            setidFuncionario('E1231')
-            setNombre('Ministerio de salud')
-            setCedula('123129131')
-            setfechaNacimineto('20/09/2023')
-            setfechaIngreso('15/10/2005')
-            setTelefono('25486963')
-            setCorreo('ministeriosalud@gmail.com')
-            setEstado('Activo')
+            
             
         };
         const Title = styled.h1`
