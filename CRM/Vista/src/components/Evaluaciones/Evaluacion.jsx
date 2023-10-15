@@ -18,7 +18,7 @@ const Title = styled.h1`
 `;
 
 
-export function Evaluacion() {
+export const Evaluacion = () => {
   const [cedula, setCedula] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     const [funcionarios, setFuncionarios] = useState([[]]);//Meter los datos de los clientes ahi
     //Esto es para enviarlo a detalles
@@ -27,7 +27,7 @@ export function Evaluacion() {
     };
     let navigate = useNavigate();
     const gotoCrearFuncionario = () => { navigate('/crearEvaluacion'); }
-    const gotoPerfiles = () => { navigate('/perfiles')}
+    const gotoTiposEvaluaciones = () => { navigate('/tiposEvaluaciones')}
    
     const Title = styled.h1`
     font-size: 24px;
@@ -41,39 +41,39 @@ export function Evaluacion() {
     //A esto me refiero recuperar los datos de los funcionarios
     setFuncionarios( [
         {
-          cedula: 12517,
-          idFuncionario: 1,
+          cliente: 12517,
+          idEvaluacion: 'EVAL001',
           nombre: 'Evaluación A',
-          telefono: 'Activa',
-          correo: 'prueba@gmail.com',
+          estado: 'Activa',
+          tipoE: 'accesibilidad',
           detalle: 'Ver más',
         },
-        {cedula: 12517,
-          idFuncionario: 2,
+        {cliente: 12517,
+          idEvaluacion: 'EVAL002',
           nombre: 'Evaluación B',
-          telefono: 'Inactiva',
-          correo: 'quePereza@gmail.com',
+          estado: 'Inactiva',
+          tipoE: 'accesibilidad',
           detalle: 'Ver más',
         },
-        {cedula: 2518,
-          idFuncionario: 3,
+        {cliente: 2518,
+          idEvaluacion: 3,
           nombre: 'Evaluación C',
-          telefono: 'Activa',
-          correo: 'tel@gmail.com',
+          estado: 'Activa',
+          tipoE: 'accesibilidad',
           detalle: 'Ver más',
         },
-        {cedula: 15745,
-          idFuncionario: 4,
+        {cliente: 15745,
+          idEvaluacion: 4,
           nombre: 'Evaluación D',
-          telefono: 'Inactiva',
-          correo: 'ahh@gmail.com',
+          estado: 'Inactiva',
+          tipoE: 'accesibilidad',
           detalle: 'Ver más',
         },
-        {cedula: 214841,
-          idFuncionario: 5,
+        {cliente: 214841,
+          idEvaluacion: 5,
           nombre: 'Evaluación E',
-          telefono: 'Activa',
-          correo: 'ser@gmail.com',
+          estado: 'Inactiva',
+          tipoE: 'accesibilidad',
           detalle: 'Ver más',
         },
         
@@ -102,7 +102,7 @@ export function Evaluacion() {
                         Crear<br />Evaluación
                     </div>
                  </button>
-                 <button  className="button3" style={{marginLeft: '140px', height: '50px', width: '180px'}} onClick={gotoPerfiles}>
+                 <button  className="button3" style={{marginLeft: '140px', height: '50px', width: '180px'}} onClick={gotoTiposEvaluaciones}>
                      <FiClipboard style={{
                      fontSize: '25px',
                      color: '#12959E', // Tamaño del icono

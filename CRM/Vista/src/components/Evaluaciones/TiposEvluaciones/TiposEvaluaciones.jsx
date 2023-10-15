@@ -5,13 +5,14 @@ import Swal from 'sweetalert2';
 import { Navbar } from '../../Navbar/Navbar';
 import styled from 'styled-components';
 import '../../Clientes/CSSClientes/Clientes.css'
+import { Table, columns, data, Styles } from './TablaTiposEvaluaciones'; 
 export const TiposEvaluaciones = () => {
-    const [cedula, setCedula] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
+    const [idTiposEvaluaciones, setidTiposEvaluaciones] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
     //Esto es para enviarlo a detalles
-    const handleCedulaChange = (event) => {
-        setCedula(event.target.value);
+    const handleidTiposEvaluacionesChange = (event) => {
+        setidTiposEvaluaciones(event.target.value);
     };
-    const [clientes, setClientes] = useState([[]]);//Meter los datos de los clientes ahi
+    const [tiposEvaluaciones, setTiposEvaluaciones] = useState([[]]);//Meter los datos de los TiposEvaluaciones ahi
     let navigate = useNavigate();
     const gotoCrearTipo = () => { navigate('/crearTiposEvaluaciones'); }
     const gotoTipoEvaluacion = () => { navigate('/tiposEvaluaciones'); }
@@ -24,9 +25,30 @@ export const TiposEvaluaciones = () => {
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
         //A esto me refiero recuperar los datos del cliente
-        setClientes([[]]);
+        setTiposEvaluaciones( [
+            {
+              idTipoEvaluacion: 1,
+              costo:30000,
+              nombre: 'Evaluación A',
+            },
+            {
+              idTipoEvaluacion: 2,
+              costo:30000,
+              nombre: 'Evaluación B',
+            },
+            {
+              idTipoEvaluacion: 3,
+              costo:30000,
+              nombre: 'Evaluación C',
+            },
+            
+          ]);
     };
-    const handleDelete = async () =>{
+    React.useEffect(() => {
+        handleSearch()
+    }, []);
+    const handleDelete =async (event, idTipoEvaluacion) =>{
+        event.preventDefault();
         Swal.fire({
             title: '¿Está seguro que desea eliminar el tipo evaluación seleccionado?',
             showDenyButton: true,
@@ -38,8 +60,11 @@ export const TiposEvaluaciones = () => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
+                const updatedTipos = tiposEvaluaciones.filter((tiposEvaluaciones) => tiposEvaluaciones.idTipoEvaluacion !== idTipoEvaluacion);
+                setTiposEvaluaciones(updatedTipos);
               Swal.fire('El tipo de evaluación se ha eliminado satisfactoriamente')
-              gotoTipoEvaluacion();
+              //Aqui se debe enviar a eliminar
+            //   gotoTipoEvaluacion();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }
@@ -65,9 +90,15 @@ export const TiposEvaluaciones = () => {
                     marginLeft: '20px',
                     }} />Crear Tipo Evaluación
                 </button>
+                <div style={{ display: 'flex' , marginLeft: '-220px' }}>
+                <Styles> 
+                  <Table columns={columns} data={tiposEvaluaciones} handleDelete={handleDelete}/>
+                </Styles>
+                </div>
+
+
             </div>
-            {/* Aqui ponemos la tabla de los clientes, falta por hacer */}
-            
+           
         </div>
 
 

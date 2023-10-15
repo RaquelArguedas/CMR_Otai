@@ -1,17 +1,22 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../../Navbar/Navbar';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import '../../Clientes/CSSClientes/Clientes.css'
 import { AiOutlinePlusCircle } from 'react-icons/ai';
+
+
+const API = "http://127.0.0.1:5000";
+
+
 export const ModficarTipoEvaluacion = () => {
     let navigate = useNavigate();
     const gotoTipoEvaluacion = () => { navigate('/tiposEvaluaciones'); }
 
     const [nombre, setNombre] = useState('');
     const [costo, setCosto] = useState('');
-   
+    const { idTipoEvaluacion } = useParams(); //Para buscar
     const handleSubmit = async (event) => {
         event.preventDefault();  
         //Es para enviar informacion al backend
@@ -37,8 +42,12 @@ export const ModficarTipoEvaluacion = () => {
         
     };
     const handleSearch = async () => { 
-        setNombre('Accesible')
-        setCosto('100000')
+        const res = await fetch(`${API}/readTipoEvaluacion/${idTipoEvaluacion}`); // cambiar por el id
+        const data = await res.json();//resultado de la consulta
+        console.log(data)
+
+        setNombre(data[1])
+        setCosto(data[2])
     }
     React.useEffect(() => {
         handleSearch()

@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import styled  from 'styled-components';
 import './DetalleEvaluacion.css';
@@ -9,12 +9,15 @@ import Swal from 'sweetalert2';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
+const API = "http://127.0.0.1:5000";
 export const DetalleEvaluacion = () => {
     let navigate = useNavigate();
-    const gotoModificarEvaluacion = () => { navigate('/modificarEvaluacion'); }
+    
+    const { idEvaluacion } = useParams();
+    const gotoModificarEvaluacion = () => { navigate(`/modificarEvaluacion/${idEvaluacion}`); }
     const gotoEvaluacion = () => { navigate('/'); }
 
-    const [idevaluacion, setidEvaluacion] = useState('');
+    const [idevaluacione, setidEvaluacion] = useState('');
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [fechaEjecucion, setFechaEjecucion] = useState('');
@@ -34,18 +37,26 @@ export const DetalleEvaluacion = () => {
     
     const handleSearch = async () => {
         //Buscamos la informacion del backend
-        
-        setidEvaluacion('E1231')
-        setNombre('Evaluacion para el Ministerio de salud')
-        setDescripcion('Evaluacion de accesibilidad')
-        setFechaEjecucion('20/09/2023')
+        const res = await fetch(`${API}/readEvaluacion/${idEvaluacion}`); // cambiar por el id
+        const data = await res.json();//resultado de la consulta
+        const resp = await fetch(`${API}/readCliente/${data[11]}`); // cambiar por el id
+        const datac = await resp.json();//resultado de la consulta
+        const respu = await fetch(`${API}/readCliente/${data[11]}`); // cambiar por el id
+        const datap = await respu.json();//resultado de la consulta
+        console.log(data)
+        console.log(datac)
+        console.log(datap)
+        setidEvaluacion(data[1])
+        setNombre(data[2])
+        setDescripcion(data[3])
+        setFechaEjecucion(data[4])
         setTipoEvaluacion('Automatica')
         
         setEstado('En proceso')
-        setCosto(230000)
-        setCedula('123129131')
-        setNombreCliente('Ministerio de hacienda')
-        setNombreProyecto('')// Si es nulo no se mete 
+        setCosto(data[9])
+        setCedula(datac[1])
+        setNombreCliente(datac[2])
+        setNombreProyecto(datap[2])// Si es nulo no se mete 
     };
 
     const handleDelete = async () =>{
@@ -61,6 +72,7 @@ export const DetalleEvaluacion = () => {
             
             if (result.isConfirmed) {
               Swal.fire('La evaluación se ha eliminado satisfactoriamente')
+              const res = fetch(`${API}/deleteEvaluacion/${idEvaluacion}`); // cambiar por el id
               gotoEvaluacion();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
@@ -90,7 +102,7 @@ export const DetalleEvaluacion = () => {
                     </div>
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
                         <label  for="idEvlabel" class="form-label">ID Evaluación:</label>
-                        <label  style={{ marginLeft: '130px' }}for="idevaluacion" class="form-label">{idevaluacion}</label>
+                        <label  style={{ marginLeft: '130px' }}for="idevaluacion" class="form-label">{idEvaluacion}</label>
                     </div>
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
                         <label for="namelabel" class="form-label">Nombre:</label>
@@ -146,7 +158,7 @@ export const DetalleEvaluacion = () => {
                     {nombreProyecto !== '' && (
                         <div class="mb-3" style={{ marginBottom: '30px' }}>
                             <label for="idEvLave" class="form-label">Proyecto asociado:</label>
-                            <label for="idevaluacion" class="form-label">{nombreProyecto}</label>
+                            <label style={{ marginLeft: '95px' }} for="idevaluacion" class="form-label">{nombreProyecto}</label>
                         </div>
                         )}
                         <div className="mb-3" style={{ marginTop: '100px', display: 'flex' }}>

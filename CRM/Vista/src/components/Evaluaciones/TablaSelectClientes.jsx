@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
@@ -227,13 +227,15 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
 
-export const Table = ({ columns, data }) => {
+export const Table = ({ columns, data, handleIdClienteChange }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
-
+    
     const [selectedClientId, setSelectedClientId] = useState(null);
 
-    const handleSelectClient = (clientId) => {
-    setSelectedClientId(clientId);
+    const handleSelectClient = ( idCliente) => {
+      console.log(idCliente)
+    setSelectedClientId(idCliente);
+    handleIdClienteChange(idCliente)
     };
 
   const filterTypes = React.useMemo(
@@ -285,12 +287,11 @@ export const Table = ({ columns, data }) => {
       data,
       defaultColumn,
       filterTypes,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: 0 , pageSize: 3},
     },
     useFilters,
     usePagination
   )
-  
     return (
       <>
         <table {...getTableProps()}>
@@ -318,8 +319,20 @@ export const Table = ({ columns, data }) => {
                       <input
                         type="checkbox"
                         checked={row.original.idCliente === selectedClientId}
-                        onChange={() => handleSelectClient(row.original.idCliente)}
+                        onChange={() => {
+                           handleSelectClient( row.original.idCliente)
+                            
+                        
+                          }}
+                          
+                      style={{ width: '30px',
+                      height: '30px',  // Establece la altura del checkbox para centrarlo verticalmente
+                      display: 'flex',
+                      alignItems: 'center', // Centra verticalmente
+                      justifyContent: 'center', margin: '0', // Establece el margen a 0 para eliminar cualquier espaciado no deseado
+                      padding: '0', }} 
                       />
+                      
                     ) : (
                       cell.render('Cell')
                     )}
@@ -350,18 +363,19 @@ export const Table = ({ columns, data }) => {
             </strong>{' '}
           </span>{' '}
           <select
-            style={{ marginLeft: '10px' , borderRadius: '5px' }} 
-            value={pageSize}
-            onChange={e => {
-              setPageSize(Number(e.target.value))
-            }}
-          >
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                Mostrar {pageSize}
-              </option>
-            ))}
-          </select>
+  style={{ marginLeft: '10px', borderRadius: '5px' }}
+  value={pageSize}
+  onChange={(e) => {
+    setPageSize(Number(e.target.value));
+  }}
+>
+  {[3, 10, 20, 50].map((size) => ( // Aquí define varias opciones de tamaño de página
+    <option key={size} value={size}>
+      Mostrar {size}
+    </option>
+  ))}
+</select>
+
         </div>
       </>
     )

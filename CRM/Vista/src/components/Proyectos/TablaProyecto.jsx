@@ -204,13 +204,12 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 
 export const Table = ({ columns, data }) => {
-  const navigate = useNavigate(); // Usar useNavigate aquí
+    const navigate = useNavigate(); // Usar useNavigate aquí
 
-  const gotoDetalle = (idEvaluacion) => {
-    // navigate('/detalleClientes'); // Reemplaza con tu URL de destino
-    navigate(`/detalleEvaluacion/${idEvaluacion}`); // Usar el idCliente en la URL
-  };
-
+    const gotoDetalle = (idProyecto) => {
+      // navigate('/detalleClientes'); // Reemplaza con tu URL de destino
+      navigate(`/detalleProyecto/${idProyecto}`); // Usar el idCliente en la URL
+    };
 
   const filterTypes = React.useMemo(
     () => ({
@@ -274,20 +273,20 @@ export const Table = ({ columns, data }) => {
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
-                 <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
-                 {column.render('Header')}
-                 <div>{column.canFilter ? column.render('Filter') : null}</div>
-               </th>
+                  <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
+                  {column.render('Header')}
+                  <div>{column.canFilter ? column.render('Filter') : null}</div>
+                </th>
                 ))}
               </tr>
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()}>
-                   {row.cells.map(cell => {
+          {page.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
                   if (cell.column.id === 'detalle') {
                     // En caso de que sea la columna "Detalle", renderiza un enlace
                     return (
@@ -295,18 +294,17 @@ export const Table = ({ columns, data }) => {
                           {...cell.getCellProps()}
                           style={{ cursor: 'pointer', color: 'blue' }}
                           //onClick={gotoDetalle} ///Mandar el id de que toco
-                          onClick={() => gotoDetalle(row.original.idEvaluacion)} // Pasar idCliente
+                          onClick={() => gotoDetalle(row.original.idProyecto)} // Pasar idCliente
                         >
                           Ver más
                         </td>
                       );
                     }
-
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  })}
-                </tr>
-              )
-            })}
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                })}
+              </tr>
+            );
+          })}
           </tbody>
         </table>
         <div className="pagination"> 
@@ -349,8 +347,8 @@ export const Table = ({ columns, data }) => {
 
   export const columns = [
   {
-    Header: 'ID Evaluación',
-    accessor: 'idEvaluacion',
+    Header: 'ID Proyecto',
+    accessor: 'idProyecto',
     filter: 'fuzzyText',
   },
   {
@@ -359,8 +357,13 @@ export const Table = ({ columns, data }) => {
     filter: 'fuzzyText',
   },
   {
-    Header: 'Cliente',
-    accessor: 'cliente',
+    Header: 'ID Cliente',
+    accessor: 'idCliente',
+    filter: 'fuzzyText',
+  },
+  {
+    Header: 'Nombre Cliente',
+    accessor: 'nombreCliente',
     filter: 'fuzzyText',
   },
   {
@@ -375,12 +378,7 @@ export const Table = ({ columns, data }) => {
     Filter: DateRangeColumnFilter,
     filter: dateBetweenFilterFn,
   },
-  {
-    Header: 'Tipo de Evaluación',
-    accessor: 'tipoE',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-  },
+  
   {
     Header: 'Detalle',
     accessor: 'detalle',

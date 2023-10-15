@@ -1,10 +1,22 @@
-import styled, { keyframes } from 'styled-components';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { BsFillPencilFill } from 'react-icons/bs';
+import { RiDeleteBinLine } from 'react-icons/ri';
+import styled, { keyframes } from 'styled-components';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
-import React, { useState, useEffect, Fragment } from 'react';
 import  { matchSorter } from 'match-sorter'
 
-const FilterSelect = styled.select`
+
+// Define un componente de título estilizado
+export const Title = styled.h1`
+  font-size: 24px;
+  color: #000000;
+  margin-bottom: 50px;
+  margin-top: 25px;
+`;
+// Define un componente de select estilizado para filtros
+ const FilterSelect = styled.select`
   width: 100px;
   height: 35px;
   background-color: #FFFFFF;
@@ -17,7 +29,18 @@ const FilterSelect = styled.select`
   margin-left: 0px;
   box-shadow: 0 0 1px 0 #000000;
 `;
-
+// Define un componente de botón estilizado
+export const Button = styled.button`
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  align-items: center; 
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: #000000;
+  font-size: 16px;
+  cursor: pointer;
+`;
+// Define otro componente de botón estilizado para la tabla
 const ButtonTbl = styled.button`
   background-color: #ffffff;
   border: 1px solid #000000;
@@ -28,7 +51,7 @@ const ButtonTbl = styled.button`
   font-size: 12px;
   cursor: pointer;
 `;
-
+// Define un componente de entrada de búsqueda estilizado
 const SearchInput = styled.input`
   padding: 10px;
   border: 1px solid #000000;
@@ -41,7 +64,7 @@ const SearchInput = styled.input`
   height: 15px;
   box-shadow: 0 0 1px 0 #000000;
 `;
-
+// Define un contenedor de estilos para la tabla
 export const Styles = styled.div`
   padding: 0.1rem;
   margin-left: 0px;
@@ -76,6 +99,7 @@ export const Styles = styled.div`
   }
 `
 // Define a default UI for filtering
+// Define un filtro de columna por defecto
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
 }) {
@@ -91,7 +115,7 @@ function DefaultColumnFilter({
     />
   )
 }
-
+// Define un filtro de columna para selección
 function SelectColumnFilter({
   column: { filterValue, setFilter, preFilteredRows, id },
 }) {
@@ -122,7 +146,7 @@ function SelectColumnFilter({
     </FilterSelect>
   )
 }
-
+// Define una función personalizada para filtrar fechas en un rango
 export function dateBetweenFilterFn(rows, id, filterValues) {
   const sd = filterValues[0] ? new Date(filterValues[0]) : undefined;
   const ed = filterValues[1] ? new Date(filterValues[1]) : undefined;
@@ -150,6 +174,7 @@ export function dateBetweenFilterFn(rows, id, filterValues) {
   }
 }
 
+// Define un filtro de columna para rango de fechas
 export function DateRangeColumnFilter({
   column: { filterValue = [], preFilteredRows, setFilter, id }
 }) {
@@ -198,25 +223,24 @@ export function DateRangeColumnFilter({
     </div>
   );
 }
-function fuzzyTextFilterFn(rows, id, filterValue) {
+// Define una función de filtro de texto difuso
+function fuzzyTextFilterFn(rows, id, filterValue,) {
   return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
 }
 fuzzyTextFilterFn.autoRemove = val => !val
+// Define un componente de tabla
+export const Table = ({ columns, data , handleDelete }) => {
+    const navigate = useNavigate(); // Usar useNavigate aquí
 
-export const Table = ({ columns, data }) => {
-  const navigate = useNavigate(); // Usar useNavigate aquí
-
-  const gotoDetalle = (idEvaluacion) => {
-    // navigate('/detalleClientes'); // Reemplaza con tu URL de destino
-    navigate(`/detalleEvaluacion/${idEvaluacion}`); // Usar el idCliente en la URL
-  };
-
-
+    const gotoDetalle = (idTipoEvaluacion) => {
+      navigate(`/modificarTiposEvaluaciones/${idTipoEvaluacion}`); // Reemplaza con tu URL de destino
+      // navigate(`/detalleFuncionario/${idFuncionario}`); // Usar el idFuncionario en la URL
+    };
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, override the default text filter to use
+      // Or, overridFuncionario the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
@@ -266,47 +290,63 @@ export const Table = ({ columns, data }) => {
     useFilters,
     usePagination
   )
-
+  
     return (
       <>
         <table {...getTableProps()}>
           <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                 <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
-                 {column.render('Header')}
-                 <div>{column.canFilter ? column.render('Filter') : null}</div>
-               </th>
-                ))}
-              </tr>
-            ))}
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
+                  {column.render('Header')}
+                  <div>{column.canFilter ? column.render('Filter') : null}</div>
+                </th>
+              ))}
+            </tr>
+          ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()}>
-                   {row.cells.map(cell => {
-                  if (cell.column.id === 'detalle') {
-                    // En caso de que sea la columna "Detalle", renderiza un enlace
-                    return (
-                        <td
-                          {...cell.getCellProps()}
-                          style={{ cursor: 'pointer', color: 'blue' }}
-                          //onClick={gotoDetalle} ///Mandar el id de que toco
-                          onClick={() => gotoDetalle(row.original.idEvaluacion)} // Pasar idCliente
-                        >
-                          Ver más
-                        </td>
-                      );
-                    }
+          {page.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                   if (cell.column.id === 'detalle') {
+                    // Renderiza el icono "Editar" (pencil) y asocia la acción de navegación
+                    const idTipoEvaluacion = row.original.idTipoEvaluacion;
+                    const nombre = row.original.nombre;
+                    const costo = row.original.costo;
+                    const editIcon = (
+                      <BsFillPencilFill
+                        style={{ cursor: 'pointer', color: '#12959E' }}
+                        onClick={() => {
+                            gotoDetalle( row.original.idTipoEvaluacion)}}
+                        />
+                    );
+    
+                    // Renderiza el icono "Eliminar" (delete) y asocia la acción de notificación
 
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  })}
-                </tr>
-              )
-            })}
+                    const deleteIcon = (
+                      <RiDeleteBinLine
+                        style={{ cursor: 'pointer', color: 'red' }}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          handleDelete(event, row.original.idTipoEvaluacion)}}/>
+                      );
+                      console.log(idTipoEvaluacion, nombre, costo)
+                    // Retorna ambos iconos dentro de un div
+                    return (
+                      <td {...cell.getCellProps()}>
+                        {editIcon} {deleteIcon}
+                      </td>
+                    );
+                  }
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                })}
+              </tr>
+            );
+          })}
           </tbody>
         </table>
         <div className="pagination"> 
@@ -347,43 +387,25 @@ export const Table = ({ columns, data }) => {
   }
   
 
-  export const columns = [
+// Define las columnas de la tabla
+export const columns = [
   {
-    Header: 'ID Evaluación',
-    accessor: 'idEvaluacion',
+    Header: 'ID Tipo Evaluación',
+    accessor: 'idTipoEvaluacion',
     filter: 'fuzzyText',
   },
   {
     Header: 'Nombre',
     accessor: 'nombre',
     filter: 'fuzzyText',
-  },
-  {
-    Header: 'Cliente',
-    accessor: 'cliente',
+  },{
+    Header: 'Costo',
+    accessor: 'costo',
     filter: 'fuzzyText',
-  },
-  {
-    Header: 'Estado',
-    accessor: 'estado',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-  },
-  {
-    Header: 'Fecha de Ejecución',
-    accessor: 'fecha',
-    Filter: DateRangeColumnFilter,
-    filter: dateBetweenFilterFn,
-  },
-  {
-    Header: 'Tipo de Evaluación',
-    accessor: 'tipoE',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-  },
-  {
-    Header: 'Detalle',
+  },{
+    Header: 'Opciones',
     accessor: 'detalle',
     disableFilters: true,
   },
 ];
+
