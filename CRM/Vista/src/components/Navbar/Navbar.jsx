@@ -24,7 +24,7 @@ export const Navbar = ({ children }) => {
   };
   const menuServicios = [
     {
-      path: '/cotizaciones',
+      path: '/cotizacion',
       name: 'Cotizaciones',
       icon: <AiIcons.AiOutlineDollarCircle />
     },

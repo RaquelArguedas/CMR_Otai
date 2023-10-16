@@ -4,11 +4,12 @@ import { Navbar } from '../Navbar/Navbar';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom';
-import { useTable, useFilters, useGlobalFilter, usePagination, useAsyncDebounce } from 'react-table'
 import { matchSorter } from 'match-sorter'
 import { format } from 'date-fns';
+import Swal from 'sweetalert2';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { Table, columns, Styles } from './TablaClientesReportes';
+const API = "http://127.0.0.1:5000";
 
 const Title = styled.h1`
   font-size: 24px;
@@ -50,16 +51,17 @@ const RadioInput = styled.input`
 
 const Checkbox = styled.label`
   display: flex;
-  align-items: left;
+  align-items: top;
   font-size: 16px;
   color: #000000;
   margin-bottom: 0px;
   margin-top: -30px;
   font-weight: normal;
+  margin-left: -225px;
 
   input {
     margin-right:-220px;
-    margin-left: -225px;
+    
   }
 `;
 
@@ -82,40 +84,79 @@ const CustomDatePicker = styled(DatePicker)`
   margin-left: 100px;
 `;
 
-const ButtonTbl = styled.button`
-  background-color: #ffffff;
-  border: 1px solid #000000;
-  align-items: center; 
-  border-radius: 5px;
-  padding: 5px 10px;
-  color: #000000;
-  font-size: 12px;
-  cursor: pointer;
-`;
-
-const ReportButton = styled.button`
-  background-color: #ffffff; 
-  color: #007bff; 
-  padding: 10px 20px;
-  border: 0 transparent; 
-  margin-left: 10px; 
-  cursor: pointer;
-  border-radius: 4px;
-`;
-
-const data = [{
-  idC: 1,
-  nombre: 'Edgar André Araya Vargas',
-}]
-
 export function ReporteFinanciero() {
-  const [servicioCheckboxArray, setServicioArray] = useState('');
+  const [servicioCheckboxArray, setServicioArray] = useState([]);
   const [estadoCheckbox, setCheckboxEstado] = useState(false);
   const [estadoDropdown, setEstado] = useState('');
   const [fechaCheckbox, setFechaCheckbox] = useState(false);
+  const [fechaI, setFechaI] = useState('');
+  const [fechaF, setFechaF] = useState('');
   const [fechaInicio, setFechaInicio] = useState(new Date());
   const [fechaFinal, setFechaFinal] = useState(new Date());
+  const [clientes, setClientes] = useState([]);
+  const [IdCliente, setIdCliente] = useState('');
 
+  let navigate = useNavigate();
+  const gotoReportesFinancieros = () => { navigate('/reportesFinancieros'); }
+
+  //Enviar la información al backend.
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(clientes);
+    if (servicioCheckboxArray !== null &&
+        servicioCheckboxArray.length > 0 &&
+        IdCliente !== null &&
+        IdCliente !== ''){
+          Swal.fire({
+            title: 'Confirmación',
+            text: 'El reporte se ha creado satisfactoriamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false, 
+            allowEscapeKey: false,    
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const formData = new FormData();
+              formData.append('servicios', servicioCheckboxArray);
+              formData.append('cliente', IdCliente);
+              formData.append('estado', estadoDropdown);
+              formData.append('fechaInicio', fechaInicio);
+              formData.append('fechaFinal', fechaFinal); 
+              const res = fetch(`${API}/createReporteFinanciero`, {
+                  method: 'POST',
+                  body: formData
+              });
+              gotoReportesFinancieros();
+            }
+          }); 
+    } else {
+      Swal.fire({
+        title: 'Error',
+        text: 'Por favor, escoge los filtros correctamente (Recuerda: necesitas por lo menos marcar un cliente y un servicio para crear el reporte).',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }  
+  }
+
+  const handleSearch = async () => { 
+    //Obtener infromacion existente en la base de datos
+    //A esto me refiero recuperar los datos del cliente
+    console.log(1)
+    const res = await fetch(`${API}/getClientes`);
+    const data = await res.json();//resultado de la consulta
+    console.log(data)
+    // Realiza la conversión de datos aquí
+    const formattedData = data.map((item) => ({
+      cedula: item[1],
+      idCliente: item[0],
+      nombre: item[2],
+    }));
+    setClientes(formattedData);
+    }
+    React.useEffect(() => {
+      handleSearch()
+    }, []);
 
   const handleCheckboxChange = (e) => {
     const value = e.target.value;
@@ -135,18 +176,29 @@ export function ReporteFinanciero() {
 
   const handleFechaInicioChange = (date) => {
     if (fechaCheckbox) {
-      const formattedDate = format(date, 'yyyy-MM-dd');
-      setFechaInicio(formattedDate);
-      console.log('fechaInicio:', formattedDate);
+      const month = date.getMonth() + 1; 
+      const day = date.getDate(); 
+      const year = date.getFullYear(); 
+      const formattedDate = `${year}-${month}-${day}`;
+      console.log(formattedDate)
+      setFechaI(formattedDate);
     }
   };
 
   const handleFechaFinalChange = (date) => {
+    const month = date.getMonth() + 1; 
+    const day = date.getDate(); 
+    const year = date.getFullYear();
+    const formattedDate = `${year}-${month}-${day}`;
+    console.log("FECHA FORMATEADA:" + formattedDate); 
     if (fechaCheckbox) {
-      const formattedDate = format(date, 'yyyy-MM-dd');
-      setFechaFinal(formattedDate);
-      console.log('fechaFinal:', formattedDate);
+      setFechaF(formattedDate);
     }
+  };
+
+  const handleIdClienteChange = ( idCliente) => {
+    console.log(idCliente + 'Handle')
+    setIdCliente(idCliente);
   };
 
   return (
@@ -155,119 +207,119 @@ export function ReporteFinanciero() {
         <Navbar />
         <div>
           <Title>Reporte Financiero</Title>
-          <div style={{ display: 'flex' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <SubTitle>Servicios:</SubTitle>
-              <Checkbox>
-                <input
-                  type="checkbox"
-                  value="Cotización"
-                  checked={servicioCheckboxArray.includes('Cotización')}
-                  onChange={handleCheckboxChange}
-                /> Cotización
-              </Checkbox>
-              <Checkbox>
-                <input
-                  type="checkbox"
-                  value="Evaluación"
-                  checked={servicioCheckboxArray.includes('Evaluación')}
-                  onChange={handleCheckboxChange}
-                /> Evaluación
-              </Checkbox>
-              <Checkbox>
-                <input
-                  type="checkbox"
-                  value="Proyecto"
-                  checked={servicioCheckboxArray.includes('Proyecto')}
-                  onChange={handleCheckboxChange}
-                /> Proyecto
-              </Checkbox>
-              <Checkbox>
-                <input
-                  type="checkbox"
-                  value="Capacitación"
-                  checked={servicioCheckboxArray.includes('Capacitación')}
-                  onChange={handleCheckboxChange}
-                /> Capacitación
-              </Checkbox>
+          <form onSubmit={handleSubmit}>
+            <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <SubTitle>Servicios:</SubTitle>
+                <Checkbox>
+                  <input
+                    type="checkbox"
+                    value="Cotización"
+                    checked={servicioCheckboxArray.includes('Cotización')}
+                    onChange={handleCheckboxChange}
+                  /> Cotización
+                </Checkbox>
+                <Checkbox>
+                  <input
+                    type="checkbox"
+                    value="Evaluación"
+                    checked={servicioCheckboxArray.includes('Evaluación')}
+                    onChange={handleCheckboxChange}
+                  /> Evaluación
+                </Checkbox>
+                <Checkbox>
+                  <input
+                    type="checkbox"
+                    value="Proyecto"
+                    checked={servicioCheckboxArray.includes('Proyecto')}
+                    onChange={handleCheckboxChange}
+                  /> Proyecto
+                </Checkbox>
+                <Checkbox>
+                  <input
+                    type="checkbox"
+                    value="Capacitación"
+                    checked={servicioCheckboxArray.includes('Capacitación')}
+                    onChange={handleCheckboxChange}
+                  /> Capacitación
+                </Checkbox>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '300px' }}>
+                <SubTitle>Estado:</SubTitle>
+                <Checkbox>
+                  <input
+                    type="checkbox"
+                    checked={estadoCheckbox}
+                    onChange={() => setCheckboxEstado(!estadoCheckbox)}
+                  /> Por estado
+                </Checkbox>
+                <Select
+                  value={estadoCheckbox ? estadoDropdown : ''}
+                  onChange={(e) => {
+                    if (estadoCheckbox) {
+                      console.log('Valor estadoDropdown:', e.target.value);
+                      setEstado(e.target.value);
+                    }
+                  }}
+                >
+                  <option value="-Seleccione Estado-" disabled={estadoDropdown !== '-Seleccione Estado-'}>-Seleccione Estado-</option>
+                  <option value="opcion1">En negociación</option>
+                  <option value="opcion2">En progreso</option>
+                  <option value="opcion3">Finalizado</option>
+                  <option value="opcion4">Entregado</option>
+                </Select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px', marginLeft: '50px'}}>
+              <button type="submit" className='button1' >
+                <AiOutlinePlusCircle style={{
+                        fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'
+                        }} /> Crear reporte
+              </button>
+              </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '300px' }}>
-              <SubTitle>Estado:</SubTitle>
-              <Checkbox>
-                <input
-                  type="checkbox"
-                  checked={estadoCheckbox}
-                  onChange={() => setCheckboxEstado(!estadoCheckbox)}
-                /> Por estado
-              </Checkbox>
-              <Select
-                value={estadoCheckbox ? estadoDropdown : ''}
-                onChange={(e) => {
-                  if (estadoCheckbox) {
-                    console.log('Valor estadoDropdown:', e.target.value);
-                    setEstado(e.target.value);
-                  }
-                }}
-              >
-                <option value="-Seleccione Estado-" disabled={estadoDropdown !== '-Seleccione Estado-'}>-Seleccione Estado-</option>
-                <option value="opcion1">En negociación</option>
-                <option value="opcion2">En progreso</option>
-                <option value="opcion3">Finalizado</option>
-                <option value="opcion4">Entregado</option>
-              </Select>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px', marginLeft: '50px'}}>
-            <button type="submit" className='button1' >
-              <AiOutlinePlusCircle style={{
-                      fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'
-                      }} /> Crear reporte
-            </button>
-            </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <SubTitle>Clientes:</SubTitle>
-              <Styles>
-                <Table columns={columns} data={data} />
-              </Styles>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '440px' }}>
-              <SubTitle>Fecha:</SubTitle>
-              <Checkbox>
-                <input
-                  type="checkbox"
-                  checked={fechaCheckbox}
-                  onChange={() => setFechaCheckbox(!fechaCheckbox)}
-                />Por rango de fechas
-              </Checkbox>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', marginRight: '50px' }}>
-                  <SubTitleFecha>Fecha Inicio:</SubTitleFecha>
-                  <CustomDatePicker
-                    selected={fechaInicio}
-                    onChange={handleFechaInicioChange}
-                    dateFormat="dd/MM/yyyy"
-                    inline
-                    showYearDropdown
-                    showMonthDropdown
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <SubTitleFecha>Fecha Final:</SubTitleFecha>
-                  <CustomDatePicker
-                    selected={fechaFinal}
-                    onChange={handleFechaFinalChange}
-                    dateFormat="dd/MM/yyyy"
-                    inline
-                    showYearDropdown
-                    showMonthDropdown
-                  />
+            <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <SubTitle>Clientes:</SubTitle>
+                <Styles>
+                  <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange} />
+                </Styles>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '100px' }}>
+                <SubTitle>Fecha:</SubTitle>
+                <Checkbox>
+                  <input
+                    type="checkbox"
+                    checked={fechaCheckbox}
+                    onChange={() => setFechaCheckbox(!fechaCheckbox)}
+                  />Por rango de fechas
+                </Checkbox>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', marginRight: '50px' }}>
+                    <SubTitleFecha>Fecha Inicio:</SubTitleFecha>
+                    <CustomDatePicker
+                      selected={fechaInicio}
+                      onChange={handleFechaInicioChange}
+                      dateFormat="dd/MM/yyyy"
+                      inline
+                      showYearDropdown
+                      showMonthDropdown
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <SubTitleFecha>Fecha Final:</SubTitleFecha>
+                    <CustomDatePicker
+                      selected={fechaFinal}
+                      onChange={handleFechaFinalChange}
+                      dateFormat="dd/MM/yyyy"
+                      inline
+                      showYearDropdown
+                      showMonthDropdown
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div style={{ display: 'flex' }}>
-          </div>
+          </form>
         </div>
       </div>
     </Fragment>

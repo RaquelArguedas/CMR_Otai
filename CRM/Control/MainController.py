@@ -6,7 +6,7 @@ from bson import ObjectId
 import os
 
 import sys
-sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo')
+sys.path.append('C:\\Users\\Usuario\\OneDrive-Estudiantes-ITCR\\Documentos\\CollegeBoy\\Aseguramiento-de-la-Calidad\\CMR_Otai\\CRM\\Modelo')
 from Capacitacion import *
 from Cliente import *
 from Cotizacion import *
@@ -63,7 +63,7 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
+        server_name = 'LAPTOP-B2KHD9VP\OTAI2'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
 
@@ -101,7 +101,7 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
+        server_name = 'LAPTOP-B2KHD9VP\OTAI2'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
 
@@ -201,11 +201,8 @@ class SingletonDAO(metaclass=SingletonMeta):
     def createCapacitacion(self, idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, documentos, idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente):
         if idCapacitacion == None or nombre == None or descripcion== None or fechaCreacion== None or fechaEjecucion== None or documentos== None or idEstado== None or horasDuracion== None or fechaFinalizacion== None or modalidad== None or idFuncionario== None or precio== None or tipoCapacitacion== None or idProyecto== None or idCliente== None:
             return -1 #No se puede crear una capacitacion con atributos nulos
-        
-        #lo crea en la bd si no se producen errores
-        self.executeCommit(f"EXEC createCapacitacion '{idCapacitacion}', '{nombre}', '{descripcion}', '{fechaCreacion}', '{fechaEjecucion}', null, {idEstado}, {horasDuracion}, '{fechaFinalizacion}', {modalidad}, {idFuncionario}, {precio}, {tipoCapacitacion}, {idProyecto}, {idCliente}")
-        result = self.execute(f"SELECT id from Capacitacion where idCapacitacion = '{idCapacitacion}'")
 
+        idCapacitacion = self.execute(f"SELECT MAX(idCapacitacion) FROM Capacitacion")
         #si hay lista y no existe el idCapacitacion en los datos se crea
         if result and (self.readCapacitacion(idCapacitacion) == None):
             self.capacitacion += [Capacitacion(result[0][0], idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, [], idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente)]
@@ -219,7 +216,7 @@ class SingletonDAO(metaclass=SingletonMeta):
     def updateCapacitacion(self, idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, documentos, idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente):
         cap = self.readCapacitacion(idCapacitacion)
         if cap != None:
-            #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            print("HOLA CAMARON SIN COLA")
             cap.editar(idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, None, idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente)
             self.executeCommit(f"EXEC updateCapacitacion {cap.id}, {cap.idCapacitacion}, {cap.nombre}, {cap.descripcion}, '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
         else:
@@ -338,12 +335,15 @@ class SingletonDAO(metaclass=SingletonMeta):
 
     def readCotizacion(self, idCotizacion):
         for c in self.cotizacion:
+            print(c.idCotizacion, idCotizacion)
             if c.idCotizacion == idCotizacion:
+                print("Entro!")
                 return c
         return None
 
     def updateCotizacion(self, idCotizacion, nombre, descripcion, idCliente, idPorcentajesC, Total, idServicio, estado, fechaCreacion):
         c = self.readCotizacion(idCotizacion)
+        print(c)
         if c is not None:
             c.editar(nombre, descripcion, idCliente, idPorcentajesC, Total, idServicio, estado, fechaCreacion)
             self.executeCommit(f"EXEC updateCotizacion {c.idCotizacion}, '{c.nombre}', '{c.descripcion}', {c.idCliente}, {c.idPorcentajesC}, {c.Total}, '{c.idServicio}', {c.estado.value}, '{c.fechaCreacion}'")
@@ -481,7 +481,7 @@ class SingletonDAO(metaclass=SingletonMeta):
         t = self.readTipoCapacitacion(idTipoCapacitacion)
         if t is not None:
             t.editar(nombre)
-            self.executeCommit(f"EXEC updateTipoCapacitacion {t.idTipoCapacitacion}, '{t.nombre}'")
+            self.executeCommit(f"EXEC updateTipoCapacitacion '{t.nombre}'")
         else:
             return -1
         
@@ -666,3 +666,11 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         except Exception as ex:
             print(ex)
+
+    #ToDo: Logica para crear Reporte Financiero
+    def createReporteFinanciero(servicios, clientes, estado, fechaInicio, fechaFinal):
+        return "ToDo"
+    
+    #ToDo: Logica para crear Reporte de Rendimiento
+    def createReporteRendimiento(servicios, clientes, estado, fechaInicio, fechaFinal):
+        return "ToDo"

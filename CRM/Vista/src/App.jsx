@@ -62,13 +62,13 @@ export function App() {
 
             <Route exact path= "/capacitacion" element = {<Capacitacion/>} />
             <Route exact path= "/crearCapacitacion" element = {<CrearCapacitacion/>} />
-            <Route exact path= "/detalleCapacitacion" element = {<DetalleCapacitacion/>} />
-            <Route exact path= "/modificarCapacitacion" element = {<ModificarCapacitacion/>} />
+            <Route exact path= "/detalleCapacitacion/:idCapacitacion" element = {<DetalleCapacitacion/>} />
+            <Route exact path= "/modificarCapacitacion/:idCapacitacion" element = {<ModificarCapacitacion/>} />
 
             <Route exact path= "/cotizacion" element = {<Cotizacion/>} />
             <Route exact path= "/crearCotizacion" element = {<CrearCotizacion/>} />
-            <Route exact path= "/detalleCotizacion" element = {<DetalleCotizacion/>} />
-            <Route exact path= "/modificarCotizacion" element = {<ModificarCotizacion/>} />
+            <Route exact path= "/detalleCotizacion/:idCotizacion" element = {<DetalleCotizacion/>} />
+            <Route exact path= "/modificarCotizacion/:idCotizacion" element = {<ModificarCotizacion/>} />
 
             <Route exact path= "/clientes" element = {<Clientes/>} />
             <Route exact path= "/crearClientes" element = {<CrearCliente/>} />
@@ -95,7 +95,7 @@ export function App() {
 
             <Route exact path= "/tiposCapacitaciones" element = {<TiposCapacitaciones/>} />
             <Route exact path= "/crearTipoCapacitacion" element = {<CrearTipoCapacitacion/>} />
-            <Route exact path= "/modficarTipoCapacitacion" element = {<ModficarTipoCapacitacion/>} />
+            <Route exact path= "/modficarTipoCapacitacion/:idTipoCapacitacion" element = {<ModficarTipoCapacitacion/>} />
 
             <Route exact path= "/proyectos" element = {<Proyectos/>} />
             <Route exact path= "/crearProyectos" element = {<CrearProyectos/>} />

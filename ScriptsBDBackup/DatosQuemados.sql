@@ -91,7 +91,7 @@ VALUES (0.1, 0.05, 0.03, 0.13, '2023-10-05', 1);
 INSERT INTO Cotizacion (nombre, descripcion, idCliente, idPorcentajesC, total, idServicio, idEstado, fechaCreacion)
 VALUES ('Cotización 1', 'Descripción de la cotización 1', 1, 1, 1500.00, 'CA001', 2, '2023-10-05');
 INSERT INTO Cotizacion (nombre, descripcion, idCliente, idPorcentajesC, total, idServicio, idEstado, fechaCreacion)
-VALUES ('Cotización 2', 'Descripción de la cotización 2', 2, 1, 1500.00, 'EVAL001', 2, '2023-10-05');
+VALUES ('Cotización 2', 'Descripción de la cotización 2', 2, 1, 1500.00, 'CA002', 2, '2023-10-05');
 
 -- Insertar valores en la tabla ProyectoXFuncionario
 INSERT INTO ProyectoXFuncionario (idProyecto, idFuncionario)

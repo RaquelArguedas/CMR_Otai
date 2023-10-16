@@ -1,18 +1,20 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import styled  from 'styled-components';
 import './DetalleCotizacion.css';
-
 import { BsFillPencilFill } from 'react-icons/bs';
 import { RiDeleteBinLine } from 'react-icons/ri';
+import Swal from 'sweetalert2';
+const API = "http://127.0.0.1:5000";
 
 export const DetalleCotizacion = () => {
     let navigate = useNavigate();
-    const gotoModificarCotizacion = () => { navigate('/modificarCotizacion'); }
+    const { idCotizacion } = useParams();
+    const gotoModificarCotizacion = () => { navigate(`/modificarCotizacion/${idCotizacion}`); }
+    const gotoCotizaciones = () => { navigate('/cotizacion'); }
 
-
-    const [idCotizacion, setidCotizacion] = useState('');
+    const [idcotizacion, setidCotizacion] = useState('');
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [fechaEjecucion, setFechaEjecucion] = useState('');
@@ -29,17 +31,49 @@ export const DetalleCotizacion = () => {
       ];
     
     const handleSearch = async () => {
-        //Buscamos la informacion del backend
-        
-        setidCotizacion('E1231')
-        setNombre('Cotizacion para el Ministerio de salud')
-        setDescripcion('Cotizacion de accesibilidad')
-        setFechaEjecucion('20/09/2023')
-        
-        setEstado('En proceso')
-        setCedula('123129131')
-        setNombreCliente('Ministerio de hacienda')
+        const res = await fetch(`${API}/readCotizacion/${idCotizacion}`); 
+        const data = await res.json();//resultado de la consulta
+        const resp = await fetch(`${API}/readCliente/${data[3]}`); 
+        const datac = await resp.json();//resultado de la consulta
+        const respu = await fetch(`${API}/readCliente/${data[3]}`); 
+        const datap = await respu.json();//resultado de la consulta
+        setNombre(data[1])
+        setDescripcion(data[2])
+        setFechaEjecucion(data[8])
+        var est = ''
+        if (data[7] === 1) { est = 'Eliminado' }
+        if (data[7] === 2) { est = 'En progreso' }
+        if (data[7] === 3) { est = 'Solicitado' }
+        if (data[7] === 4) { est = 'En planeacion' }
+        if (data[7] === 5) { est = 'Activo' }
+        if (data[7] === 6) { est = 'Inactivo' }
+        setEstado(est)
+        setTotal(data[5])
+        setCedula(datac[1])
+        setNombreCliente(datac[2])
+
+
     };
+
+    const handleDelete = async () => {
+        Swal.fire({
+            title: '¿Está seguro que desea eliminar la cotización seleccionada?',
+            showDenyButton: true,
+            confirmButtonText: 'Aceptar',
+            denyButtonText: `Cancelar`,
+            allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
+            allowEscapeKey: false,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                Swal.fire('La cotización se ha eliminado satisfactoriamente')
+                const res = fetch(`${API}/deleteCotizacion/${idCotizacion}`, {method: 'POST'}); // cambiar por el id
+                gotoCotizaciones();
+            } else if (result.isDenied) {
+                Swal.fire('No se guardaron los cambios')
+            }
+        })
+    }
 
 
     const Title = styled.h1`
@@ -81,10 +115,11 @@ export const DetalleCotizacion = () => {
                     
                     <div style={{ marginBottom: '30px' }}>
                         <label for="idCoLave" class="form-label">Total:</label>
-                        <label style={{ marginLeft: '90px' }} for="total" class="form-label">{total}</label>
+                        <label style={{ marginLeft: '200px' }} for="total" class="form-label">{total}</label>
                     </div>
                     <div style={{ marginBottom: '30px' }}>
-                        <label for="idCoLave" class="form-label">Cédula Jurídica:</label>
+                        <label for="idCoLave" class="form-label">Estado: </label>
+                        <label style={{ marginLeft: '180px' }} for="estado" class="form-label">{estado}</label>
                     </div>
                     <div style={{ marginBottom: '30px' }}>
                         <label for="idCoLave" class="form-label">Cédula Juridica: </label>
@@ -95,10 +130,6 @@ export const DetalleCotizacion = () => {
                         <label for="idCoLave" class="form-label">Nombre del cliente o entidad:</label>
                         <label for="idCotizacion" class="form-label">{nombreCliente}</label>
                     </div>
-                    <div style={{ marginBottom: '30px' }}>
-                        <label for="idCoLave" class="form-label">Servicios Asociados:</label>
-                        <label style={{ marginLeft: '200px' }} for="idCotizacion" class="form-label">{serviciosAsociados}</label>
-                    </div>
                         <div style={{ marginTop: '100px', display: 'flex' }}>
                             <button type="submit" className="button2" onClick={gotoModificarCotizacion}>
                                 <BsFillPencilFill style={{
@@ -108,7 +139,7 @@ export const DetalleCotizacion = () => {
                                 color: '#12959E' // Tamaño del icono
                                 }} /> Modificar cotización
                             </button>
-                            <button type="submit" className="button2">
+                            <button type="submit" className="button2" onClick={handleDelete}>
                                 <RiDeleteBinLine style={{
                                 fontSize: '25px',
                                 marginRight: '20px',

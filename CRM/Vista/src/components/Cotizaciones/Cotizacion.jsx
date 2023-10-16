@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
 import { matchSorter } from 'match-sorter'
+const API = "http://127.0.0.1:5000";
 
 const Title = styled.h1`
   font-size: 24px;
@@ -225,6 +226,11 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 
 const Table = ({ columns, data }) => {
+  const navigate = useNavigate();
+
+  const gotoDetalle = (idCotizacion) => {
+    navigate(`/detalleCotizacion/${idCotizacion}`); 
+  };
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -298,8 +304,20 @@ const Table = ({ columns, data }) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
+                  if (cell.column.id === 'detalle') {
+                    // En caso de que sea la columna "Detalle", renderiza un enlace
+                    return (
+                        <td
+                          {...cell.getCellProps()}
+                          style={{ cursor: 'pointer', color: 'blue' }}
+                          onClick={() => gotoDetalle(row.original.idC)}
+                        >
+                          Ver más
+                        </td>
+                      );
+                    }
+                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  })}
               </tr>
             )
           })}
@@ -367,219 +385,36 @@ const columns = [
     Header: 'Detalle',
     accessor: 'detalle',
     disableFilters: true,
-    Cell: ({ row }) => (
-      <Link to="/DetalleCotizacion">
-        Ver más
-      </Link>
-    )
   },
 ];
-
-const data = [
-  {
-    idC: 1,
-    nombre: 'Cotización A',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoC: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 2,
-    nombre: 'Cotización B',
-    estado: 'Inactiva',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 3,
-    nombre: 'Cotización C',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 4,
-    nombre: 'Cotización D',
-    estado: 'Inactiva',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 3',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 5,
-    nombre: 'Cotización E',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 6,
-    nombre: 'Cotización A',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 7,
-    nombre: 'Cotización B',
-    estado: 'Inactiva',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 8,
-    nombre: 'Cotización C',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 9,
-    nombre: 'Cotización D',
-    estado: 'Inactiva',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 3',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 10,
-    nombre: 'Cotización E',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 11,
-    nombre: 'Cotización A',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 12,
-    nombre: 'Cotización B',
-    estado: 'Inactiva',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 13,
-    nombre: 'Cotización C',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 14,
-    nombre: 'Cotización D',
-    estado: 'Inactiva',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 3',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 15,
-    nombre: 'Cotización E',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 16,
-    nombre: 'Cotización A',
-    estado: 'Activa',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 17,
-    nombre: 'Cotización B',
-    estado: 'Inactiva',
-    fecha: '23/11/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 18,
-    nombre: 'Cotización C',
-    estado: 'Activa',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 19,
-    nombre: 'Cotización D',
-    estado: 'Inactiva',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 3',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 20,
-    nombre: 'Cotización E',
-    estado: 'Activa',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 21,
-    nombre: 'Cotización A',
-    estado: 'Activa',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 22,
-    nombre: 'Cotización B',
-    estado: 'Inactiva',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 23,
-    nombre: 'Cotización C',
-    estado: 'Activa',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 1',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 24,
-    nombre: 'Cotización D',
-    estado: 'Inactiva',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 3',
-    detalle: 'Ver más',
-  },
-  {
-    idC: 25,
-    nombre: 'Cotización E',
-    estado: 'Activa',
-    fecha: '13/10/2022',
-    tipoE: 'Tipo 2',
-    detalle: 'Ver más',
-  },
-];
+  
 
 export function Cotizacion() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [cotizaciones, setCotizaciones] = useState([[]]);
+
+  const handleSearch = async () => {
+    //Obtener infromacion existente en la base de datos
+    const res = await fetch(`${API}/getCotizaciones`);
+    const data = await res.json();//resultado de la consulta
+    console.log(data)
+    const rest = await fetch(`${API}/readCliente/${data[0][5]}`);
+    const dato = await rest.json();
+    console.log(data[0][5])
+    const formattedData = data
+      .filter((item) => item[7] !== 1)
+      .map((item) => ({
+        idC: item[0],
+        nombre: item[1],
+        cliente: item[9],
+        total: item[5],
+        detalle: 'Ver más',
+      }));
+    setCotizaciones(formattedData);
+    };
+  React.useEffect(() => {
+    handleSearch()
+  }, []);
 
   return (
     <Fragment>
@@ -592,7 +427,7 @@ export function Cotizacion() {
           </div>
           <div style={{ display: 'flex' }}>
             <Styles>
-              <Table columns={columns} data={data} />
+              <Table columns={columns} data={cotizaciones} />
             </Styles>
           </div>
         </div>

@@ -128,14 +128,8 @@ export function dateBetweenFilterFn(rows, id, filterValues) {
   const ed = filterValues[1] ? new Date(filterValues[1]) : undefined;
   if (ed || sd) {
     return rows.filter((r) => {
-      // format data
-      var dateAndHour = r.values[id].split(" ");
-      var [year, month, day] = dateAndHour[0].split("-");
-      var date = [month, day, year].join("/");
-      var hour = dateAndHour[1];
-      var formattedData = date + " " + hour;
 
-      const cellDate = new Date(formattedData);
+      const cellDate = new Date(r.values[id].split(' ')[0]);
 
       if (ed && sd) {
         return cellDate >= sd && cellDate <= ed;

@@ -1,5 +1,8 @@
-import React, { useState,  } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { BsFillPencilFill } from 'react-icons/bs';
+import { RiDeleteBinLine } from 'react-icons/ri';
 import styled, { keyframes } from 'styled-components';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
 import  { matchSorter } from 'match-sorter'
@@ -221,28 +224,22 @@ export function DateRangeColumnFilter({
   );
 }
 // Define una función de filtro de texto difuso
-function fuzzyTextFilterFn(rows, id, filterValue) {
+function fuzzyTextFilterFn(rows, id, filterValue,) {
   return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
 }
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
-
-export const Table = ({ columns, data, handleIdClienteChange }) => {
+export const Table = ({ columns, data , handleDelete }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
-    
-    const [selectedClientId, setSelectedClientId] = useState(null);
 
-    const handleSelectClient = ( idCliente) => {
-      console.log(idCliente)
-    setSelectedClientId(idCliente);
-    handleIdClienteChange(idCliente)
+    const gotoDetalle = (idTipoCapacitacion) => {
+      navigate(`/modficarTipoCapacitacion/${idTipoCapacitacion}`); // Reemplaza con tu URL de destino
     };
-
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, overridCliente the default text filter to use
+      // Or, overridFuncionario the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
@@ -287,14 +284,15 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
       data,
       defaultColumn,
       filterTypes,
-      initialState: { pageIndex: 0 , pageSize: 3},
+      initialState: { pageIndex: 0 },
     },
     useFilters,
     usePagination
   )
+  
     return (
       <>
-        <table {...getTableProps()} style={{ marginRight: '0px' }}>
+        <table {...getTableProps()}>
           <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -312,32 +310,39 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
             prepareRow(row)
             return (
               <tr {...row.getRowProps()}>
-                 {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>
-                    {cell.column.id === 'select' ? (
-                      // Aquí agregamos la lógica para los checkboxes
-                      <input
-                        type="checkbox"
-                        checked={row.original.idCliente === selectedClientId}
-                        onChange={() => {
-                           handleSelectClient( row.original.idCliente)
-                            
-                        
-                          }}
-                          
-                      style={{ width: '30px',
-                      height: '30px',  // Establece la altura del checkbox para centrarlo verticalmente
-                      display: 'flex',
-                      alignItems: 'center', // Centra verticalmente
-                      justifyContent: 'center', margin: '0', // Establece el margen a 0 para eliminar cualquier espaciado no deseado
-                      padding: '0', }} 
-                      />
-                      
-                    ) : (
-                      cell.render('Cell')
-                    )}
-                  </td>
-                ))}
+                {row.cells.map(cell => {
+                   if (cell.column.id === 'detalle') {
+                    // Renderiza el icono "Editar" (pencil) y asocia la acción de navegación
+                    const idTipoCapacitacion = row.original.idTipoCapacitacion;
+                    const nombre = row.original.nombre;
+                    const costo = row.original.costo;
+                    const editIcon = (
+                      <BsFillPencilFill
+                        style={{ cursor: 'pointer', color: '#12959E' }}
+                        onClick={() => {
+                            gotoDetalle( row.original.idTipoCapacitacion)}}
+                        />
+                    );
+    
+                    // Renderiza el icono "Eliminar" (delete) y asocia la acción de notificación
+
+                    const deleteIcon = (
+                      <RiDeleteBinLine
+                        style={{ cursor: 'pointer', color: 'red' }}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          handleDelete(event, row.original.idTipoCapacitacion)}}/>
+                      );
+                      console.log(idTipoCapacitacion, nombre, costo)
+                    // Retorna ambos iconos dentro de un div
+                    return (
+                      <td {...cell.getCellProps()}>
+                        {editIcon} {deleteIcon}
+                      </td>
+                    );
+                  }
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                })}
               </tr>
             );
           })}
@@ -363,19 +368,18 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
             </strong>{' '}
           </span>{' '}
           <select
-  style={{ marginLeft: '10px', borderRadius: '5px' }}
-  value={pageSize}
-  onChange={(e) => {
-    setPageSize(Number(e.target.value));
-  }}
->
-  {[3, 10, 20, 50].map((size) => ( // Aquí define varias opciones de tamaño de página
-    <option key={size} value={size}>
-      Mostrar {size}
-    </option>
-  ))}
-</select>
-
+            style={{ marginLeft: '10px' , borderRadius: '5px' }} 
+            value={pageSize}
+            onChange={e => {
+              setPageSize(Number(e.target.value))
+            }}
+          >
+            {[10, 20, 30, 40, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Mostrar {pageSize}
+              </option>
+            ))}
+          </select>
         </div>
       </>
     )
@@ -384,26 +388,19 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
 
 // Define las columnas de la tabla
 export const columns = [
-    {
-    Header: 'Cédula Jurídica',
-    accessor: 'cedula',
-    filter: 'fuzzyText',
-  },
   {
-    Header: 'ID Cliente',
-    accessor: 'idCliente',
+    Header: 'ID Tipo Capacitación',
+    accessor: 'idTipoCapacitacion',
     filter: 'fuzzyText',
   },
   {
     Header: 'Nombre',
     accessor: 'nombre',
     filter: 'fuzzyText',
-  },
-  
-  {
-    Header: 'Seleccionar',
-    accessor: 'select',
+  },{
+    Header: 'Opciones',
+    accessor: 'detalle',
     disableFilters: true,
   },
-  
 ];
+

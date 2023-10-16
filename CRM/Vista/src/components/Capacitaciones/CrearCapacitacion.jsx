@@ -1,322 +1,66 @@
 
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { Navbar } from '../Navbar/Navbar';
-import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
-import { matchSorter } from 'match-sorter'
 import './CrearCapacitacion.css';
+import { Table, columns, Styles } from './TablaSelectClientes';
+import { TableF, columnsF } from './TablaSelectFuncionario';
 import Swal from 'sweetalert2';
-
-const FilterSelect = styled.select`
-  width: 100px;
-  height: 35px;
-  background-color: #FFFFFF;
-  border: 1px solid #000000;
-  border-radius: 5px;
-  color: #333;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  margin-left: 0px;
-  box-shadow: 0 0 1px 0 #000000;
-`;
-
-const SearchInput = styled.input`
-  padding: 10px;
-  border: 1px solid #000000;
-  border-radius: 5px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  margin-left: 0px;
-  width: 100px;
-  height: 15px;
-  box-shadow: 0 0 1px 0 #000000;
-`;
-
-const ButtonTbl = styled.button`
-  background-color: #ffffff;
-  border: 1px solid #000000;
-  align-items: center; 
-  border-radius: 5px;
-  padding: 5px 10px;
-  color: #000000;
-  font-size: 12px;
-  cursor: pointer;
-`;
-
-const Styles = styled.div`
-  padding: 0.1rem;
-  margin-left: 0px;
-  margin-top: 30px;
-
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
-
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
-
-    th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
-  .pagination {
-    padding: 0.5rem;
-  }
-`
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-}) {
-  const count = preGlobalFilteredRows.length
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined)
-  }, 200)
-
-  return (
-    <span>
-      {' '}
-      <input
-        value={value || ""}
-        onChange={e => {
-          setValue(e.target.value);
-          onChange(e.target.value);
-        }}
-        placeholder={`Buscar entre ${count} registros...`}
-        style={{
-          fontSize: '1.1rem',
-          border: '1px solid black',
-          marginBottom: '1px',
-          marginRight: '1px',
-          borderRadius: '5px',
-          width: '300px'
-        }}
-      />
-    </span>
-  )
-}
-
-//Uso de librería fuzzy para buscar en columnas
-function fuzzyTextFilterFn(rows, id, filterValue) {
-  return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
-}
-fuzzyTextFilterFn.autoRemove = val => !val
-
-function Table({ columns, data }) {
-  const [clientesSeleccionados, setClienteArray] = useState([]);
-  const filterTypes = React.useMemo(
-    () => ({
-      fuzzyText: fuzzyTextFilterFn,
-      text: (rows, id, filterValue) => {
-        return rows.filter(row => {
-          const rowValue = row.values[id]
-          return rowValue !== undefined
-            ? String(rowValue)
-              .toLowerCase()
-              .startsWith(String(filterValue).toLowerCase())
-            : true
-        })
-      },
-    }),
-    []
-  )
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    preGlobalFilteredRows,
-    setGlobalFilter,
-    visibleColumns,
-    state,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: { pageIndex: 0 },
-      filterTypes
-    },
-    useFilters,
-    useGlobalFilter,
-    usePagination
-  );
-
-  return (
-    <>
-      <table {...getTableProps()} style={{ margin: '0' }}>
-        <thead>
-          <tr>
-            <th
-              colSpan={visibleColumns.length}
-              style={{
-                textAlign: 'left',
-              }}
-            >
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={state.globalFilter}
-                setGlobalFilter={setGlobalFilter}
-              />
-            </th>
-          </tr>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map(row => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <td {...cell.getCellProps()}>
-                      {cell.column.id === 'checkbox' ? (
-                        <input type="checkbox" style={{ width: '15px', height: '15px', margin: '0' }} />
-                      ) : (
-                        cell.render('Cell')
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <div className="pagination">
-        <ButtonTbl onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </ButtonTbl>{' '}
-        <ButtonTbl onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </ButtonTbl>{' '}
-        <ButtonTbl onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </ButtonTbl>{' '}
-        <ButtonTbl onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </ButtonTbl>{' '}
-        <span>
-          Página{' '}
-          <strong>
-            {pageIndex + 1} de {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Mostrar {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-    </>
-  );
-}
-
-const columnsF = [
-  {
-    Header: 'Cédula',
-    accessor: 'cedula',
-  },
-  {
-    Header: 'ID Funcionario',
-    accessor: 'idF',
-  },
-  {
-    Header: 'Nombre',
-    accessor: 'nombre',
-  },
-  {
-    accessor: 'checkbox',
-  },
-];
-
-const dataF = []
-
-const columnsC = [
-  {
-    Header: 'Cédula Juridica',
-    accessor: 'cedula',
-  },
-  {
-    Header: 'ID Cliente',
-    accessor: 'idC',
-  },
-  {
-    Header: 'Nombre',
-    accessor: 'nombre',
-  },
-  {
-    accessor: 'checkbox',
-  },
-];
-
-const dataC = []
-
+const API = "http://127.0.0.1:5000";
 
 export const CrearCapacitacion = () => {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [costo, setCosto] = useState('');
+  const [horas, setHora] = useState('');
+  const [modalidad, setModalidad] = useState('');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fechaEjecucion, setFechaEjecucion] = useState(new Date());
+  const [fechaFinal, setFechaFinal] = useState(new Date());
   const [inputValue, setInputValue] = useState('');
   const [estado, setEstado] = useState("");
   const [tipoCapacitacion, setTipoCapacitacion] = useState("");
   const [fileInputKey, setFileInputKey] = useState('');
-  //Esto va parte de la tabla que aun no esta creada
-  const [cedula, setCedula] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
+  const [IdCliente, setIdCliente] = useState('');
+  const [IdFuncionario, setIdFuncionario] = useState('');
   const [nombreCliente, setNombreCliente] = useState('');
+  const [clientes, setClientes] = useState([]);
+  const [funcionarios, setFuncionarios] = useState([]);
   let navigate = useNavigate();
 
-  const gotoMenu = () => { navigate('/', {}); }
+  const gotoMenu = () => { navigate('/capacitacion', {}); }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    //Es para enviar informacion al backend
-    //Lo de abajo es la notificacion de que ya se creo la evalaucion
+    const data = {
+        nombre: nombre,
+        descripcion: descripcion, 
+        fechaEjecucion: fechaEjecucion, 
+        documentos: fileInputKey,
+        estado: estado,
+        horasDuracion: horas, 
+        fechaFinalizacion: fechaFinal,
+        modalidad: 1,
+        funcionario: IdFuncionario, 
+        precio: costo, 
+        tipoCapacitacion: tipoCapacitacion, 
+        idProyecto: null, 
+        idCliente: IdCliente  
+      };
+      
+    const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    };
+    const res = await fetch(`${API}/createTipoCapacitacion`, requestOptions); 
     Swal.fire({
       title: 'Confirmación',
       text: 'La capacitación se ha creado exitosamente',
@@ -333,9 +77,32 @@ export const CrearCapacitacion = () => {
 
   }
   const handleSearch = async () => {
-    //Obtener infromacion existente en la base de datos
-    //A esto me refiero a la tabla de los clientes
+    const res = await fetch(`${API}/getClientes`);
+    const data = await res.json();//resultado de la consulta
+    console.log(data)
+    // Realiza la conversión de datos aquí
+    const formattedData = data.map((item) => ({
+      cedula: item[1],
+      idCliente: item[0],
+      nombre: item[2],
+    }));
+    setClientes(formattedData);
+
+    const res2 = await fetch(`${API}/getFuncionarios`);
+    const data2 = await res2.json();//resultado de la consulta
+    console.log(data2)
+    // Realiza la conversión de datos aquí
+    const formattedData2 = data2.map((item) => ({
+      cedula: item[4],
+      idFuncionario: item[0],
+      nombre: item[1] + ' ' + item[2],
+    }));
+    setFuncionarios(formattedData2);
   };
+
+  React.useEffect(() => {
+    handleSearch()
+  }, []);
 
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -362,12 +129,13 @@ export const CrearCapacitacion = () => {
   const handleCostoChange = (event) => {
     setCosto(event.target.value);
   };
+  const handleHoraChange = (event) => {
+    setHora(event.target.value);
+  };
   const handleClienteNombreChange = (event) => {
     setNombreCliente(event.target.value);
   };
-  const handleCedulaChange = (event) => {
-    setCedula(event.target.value);
-  };
+
   const handleFechaEjecucionChange = (date) => {
     setFechaEjecucion(date);
 
@@ -380,8 +148,31 @@ export const CrearCapacitacion = () => {
 
     setInputValue(formattedDate);
   };
+
+  const handleFechaFinalChange = (date) => {
+    setFechaFinal(date);
+
+    const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
+    const day = date.getDate(); // Obtener el día
+    const year = date.getFullYear(); // Obtener el año
+    // Construir la cadena en el formato deseado (mm/dd/aaaa)
+    const formattedDate = `${month}/${day}/${year}`;
+    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
+
+    setInputValue(formattedDate);
+  };
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
+  };
+
+  const handleIdClienteChange = (idCliente) => {
+    console.log(idCliente + 'Por aqui en handle')
+    setIdCliente(idCliente);
+  };
+
+  const handleIdFuncionarioChange = (idFuncionario) => {
+    setIdFuncionario(idFuncionario);
   };
 
   const Title = styled.h1`
@@ -414,32 +205,41 @@ export const CrearCapacitacion = () => {
             <div class="mb-3">
               <select id="mySelect" value={estado} onChange={handleEstadoChange}>
                 <option value="">Seleccione el estado de la capacitación</option>
+                <option value="">Solicitada</option>
+                <option value="">En progreso</option>
+                <option value="">Finalizado</option>
               </select>
               <select id="mySelect2" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
                 <option value="">Seleccione el tipo capacitación</option>
+                <option value="">Aplicación y evaluación de Accesibilidad Web</option>
+                <option value="">Teleconferencias y videoconferencias Accesibles</option>
+                <option value="">Uso de Lectores de Pantalla</option>
               </select>
               <select id="mySelect3" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
                 <option value="">Seleccione la modalidad</option>
+                <option value="">Sincrónica </option>
+                <option value="">Asincrónica</option>
+                <option value="">Mixta</option>
               </select>
             </div>
             <div className="mb-3" >
-              <div style={{ display: 'flex'}}>
-              <label for="costInput" class="form-label" style={{marginTop: '2px', marginRight: '10px'}}>Costo:</label>
-              <input type="text" class="form-control custom-margin-right" id="costInput" style={{width:'300px'}}
-                placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
-              
-              <label for="costInput" class="form-label" style={{marginTop: '2px', marginRight: '10px'}}>Horas:</label>
-              <input type="text" class="form-control custom-margin-right" id="costInput" style={{width:'300px'}}
-                placeholder="Ingrese la duración en horas de la capacitación" value={costo} onChange={handleCostoChange} />
-            </div> 
+              <div style={{ display: 'flex' }}>
+                <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Costo:</label>
+                <input type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' }}
+                  placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
+
+                <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Horas:</label>
+                <input type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' }}
+                  placeholder="Ingrese la duración en horas de la capacitación" value={horas} onChange={handleHoraChange} />
+              </div>
             </div>
             <label for="inputDate" className="form-label">
-                Fecha de inicio:
-              </label>
-              <label style={{ marginLeft: '40px' }} for="inputDate" className="form-label">
-                Fecha de finalización:
-              </label>
-            <div className="mb-3" style={{ display: 'flex'}}>
+              Fecha de inicio:
+            </label>
+            <label style={{ marginLeft: '40px' }} for="inputDate" className="form-label">
+              Fecha de finalización:
+            </label>
+            <div className="mb-3" style={{ display: 'flex' }}>
               <DatePicker
                 selected={fechaEjecucion}
                 onChange={handleFechaEjecucionChange}
@@ -449,8 +249,8 @@ export const CrearCapacitacion = () => {
                 showMonthDropdown
               />
               <DatePicker
-                selected={fechaEjecucion}
-                onChange={handleFechaEjecucionChange}
+                selected={fechaFinal}
+                onChange={handleFechaFinalChange}
                 dateFormat="dd/MM/yyyy"
                 inline
                 showYearDropdown
@@ -479,20 +279,20 @@ export const CrearCapacitacion = () => {
               </div>
             </div>
             <div style={{ marginTop: '30px' }}>
-            <label class="form-label" style={{ marginBottom: '70px' }}>Funcionario</label>
-            <label class="form-label" style={{ marginLeft: '230px' }}>Cliente</label>
-            <div style={{ display: 'flex' }}>
-              <Styles>
-                <Table columns={columnsF} data={dataF} />
-              </Styles>
-              <Styles>
-                <Table columns={columnsC} data={dataC} />
-              </Styles>
-            </div>
+              <label class="form-label" style={{ marginBottom: '70px' }}>Cliente</label>
+              <label class="form-label" style={{ marginLeft: '480px' }}>Funcionario</label>
+              <div style={{ display: 'flex' }}>
+                <Styles>
+                  <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange} />
+                </Styles>
+                <Styles style={{ marginLeft: '60px' }}>
+                  <TableF columns={columnsF} data={funcionarios} handleIdFuncionarioChange={handleIdFuncionarioChange} />
+                </Styles>
+              </div>
             </div>
             <div className="mb-3"
               style={{ marginTop: '100px' }} >
-              <button type="submit" className='button1' style={{marginTop:'-100px'}} >
+              <button type="submit" className='button1' style={{ marginTop: '-100px' }} >
                 <AiOutlinePlusCircle style={{
                   fontSize: '25px', marginRight: '20px', marginLeft: '20px'// Tamaño del icono
                 }} /> Crear capacitación

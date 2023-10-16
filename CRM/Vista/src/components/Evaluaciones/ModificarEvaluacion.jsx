@@ -55,10 +55,9 @@ export const ModificarEvaluacion = () => {
               gotoMenu()
               //gotoMenu();
             } else if (result.isDenied) {
-              Swal.fire('No se guaron los cambios')
+              Swal.fire('No se guardaron los cambios')
             }
-          })
-        
+          }) 
     }
     const handleSearch = async () => { 
         const resultado = await fetch(`${API}/getTipoEvaluaciones`);
@@ -76,7 +75,6 @@ export const ModificarEvaluacion = () => {
         console.log(3) // imprime en consola web
         console.log(data) // imprime en consola web
         console.log("idEvaluacion:", data[0]);
-        
         console.log("idCliente:", data[11]);
         setIdCliente(data[11])
         setNombre(data[2])
@@ -84,7 +82,6 @@ export const ModificarEvaluacion = () => {
         //setFechaEjecucion('20/09/2023')
         setTipoEvaluacion(data[5])
         setEstado(data[8])
-
         setCosto(data[9])
        
         

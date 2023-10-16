@@ -34,7 +34,7 @@ export const TiposEvaluaciones = () => {
             nombre: item[1],
             costo:item[2],
           }))
-        setTiposEvaluaciones( formatted);
+        setTiposEvaluaciones(formatted);
     };
     React.useEffect(() => {
         handleSearch()
@@ -58,7 +58,7 @@ export const TiposEvaluaciones = () => {
               //Aqui se debe enviar a eliminar
             //   gotoTipoEvaluacion();
             } else if (result.isDenied) {
-              Swal.fire('No se guaron los cambios')
+              Swal.fire('No se guardaron los cambios')
             }
           })
 
@@ -87,10 +87,7 @@ export const TiposEvaluaciones = () => {
                   <Table columns={columns} data={tiposEvaluaciones} handleDelete={handleDelete}/>
                 </Styles>
                 </div>
-
-
             </div>
-           
         </div>
 
 

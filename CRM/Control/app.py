@@ -160,7 +160,8 @@ def updateCotizacion():
 
 @app.route('/deleteCotizacion/<idCotizacion>', methods=['POST'])
 def deleteCotizacion(idCotizacion):
-    id = control.updateCotizacion( idCotizacion, None,None,None,None,None,None,1,None)
+    print('DeleteCotizacion!')
+    id = control.updateCotizacion(int (idCotizacion), None,None,None,None,None,None,1,None)
     return jsonify(str(id))
 
 
@@ -448,10 +449,7 @@ def readTipoCapacitacion(idTipoCapacitacion):
 
 @app.route('/updateTipoCapacitacion', methods=['POST'])
 def updateTipoCapacitacion():
-    id = control.updateTipoCapacitacion(
-        request.json['idTipoCapacitacion'],
-        request.json['nombre']
-    )
+    id = control.updateTipoCapacitacion(int(request.json['id']), request.json['nombre'])
     return jsonify(str(id))
 
 @app.route('/getTipoCapacitacion', methods=['GET'])
@@ -662,7 +660,13 @@ def getCapacitaciones():
     capacitaciones = control.capacitacion
     lista = []
     for cap in capacitaciones:
-        lista += [cap.toList()]
+        for cliente in control.cliente:
+            if cap.idCliente == cliente.idCliente:
+                nombreCliente = cliente.nombre
+        for tipo in control.tipoCapacitacion:
+            if cap.tipoCapacitacion == tipo.idTipoCapacitacion:
+                nombreTipo = tipo.nombre
+        lista += [cap.toList()+[nombreCliente]+[nombreTipo]]
     print(lista)
     return jsonify(lista)
 
@@ -682,6 +686,20 @@ def getServicios():
     print(lista)
     return jsonify(lista)
 
+#getEvaluaciones
+@app.route('/getCotizaciones', methods=['GET'])
+def getCotizaciones():
+    print('GetCotizaciones!')
+    cotizaciones = control.cotizacion
+    lista = []
+    for eval in cotizaciones:
+        for cliente in control.cliente:
+            if eval.idCliente == cliente.idCliente:
+                nombreCliente = cliente.nombre
+        lista += [eval.toList()+[nombreCliente]]
+    print(lista)
+    return jsonify(lista)
+
 #getNewIdProyecto
 @app.route('/getNewIdProyecto', methods=['GET'])
 def getNewIdProyecto():
@@ -697,6 +715,32 @@ def getNewIdProyecto():
 
     print(nueva_cadena)
     return jsonify(nueva_cadena)
+
+#Crear Reporte Financiero
+@app.route('/createReporteFinanciero', methods=['POST'])
+def createReporteFinanciero():
+
+    servicios = request.form.get('servicios')
+    cliente = request.form.get('cliente')
+    estado = request.form.get('estado')
+    fechaInicio = request.form.get('fechaInicio')
+    fechaFinal = request.form.get('fechaFinal')
+
+    id = control.createReporteFinanciero(servicios, cliente, estado, fechaInicio, fechaFinal)
+    return jsonify(str(id))
+
+#Crear Reporte Rendimiento
+@app.route('/createReporteRendimiento', methods=['POST'])
+def createReporteRendimiento():
+
+    servicios = request.form.get('servicios')
+    cliente = request.form.get('cliente')
+    estado = request.form.get('estado')
+    fechaInicio = request.form.get('fechaInicio')
+    fechaFinal = request.form.get('fechaFinal')
+
+    id = control.createReporteRendimiento(servicios, cliente, estado, fechaInicio, fechaFinal)
+    return jsonify(str(id))
 
 
 # inicia el servidor

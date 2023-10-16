@@ -294,7 +294,7 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
   )
     return (
       <>
-        <table {...getTableProps()} style={{ marginRight: '0px' }}>
+        <table {...getTableProps()}>
           <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -407,3 +407,4 @@ export const columns = [
   },
   
 ];
+

@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -8,6 +8,8 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { Navbar } from '../Navbar/Navbar';
 import './CrearCotizacion.css';
 import Swal from 'sweetalert2';
+const API = "http://127.0.0.1:5000";
+
 export const ModificarCotizacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
@@ -21,74 +23,65 @@ export const ModificarCotizacion = () => {
     const [cedula, setCedula] = useState('');
     const [nombreCliente, setNombreCliente] = useState('');
     let navigate = useNavigate();
-
+    const { idCotizacion } = useParams();
     const gotoMenu = () => { navigate('/', {}); }
+    const gotoCotizaciones = () => { navigate('/cotizacion'); }
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
-        //Es para enviar informacion al backend
-
-        //Para enviar los datos de la fecha es inputValue
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-
-        //Notificacion de que se realizaron los cambios
+        event.preventDefault();  
         Swal.fire({
             title: '¿Está seguro desea modificar la cotización?',
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
-            allowEscapeKey: false,
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-
+            allowEscapeKey: false, 
+          }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire('La cotización se ha modificado satisfactoriamente')
-                gotoMenu();
+              Swal.fire('La cotización se ha modificado satisfactoriamente')
+              gotoCotizaciones();
             } else if (result.isDenied) {
-                Swal.fire('No se guaron los cambios')
+              Swal.fire('No se guaron los cambios')
             }
-        })
-
+          }) 
     }
+
     const handleSearch = async () => {
-        //Obtener infromacion existente en la base de datos
-        // const res = await fetch(`${API}/getProfesorCodigo/${codigoRef.current.value}`);
-        // const data = await res.json();//resultado de la consulta
-        // console.log(data) // imprime en consola web
-        setNombre('Cotizacion para el Ministerio de salud')
-        setDescripcion('Cotizacion de accesibilidad')
-        //setFechaEjecucion('20/09/2023')
-        setTipoCotizacion(1)
+        const res = await fetch(`${API}/readCotizacion/${idCotizacion}`);
+        const data = await res.json();
+        const rest = await fetch(`${API}/readCliente/${data[3]}`);
+        const dato = await rest.json();
+        setNombre(data[1])
+        setDescripcion(data[2])
+        var est = ''
+        if (data[7] === 1) { est = 'Eliminado' }
+        if (data[7] === 2) { est = 'En progreso' }
+        if (data[7] === 3) { est = 'Solicitado' }
+        if (data[7] === 4) { est = 'En planeacion' }
+        if (data[7] === 5) { est = 'Activo' }
+        if (data[7] === 6) { est = 'Inactivo' }
+        setEstado(est)
+        setCosto(data[5])
+        setCedula(dato[1])
+        setNombreCliente(dato[2])
 
-        setEstado(1)
-        setCosto(230000)
-        setCedula('123129131')
-        setNombreCliente('Ministerio de hacienda')
-
-        //La fecha
-        const fechaBaseDatos = "2023-11-08T00:00:00Z"; // Ejemplo
-        // Parsear la fecha de la base de datos en un objeto Date
-        // Convertir la cadena de fecha en un objeto Date en zona horaria UTC
-        //Tiene que se como el de abajo ya que es necesario la zona horaria entoces se agrega lo de T
-        // const fechaDesdeBaseDatos = new Date(fechaSoloFecha + "T00:00:00Z");
-        const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
-        // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
+        const fechaDesdeBaseDatos = new Date(data[8] + "T00:00:00Z");
         fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
-        // Luego, establece esa fecha en el estado fechaEjecucion
         setFechaEjecucion(fechaDesdeBaseDatos);
-
+        
         // Para modificar los archivos
-        setSelectedFiles([
-            {
-                nombre: 'Carnet e Informe de matrícula.pdf',
-                url: 'CRMFrontend/public/Carnet e Informe de matrícula.pdf'
-            },
-            {
-                nombre: 'logo192.png',
-                url: 'CRMFrontend/public/logo192.png'
-            }
-        ]);
+        const res2 = await fetch(`${API}/getDocs/${data[1]}`);
+        const data2 = await res2.json();
+        const files = Object.keys(data2);
+        console.log(files);
+
+        const modifiedData = Object.keys(data2).map(nombre => ({
+            nombre: nombre,
+            url: data2[nombre]
+          }));
+          
+        
+        setSelectedFiles(modifiedData);
     };
     const handleFileChange = (e) => {
         const files = e.target.files;
@@ -176,13 +169,6 @@ export const ModificarCotizacion = () => {
                                 <option value="">Seleccione el estado de la cotización</option>
                                 <option value="1">Activo</option>
                                 <option value="2">Inactivo</option>
-                            </select>
-                            <select id="mySelect2" value={tipoCotizacion} onChange={handleTipoCotizacionChange}>
-                                <option value="">Seleccione el tipo cotización</option>
-                                <option value="1">Automática Aleatoria</option>
-                                <option value="2">Automática Específica</option>
-                                <option value="2">Manual Específica</option>
-                                <option value="2">Completa Aleatoria</option>
                             </select>
                         </div>
 

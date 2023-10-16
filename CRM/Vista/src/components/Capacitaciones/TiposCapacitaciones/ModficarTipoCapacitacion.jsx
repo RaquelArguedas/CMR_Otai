@@ -1,22 +1,36 @@
 import React, { useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../../Navbar/Navbar';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import '../../Clientes/CSSClientes/Clientes.css'
 import { AiOutlinePlusCircle } from 'react-icons/ai';
+const API = "http://127.0.0.1:5000";
+
 export const ModficarTipoCapacitacion = () => {
     let navigate = useNavigate();
     const gotoTipoCapacitacion = () => { navigate('/tiposCapacitaciones'); }
 
     const [nombre, setNombre] = useState('');
     const [costo, setCosto] = useState('');
+
+    const { idTipoCapacitacion } = useParams();
    
     const handleSubmit = async (event) => {
-        event.preventDefault();  
-        //Es para enviar informacion al backend
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-        //Recordar en el backend poner lo de fecha de ingreso que se hace alla
+        event.preventDefault();   
+        const data = {
+            id: idTipoCapacitacion,
+            nombre: nombre,  
+          };
+          
+        const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        };
+        const res = await fetch(`${API}/updateTipoCapacitacion`, requestOptions);
         Swal.fire({
             title: '¿Está seguro que desea modificar el tipo de capacitación?',
             showDenyButton: true,
@@ -37,7 +51,7 @@ export const ModficarTipoCapacitacion = () => {
         
     };
     const handleSearch = async () => { 
-        setNombre('Accesible')
+        setNombre(nombre)
         setCosto('100000')
     }
     React.useEffect(() => {
@@ -73,15 +87,7 @@ export const ModficarTipoCapacitacion = () => {
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange}/>
                             
-                        </div>
-                        <div class="mb-3">
-                            <label  style={{ marginRight: '170px'  }}for="apellidoInput" class="form-label">Costo:</label>
-                            <input type="text" class="form-control custom-margin-right" id="nameInput"
-                            placeholder="Ingrese el costo del tipo" value={costo} onChange={handleCostoChange}/>
-                            
-                        </div>
-                    
-                                                                    
+                        </div>                                       
                         <div className="mb-3" style={{ marginRight: '140px', marginTop:  '100px' }} >
                             <button type="submit" className='button1' >
                                 <AiOutlinePlusCircle style={{

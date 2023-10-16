@@ -112,114 +112,6 @@ function DefaultColumnFilter({
     />
   )
 }
-// Define un filtro de columna para selección
-function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) {
-  // Calculate the options for filtering
-  // using the preFilteredRows
-  const options = React.useMemo(() => {
-    const options = new Set()
-    preFilteredRows.forEach(row => {
-      options.add(row.values[id])
-    })
-    return [...options.values()]
-  }, [id, preFilteredRows])
-
-  // Render a multi-select box
-  return (
-    <FilterSelect
-      value={filterValue}
-      onChange={e => {
-        setFilter(e.target.value || undefined)
-      }}
-    >
-      <option value="">Todos</option>
-      {options.map((option, i) => (
-        <option key={i} value={option}>
-          {option}
-        </option>
-      ))}
-    </FilterSelect>
-  )
-}
-// Define una función personalizada para filtrar fechas en un rango
-export function dateBetweenFilterFn(rows, id, filterValues) {
-  const sd = filterValues[0] ? new Date(filterValues[0]) : undefined;
-  const ed = filterValues[1] ? new Date(filterValues[1]) : undefined;
-  if (ed || sd) {
-    return rows.filter((r) => {
-      // format data
-      var dateAndHour = r.values[id].split(" ");
-      var [year, month, day] = dateAndHour[0].split("-");
-      var date = [month, day, year].join("/");
-      var hour = dateAndHour[1];
-      var formattedData = date + " " + hour;
-
-      const cellDate = new Date(formattedData);
-
-      if (ed && sd) {
-        return cellDate >= sd && cellDate <= ed;
-      } else if (sd) {
-        return cellDate >= sd;
-      } else {
-        return cellDate <= ed;
-      }
-    });
-  } else {
-    return rows;
-  }
-}
-
-// Define un filtro de columna para rango de fechas
-export function DateRangeColumnFilter({
-  column: { filterValue = [], preFilteredRows, setFilter, id }
-}) {
-  const [min, max] = React.useMemo(() => {
-    let min = preFilteredRows.length
-      ? new Date(preFilteredRows[0].values[id])
-      : new Date(0);
-    let max = preFilteredRows.length
-      ? new Date(preFilteredRows[0].values[id])
-      : new Date(0);
-
-    preFilteredRows.forEach((row) => {
-      const rowDate = new Date(row.values[id]);
-
-      min = rowDate <= min ? rowDate : min;
-      max = rowDate >= max ? rowDate : max;
-    });
-
-    return [min, max];
-  }, [id, preFilteredRows]);
-
-  return (
-    <div>
-      <SearchInput
-        //min={min.toISOString().slice(0, 10)}
-        onChange={(e) => {
-          const val = e.target.value;
-          setFilter((old = []) => [val ? val : undefined, old[1]]);
-        }}
-        type="date"
-        value={filterValue[0] || ""}
-      />
-      {" a "}
-      <SearchInput
-        //max={max.toISOString().slice(0, 10)}
-        onChange={(e) => {
-          const val = e.target.value;
-          setFilter((old = []) => [
-            old[0],
-            val ? val.concat("T23:59:59.999Z") : undefined
-          ]);
-        }}
-        type="date"
-        value={filterValue[1]?.slice(0, 10) || ""}
-      />
-    </div>
-  );
-}
 // Define una función de filtro de texto difuso
 function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
@@ -227,22 +119,22 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
 
-export const Table = ({ columns, data, handleIdClienteChange }) => {
+export const TableF = ({ columns, data, handleIdFuncionarioChange }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
     
-    const [selectedClientId, setSelectedClientId] = useState(null);
+    const [selectedFuncId, setSelectedFuncId] = useState(null);
 
-    const handleSelectClient = ( idCliente) => {
-      console.log(idCliente)
-    setSelectedClientId(idCliente);
-    handleIdClienteChange(idCliente)
+    const handleSelectClient = ( idFuncionario) => {
+      console.log(idFuncionario)
+    setSelectedFuncId(idFuncionario);
+    handleIdFuncionarioChange(idFuncionario)
     };
 
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, overridCliente the default text filter to use
+      // Or, overridFuncionario the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
@@ -294,7 +186,7 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
   )
     return (
       <>
-        <table {...getTableProps()} style={{ marginRight: '0px' }}>
+        <table {...getTableProps()}>
           <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -318,9 +210,9 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
                       // Aquí agregamos la lógica para los checkboxes
                       <input
                         type="checkbox"
-                        checked={row.original.idCliente === selectedClientId}
+                        checked={row.original.idFuncionario === selectedFuncId}
                         onChange={() => {
-                           handleSelectClient( row.original.idCliente)
+                           handleSelectClient( row.original.idFuncionario)
                             
                         
                           }}
@@ -383,15 +275,15 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
   
 
 // Define las columnas de la tabla
-export const columns = [
+export const columnsF = [
     {
-    Header: 'Cédula Jurídica',
+    Header: 'Cédula',
     accessor: 'cedula',
     filter: 'fuzzyText',
   },
   {
-    Header: 'ID Cliente',
-    accessor: 'idCliente',
+    Header: 'ID Funcionario',
+    accessor: 'idFuncionario',
     filter: 'fuzzyText',
   },
   {
