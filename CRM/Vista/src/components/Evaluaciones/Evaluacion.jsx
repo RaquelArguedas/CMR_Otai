@@ -47,7 +47,7 @@ export const Evaluacion = () => {
     const formattedData = data.map((item) => {
       
       var estado = '';
-      switch (item[9]) {
+      switch (item[8]) {
       case 1:
           estado = 'Eliminado';
           break;

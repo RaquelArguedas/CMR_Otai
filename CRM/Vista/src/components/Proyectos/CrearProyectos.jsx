@@ -25,7 +25,7 @@ export const CrearProyectos = () => {
     const [fileInputKey, setFileInputKey] = useState('');
     //Esto va parte de la tabla que aun no esta creada
     let navigate = useNavigate();
-    const gotoMenu = () => { navigate('/', {}); }
+    const gotoMenu = () => { navigate('/proyectos', {}); }
     const [servicios, setServicios] = useState([]);
     const [idServicio, setIdServicios] = useState([]);
 
@@ -33,11 +33,11 @@ export const CrearProyectos = () => {
 
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
         const res = await fetch(`${API}/getNewIdProyecto`);
         const data = await res.json();//resultado de la consulta
         console.log("dataaaaaaaaaaaaaaa")
-        console.log(data)
-        event.preventDefault();  
+        console.log(data)  
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         Swal.fire({
@@ -49,44 +49,36 @@ export const CrearProyectos = () => {
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
           }).then((result) => {
             if (result.isConfirmed) {
-              // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
-            //   const formData2 = new FormData();
-            //   const selectedFilesModified = selectedFiles.map((item) => { 
-            //     if (item.url instanceof File) {
-            //         formData2.append('doc', item.url);
-            //         fetch(`${API}/saveDoc/${idProyecto}`, {
-            //             method: 'POST',
-            //             body: formData2, // Utiliza el objeto FormData que contiene archivos
-            //         });
-            //         formData2.delete('*');
-            //     }else {
-            //         return null; // O cualquier otro valor que desees en lugar de null
-            //       }
-            //     }).filter((item) => item !== null); // Eliminar elementos nulos
-            //   // console.log(selectedFilesModified)
+            //   El usuario hizo clic en "OK", entonces llama a la función gotoMenu
+              const formData2 = new FormData();
+              const selectedFilesModified = selectedFiles.map((item) => { 
+                if (item.url instanceof File) {
+                    formData2.append('doc', item.url);
+                    fetch(`${API}/saveDoc/${data}`, {
+                        method: 'POST',
+                        body: formData2, // Utiliza el objeto FormData que contiene archivos
+                    });
+                    formData2.delete('*');
+                }else {
+                    return null; // O cualquier otro valor que desees en lugar de null
+                  }
+                }).filter((item) => item !== null); // Eliminar elementos nulos
+              // console.log(selectedFilesModified)
 
-
-            //   const formData = new FormData();
-            //   const añoN = fechaIncio.getFullYear();
-            // const mesN = String(fechaIncio.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-            // const diaN = String(fechaIncio.getDate()).padStart(2, "0");
-            // const año = fechaFinalizacion.getFullYear();
-            // const mes = String(fechaFinalizacion.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-            // const dia = String(fechaFinalizacion.getDate()).padStart(2, "0");
-            //     formData.append('nombre', nombre);
-            //     formData.append('descripcion', descripcion);
-            //     formData.append('fechaInicio', `${añoN}-${mesN}-${diaN}`);
-            //     formData.append('fechaFinalizacion', `${año}-${mes}-${dia}`);
-            //     formData.append('subTotal', estado);
-            //     formData.append('estado', estado);
-            //     formData.append('servicios', idServicio);
-            //     formData.append('doc', selectedFilesModified);
-            //     const res = fetch(`${API}/updateProyecto/${idProyecto}`, {
-            //         method: 'POST',
-            //         body: formData
-            //     });
-              
-              //gotoMenu();
+              const formData = new FormData();
+                formData.append('nombre', nombre);
+                formData.append('descripcion', descripcion);
+                formData.append('fechaInicio', inputValue);
+                formData.append('fechaFinalizacion', outValue);
+                formData.append('subTotal', estado);
+                formData.append('estado', estado);
+                formData.append('servicios', idServicio);
+                formData.append('doc', selectedFilesModified);
+                const res = fetch(`${API}/updateProyecto/${data}`, {
+                    method: 'POST',
+                    body: formData
+                });
+              gotoMenu();
             }
           });
         

@@ -252,7 +252,9 @@ export const Table = ({ columns, data, handleidServicioChange }) => {
         // Este efecto se ejecutará cada vez que selectProyectosID cambie.
         handleidServicioChange(selectProyectosID);
     }, [selectProyectosID]);
-  const filterTypes = React.useMemo(
+    
+    
+    const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
@@ -332,7 +334,7 @@ export const Table = ({ columns, data, handleidServicioChange }) => {
                       // Aquí agregamos la lógica para los checkboxes
                       <input
                         type="checkbox"
-                        // checked={selectProyectosID.includes(row.original.idServicio)}
+                        checked={selectProyectosID.includes(row.original.idServicio)}
                         onChange={() => {
                             handleSelectServicio( row.original.idServicio)
                             
