@@ -26,13 +26,13 @@ control = SingletonDAO()
 #Crear
 @app.route('/createCapacitacion', methods=['POST'])
 def createCapacitacion(): 
-  id = control.createCapacitacion(request.json['idCapacitacion'], request.json['nombre'],
+  id = control.createCapacitacion(request.json['nombre'],
                                   request.json['descripcion'], request.json['fechaCreacion'], 
                                   request.json['fechaEjecucion'], request.json['documentos'], 
-                                  request.json['idEstado'], request.json['horasDuracion'],
-                                  request.json['fechaFinalizacion'], request.json['modalidad'],
-                                  request.json['idFuncionario'], request.json['precio'],
-                                  request.json['tipoCapacitacion'], request.json['idProyecto'],
+                                  int(request.json['idEstado']), int(request.json['horasDuracion']),
+                                  request.json['fechaFinalizacion'], int(request.json['modalidad']),
+                                  request.json['idFuncionario'], float(request.json['precio']),
+                                  int(request.json['tipoCapacitacion']), request.json['idProyecto'],
                                   request.json['idCliente'])
   
   return jsonify(str(id))
@@ -503,6 +503,17 @@ def deleteTipoEvaluacion(idTipo):
     id = control.deleteTipoEvaluacion(int(idTipo))
     print(id)
     return jsonify(str(id))
+
+#CRUD Estado
+@app.route('/getEstado', methods=['GET'])
+def getEstado():
+    estados = control.estado
+    lista = []
+    for estado in estados:
+        lista += [estado.toList()]
+    print("ESTADOS....................")
+    print(lista)
+    return jsonify(lista)
 
 #CRUD Usuario
 @app.route('/createUsuario', methods=['POST'])

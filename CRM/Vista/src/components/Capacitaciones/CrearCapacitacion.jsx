@@ -21,10 +21,15 @@ export const CrearCapacitacion = () => {
   const [modalidad, setModalidad] = useState('');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fechaEjecucion, setFechaEjecucion] = useState(new Date());
+  const [fechaCreada, setFechaCreada] = useState(new Date());
   const [fechaFinal, setFechaFinal] = useState(new Date());
-  const [inputValue, setInputValue] = useState('');
-  const [estado, setEstado] = useState("");
-  const [tipoCapacitacion, setTipoCapacitacion] = useState("");
+  const [inputValueEjecucion, setInputValueEjecucion] = useState('');
+  const [inputValueFinal, setInputValueFinal] = useState('');
+  const [inputValueCreacion, setInputValueCreacion] = useState('');
+  const [estado, setEstado] = useState('');
+  const [opciones, setOpciones] = useState([]);
+  const [tipoCapacitacion, setTipoCapacitacion] = useState('');
+  const [tiposCapacitacion, setTiposCapacitacion] = useState([]);
   const [fileInputKey, setFileInputKey] = useState('');
   const [IdCliente, setIdCliente] = useState('');
   const [IdFuncionario, setIdFuncionario] = useState('');
@@ -37,22 +42,26 @@ export const CrearCapacitacion = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(inputValueCreacion)
     const data = {
         nombre: nombre,
         descripcion: descripcion, 
-        fechaEjecucion: fechaEjecucion, 
+        fechaCreacion: inputValueCreacion,
+        fechaEjecucion: inputValueEjecucion, 
         documentos: fileInputKey,
-        estado: estado,
+        idEstado: estado,
         horasDuracion: horas, 
-        fechaFinalizacion: fechaFinal,
+        fechaFinalizacion: inputValueFinal,
         modalidad: 1,
-        funcionario: IdFuncionario, 
+        idFuncionario: IdFuncionario, 
         precio: costo, 
         tipoCapacitacion: tipoCapacitacion, 
-        idProyecto: null, 
+        idProyecto: 0, 
         idCliente: IdCliente  
       };
-      
+
+    console.log(data)
+
     const requestOptions = {
     method: 'POST',
     headers: {
@@ -60,22 +69,54 @@ export const CrearCapacitacion = () => {
     },
     body: JSON.stringify(data),
     };
-    const res = await fetch(`${API}/createTipoCapacitacion`, requestOptions); 
-    Swal.fire({
-      title: 'Confirmación',
-      text: 'La capacitación se ha creado exitosamente',
-      icon: 'success',
-      confirmButtonText: 'Aceptar',
-      allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
-      allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
-        gotoMenu();
-      }
-    });
-
+    const res = await fetch(`${API}/createCapacitacion`, requestOptions);
+    if (res.ok) {
+      Swal.fire({
+        title: 'Confirmación',
+        text: 'La capacitación se ha creado exitosamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
+        allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
+      }).then((result) => {
+        if (result.isConfirmed) {
+          gotoMenu();
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al crear la capacitación.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
   }
+
+  const handleGetEstados = async () => {
+    await fetch('${API}/getEstado')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setOpciones(data);
+      })
+      .catch(error => {
+        console.error("Error al obtener estados:", error);
+      });
+  };
+
+  const handleTiposCapacitacion = async () => {
+    await fetch(`${API}/getTipoCapacitacion`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setTiposCapacitacion(data);
+      })
+      .catch(error => {
+        console.error("Error al obtener tipos de capacitacion:", error);
+      });
+  };
+
   const handleSearch = async () => {
     const res = await fetch(`${API}/getClientes`);
     const data = await res.json();//resultado de la consulta
@@ -102,6 +143,8 @@ export const CrearCapacitacion = () => {
 
   React.useEffect(() => {
     handleSearch()
+    handleTiposCapacitacion();
+    //handleGetEstados()
   }, []);
 
   const handleFileChange = (e) => {
@@ -119,6 +162,7 @@ export const CrearCapacitacion = () => {
   };
   const handleTipoCapacitacionChange = (event) => {
     setTipoCapacitacion(event.target.value);
+    console.log()
   };
   const handleNameChange = (event) => {
     setNombre(event.target.value);
@@ -142,11 +186,9 @@ export const CrearCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    // Construir la cadena en el formato deseado (mm/dd/aaaa)
-    const formattedDate = `${month}/${day}/${year}`;
-    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
+    const formattedDate = `${year}/${month}/${day}`;
 
-    setInputValue(formattedDate);
+    setInputValueEjecucion(formattedDate);
   };
 
   const handleFechaFinalChange = (date) => {
@@ -155,15 +197,21 @@ export const CrearCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    // Construir la cadena en el formato deseado (mm/dd/aaaa)
-    const formattedDate = `${month}/${day}/${year}`;
-    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
+    const formattedDate = `${year}/${month}/${day}`;
 
-    setInputValue(formattedDate);
+    console.log(fechaCreada);
+    const monthC = fechaCreada.getMonth() + 1; 
+    const dayC = fechaCreada.getDate(); 
+    const yearC = fechaCreada.getFullYear(); 
+    const formattedDateC = `${yearC}/${monthC}/${dayC}`;
+    console.log(formattedDateC);
+    setInputValueCreacion(formattedDateC);
+
+    setInputValueFinal(formattedDate);
   };
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    setInputValueEjecucion(e.target.value);
   };
 
   const handleIdClienteChange = (idCliente) => {
@@ -174,6 +222,12 @@ export const CrearCapacitacion = () => {
   const handleIdFuncionarioChange = (idFuncionario) => {
     setIdFuncionario(idFuncionario);
   };
+
+  const handleModalidadChange = (event) => {
+    setModalidad(event.target.value);
+  };
+
+  
 
   const Title = styled.h1`
     font-size: 24px;
@@ -204,22 +258,27 @@ export const CrearCapacitacion = () => {
             </div>
             <div class="mb-3">
               <select id="mySelect" value={estado} onChange={handleEstadoChange}>
-                <option value="">Seleccione el estado de la capacitación</option>
-                <option value="">Solicitada</option>
-                <option value="">En progreso</option>
-                <option value="">Finalizado</option>
+              <option value="">Seleccione el estado</option>
+              <option value="1">Eliminado</option>
+              <option value="2">En progreso</option>
+              <option value="3">Solicitado</option>
+              <option value="4">En planeación</option>
+              <option value="5">Activo</option>
+              <option value="6">Inactivo</option>
               </select>
               <select id="mySelect2" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
-                <option value="">Seleccione el tipo capacitación</option>
-                <option value="">Aplicación y evaluación de Accesibilidad Web</option>
-                <option value="">Teleconferencias y videoconferencias Accesibles</option>
-                <option value="">Uso de Lectores de Pantalla</option>
+              <option value="">Seleccione el tipo de capacitación</option>
+              {tiposCapacitacion.map(tipo => (
+                <option key={tipo[0]} value={tipo[0]}>
+                  {tipo[1]}
+                </option>
+              ))}
               </select>
-              <select id="mySelect3" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
+              <select id="mySelect3" value={modalidad} onChange={handleModalidadChange}>
                 <option value="">Seleccione la modalidad</option>
-                <option value="">Sincrónica </option>
-                <option value="">Asincrónica</option>
-                <option value="">Mixta</option>
+                <option value="Hibrida">Hibrida </option>
+                <option value="Presencial">Presencial</option>
+                <option value="Virtual">Virtual</option>
               </select>
             </div>
             <div className="mb-3" >
