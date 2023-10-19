@@ -42,7 +42,6 @@ export const CrearCapacitacion = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(inputValueCreacion)
     const data = {
         nombre: nombre,
         descripcion: descripcion, 
@@ -52,7 +51,7 @@ export const CrearCapacitacion = () => {
         idEstado: estado,
         horasDuracion: horas, 
         fechaFinalizacion: inputValueFinal,
-        modalidad: 1,
+        modalidad: modalidad,
         idFuncionario: IdFuncionario, 
         precio: costo, 
         tipoCapacitacion: tipoCapacitacion, 
@@ -93,17 +92,17 @@ export const CrearCapacitacion = () => {
     }
   }
 
-  const handleGetEstados = async () => {
-    await fetch('${API}/getEstado')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setOpciones(data);
-      })
-      .catch(error => {
-        console.error("Error al obtener estados:", error);
-      });
-  };
+  //const handleGetEstados = async () => {
+    //await fetch('${API}/getEstado')
+      //.then(response => response.json())
+      //.then(data => {
+        //console.log(data);
+        //setOpciones(data);
+      //})
+      //.catch(error => {
+        //console.error("Error al obtener estados:", error);
+      //});
+  //};
 
   const handleTiposCapacitacion = async () => {
     await fetch(`${API}/getTipoCapacitacion`)
@@ -143,7 +142,7 @@ export const CrearCapacitacion = () => {
 
   React.useEffect(() => {
     handleSearch()
-    handleTiposCapacitacion();
+    handleTiposCapacitacion()
     //handleGetEstados()
   }, []);
 
@@ -198,16 +197,15 @@ export const CrearCapacitacion = () => {
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
     const formattedDate = `${year}/${month}/${day}`;
+    setInputValueFinal(formattedDate);
 
-    console.log(fechaCreada);
     const monthC = fechaCreada.getMonth() + 1; 
     const dayC = fechaCreada.getDate(); 
     const yearC = fechaCreada.getFullYear(); 
     const formattedDateC = `${yearC}/${monthC}/${dayC}`;
-    console.log(formattedDateC);
     setInputValueCreacion(formattedDateC);
 
-    setInputValueFinal(formattedDate);
+
   };
 
   const handleInputChange = (e) => {
@@ -276,9 +274,9 @@ export const CrearCapacitacion = () => {
               </select>
               <select id="mySelect3" value={modalidad} onChange={handleModalidadChange}>
                 <option value="">Seleccione la modalidad</option>
-                <option value="Hibrida">Hibrida </option>
-                <option value="Presencial">Presencial</option>
-                <option value="Virtual">Virtual</option>
+                <option value="1">Presencial </option>
+                <option value="2">Virtual</option>
+                <option value="3">Hibrida</option>
               </select>
             </div>
             <div className="mb-3" >

@@ -18,14 +18,18 @@ export const CrearProyectos = () => {
     const [costo, setCosto] = useState('');
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [fechaIncio, setfechaIncio] = useState(new Date());
+    const [inputValueIncio, setInputValueIncio] = useState('');
     const [fechaFinalizacion, setfechaFinalizacion] = useState(new Date());
+    const [inputValueFinalizacion, setInputValueFinalizacion] = useState('');
+    const [fechaCreacion, setFechaCreacion] = useState(new Date());
+    const [inputValueCreacion, setInputValueCreacion] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [outValue, setOutValue] = useState('');
     const [estado, setEstado] = useState("");
     const [fileInputKey, setFileInputKey] = useState('');
     //Esto va parte de la tabla que aun no esta creada
     let navigate = useNavigate();
-    const gotoMenu = () => { navigate('/', {}); }
+    const gotoMenu = () => { navigate('/proyectos', {}); }
     const [servicios, setServicios] = useState([]);
     const [idServicio, setIdServicios] = useState([]);
 
@@ -33,64 +37,64 @@ export const CrearProyectos = () => {
 
 
     const handleSubmit = async (event) => {
-        const res = await fetch(`${API}/getNewIdProyecto`);
-        const data = await res.json();//resultado de la consulta
-        console.log("dataaaaaaaaaaaaaaa")
-        console.log(data)
-        event.preventDefault();  
-        //Es para enviar informacion al backend
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-        Swal.fire({
-            title: 'Confirmación',
-            text: 'La evaluación se ha creado exitosamente',
-            icon: 'success',
-            confirmButtonText: 'Aceptar',
-            allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
-            allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
-            //   const formData2 = new FormData();
-            //   const selectedFilesModified = selectedFiles.map((item) => { 
-            //     if (item.url instanceof File) {
-            //         formData2.append('doc', item.url);
-            //         fetch(`${API}/saveDoc/${idProyecto}`, {
-            //             method: 'POST',
-            //             body: formData2, // Utiliza el objeto FormData que contiene archivos
-            //         });
-            //         formData2.delete('*');
-            //     }else {
-            //         return null; // O cualquier otro valor que desees en lugar de null
-            //       }
-            //     }).filter((item) => item !== null); // Eliminar elementos nulos
-            //   // console.log(selectedFilesModified)
+        //const res = await fetch(`${API}/getNewIdProyecto`);
+        //const data = await res.json();
+        event.preventDefault(); 
+        const data = {
+            nombre: nombre,
+            descripcion: descripcion, 
+            idCliente: null,
+            documentos: fileInputKey,
+            fechaCreacion: inputValueCreacion,
+            fechaInicio: inputValueIncio,
+            fechaFinalizacion: inputValueFinalizacion,
+            subTotal: costo,
+            estado: estado,
+        }; 
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        const res = await fetch(`${API}/createProyecto`, requestOptions);
+        if (res.ok) {
+            Swal.fire({
+                title: 'Confirmación',
+                text: 'El proyecto se ha creado exitosamente',
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                allowOutsideClick: false, 
+                allowEscapeKey: false,    
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    gotoMenu();
+                //   const formData2 = new FormData();
+                //   const selectedFilesModified = selectedFiles.map((item) => { 
+                //     if (item.url instanceof File) {
+                //         formData2.append('doc', item.url);
+                //         fetch(`${API}/saveDoc/${idProyecto}`, {
+                //             method: 'POST',
+                //             body: formData2, // Utiliza el objeto FormData que contiene archivos
+                //         });
+                //         formData2.delete('*');
+                //     }else {
+                //         return null; // O cualquier otro valor que desees en lugar de null
+                //       }
+                //     }).filter((item) => item !== null); // Eliminar elementos nulos
+                //   // console.log(selectedFilesModified)
+            }});    
+        } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un problema al crear el proyecto.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar',
+            });
+        }
+    };
 
-
-            //   const formData = new FormData();
-            //   const añoN = fechaIncio.getFullYear();
-            // const mesN = String(fechaIncio.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-            // const diaN = String(fechaIncio.getDate()).padStart(2, "0");
-            // const año = fechaFinalizacion.getFullYear();
-            // const mes = String(fechaFinalizacion.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-            // const dia = String(fechaFinalizacion.getDate()).padStart(2, "0");
-            //     formData.append('nombre', nombre);
-            //     formData.append('descripcion', descripcion);
-            //     formData.append('fechaInicio', `${añoN}-${mesN}-${diaN}`);
-            //     formData.append('fechaFinalizacion', `${año}-${mes}-${dia}`);
-            //     formData.append('subTotal', estado);
-            //     formData.append('estado', estado);
-            //     formData.append('servicios', idServicio);
-            //     formData.append('doc', selectedFilesModified);
-            //     const res = fetch(`${API}/updateProyecto/${idProyecto}`, {
-            //         method: 'POST',
-            //         body: formData
-            //     });
-              
-              //gotoMenu();
-            }
-          });
-        
-    }
     const handleidServicioChange = ( idServicios) => {
         console.log('Array de idServicios:', idServicios);
         setIdServicios(idServicios);
@@ -98,7 +102,7 @@ export const CrearProyectos = () => {
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
         //A esto me refiero a la tabla de la evaluacion, cotizacion o nombre
-          //Obtener infromacion existente en la base de datos
+        //Obtener infromacion existente en la base de datos
         //A esto me refiero recuperar los datos del cliente
         console.log(1)
         //Se supoene que ahi abajo mandamos a llamar a todos los servicios
@@ -147,10 +151,10 @@ export const CrearProyectos = () => {
         const day = date.getDate(); // Obtener el día
         const year = date.getFullYear(); // Obtener el año
         // Construir la cadena en el formato deseado (mm/dd/aaaa)
-        const formattedDate = `${month}/${day}/${year}`;
+        const formattedDate = `${year}/${month}/${day}`;
         //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
 
-        setInputValue(formattedDate);
+        setInputValueIncio(formattedDate);
     };
     const handlefechaFinalizacionChange = (date) => {
         setfechaFinalizacion(date);
@@ -158,15 +162,17 @@ export const CrearProyectos = () => {
         const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
         const day = date.getDate(); // Obtener el día
         const year = date.getFullYear(); // Obtener el año
-        // Construir la cadena en el formato deseado (mm/dd/aaaa)
-        const formattedDate = `${month}/${day}/${year}`;
-        //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
+        const formattedDate = `${year}/${month}/${day}`;
+        setInputValueFinalizacion(formattedDate);
 
-        setOutValue(formattedDate);
+        const monthC = fechaCreacion.getMonth() + 1; 
+        const dayC = fechaCreacion.getDate(); 
+        const yearC = fechaCreacion.getFullYear(); 
+        const formattedDateC = `${yearC}/${monthC}/${dayC}`;
+        setInputValueCreacion(formattedDateC);
+
+        
     };
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
-      };
 
     const Title = styled.h1`
     font-size: 24px;
@@ -201,8 +207,12 @@ export const CrearProyectos = () => {
                         
                         <select id="mySelect" value={estado} onChange={handleEstadoChange} style={{ marginRight: '95px'}} >
                             <option value="">Seleccione el estado del proyecto</option>
-                            <option value="1">Activo</option>
-                            <option value="2">Inactivo</option>
+                            <option value="1">Eliminado</option>
+                            <option value="2">En progreso</option>
+                            <option value="3">Solicitado</option>
+                            <option value="4">En planeación</option>
+                            <option value="5">Activo</option>
+                            <option value="6">Inactivo</option>
                         </select>
                         
                         <label  style={{ marginRight: '40px'}} for="costInput" class="form-label">Sub Total:</label>

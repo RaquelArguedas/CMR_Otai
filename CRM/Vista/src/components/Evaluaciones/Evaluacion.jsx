@@ -40,14 +40,14 @@ export const Evaluacion = () => {
     //Obtener infromacion existente en la base de datos
     const res = await fetch(`${API}/getEvaluaciones`);
     const data = await res.json();//resultado de la consulta
-   console.log(data)
+    console.log(data)
     const rest = await fetch(`${API}/readCliente/${data[0][5]}`);
-  const dato = await rest.json();
-  console.log(data[0][5])
+    const dato = await rest.json();
+    console.log(data[0][5])
     const formattedData = data.map((item) => {
-      
+      console.log(item)
       var estado = '';
-      switch (item[9]) {
+      switch (item[8]) {
       case 1:
           estado = 'Eliminado';
           break;

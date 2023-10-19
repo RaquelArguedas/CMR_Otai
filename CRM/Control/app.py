@@ -169,17 +169,16 @@ def deleteCotizacion(idCotizacion):
 @app.route('/createEvaluacion', methods=['POST'])
 def createEvaluacion(): 
     id = control.createEvaluacion(
-        request.json['idEvaluacion'],
         request.json['nombre'],
         request.json['descripcion'],
         request.json['fechaCreacion'],
-        request.json['tipoEvaluacion'],
+        int(request.json['tipoEvaluacion']),
         request.json['fechaEjecucion'],
         request.json['documentos'],
-        request.json['idEstado'],
-        request.json['precio'],
-        request.json['idProyecto'],
-        request.json['idCliente']
+        int(request.json['idEstado']),
+        int(request.json['precio']),
+        int(request.json['idProyecto']),
+        int(request.json['idCliente'])
     )
     return jsonify(str(id))
 
@@ -347,16 +346,14 @@ def updatePorcentaje():
 @app.route('/createProyecto', methods=['POST'])
 def createProyecto():
     id = control.createProyecto(
-        request.json['idProyecto'],
         request.json['nombre'],
         request.json['descripcion'],
         request.json['idCliente'],
         request.json['documentos'],
         request.json['fechaInicio'],
         request.json['fechaFinalizacion'],
-        request.json['subTotal'],
-        request.json['estado'],
-        request.json['funcionarios'] #recibe una lista con ids de funcionarios
+        int(request.json['subTotal']),
+        int(request.json['estado'])
     )
     return jsonify(str(id))
 

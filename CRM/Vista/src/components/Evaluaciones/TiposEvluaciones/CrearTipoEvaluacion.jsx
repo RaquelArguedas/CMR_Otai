@@ -13,28 +13,32 @@ export const CrearTipoEvaluacion = () => {
 
     const [nombre, setNombre] = useState('');
     const [costo, setCosto] = useState('');
+    
+    const data = {
+        nombre: nombre,  
+        precio: costo,
+      };
+    const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    };
+    const res = fetch(`${API}/createTipoEvaluacion`,requestOptions);
    
     const handleSubmit = async (event) => {
         event.preventDefault();  
-        //Es para enviar informacion al backend
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-        //Recordar en el backend poner lo de fecha de ingreso que se hace alla
         Swal.fire({
             title: 'Confirmación',
             text: 'El tipo de evaluación se ha creado satisfactoriamente',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-            allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
-            allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
+            allowOutsideClick: false, 
+            allowEscapeKey: false,    
           }).then((result) => {
             if (result.isConfirmed) {
-                const formData = new FormData();
-                formData.append('precio', costo);
-                formData.append('nombre', nombre);
-                const res = fetch(`${API}/createTipoEvaluacion`, {
-                    method: 'POST',
-                    body: formData
-                });
+                
               // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
               gotoTipoEvaluacion();
             }

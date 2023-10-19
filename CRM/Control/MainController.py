@@ -151,13 +151,21 @@ class SingletonDAO(metaclass=SingletonMeta):
         objeto = None
         
         if (tablaBD == "Capacitacion"):
-            objeto = Capacitacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], [], lista[7], lista[8], lista[9], lista[10], lista[11], lista[12], lista[13], 0, lista[15])
+            #if en el caso de que no exista valor en idProyecto para que no de error al traerlo de base de datos.
+            if (lista[14] != None):
+                objeto = Capacitacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], [], lista[7], lista[8], lista[9], lista[10], lista[11], lista[12], lista[13], lista[14], lista[15])
+            else:
+                objeto = Capacitacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], [], lista[7], lista[8], lista[9], lista[10], lista[11], lista[12], lista[13], 0, lista[15])
         if (tablaBD == "Cliente"):
             objeto = Cliente(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6])
         if (tablaBD == "Cotizacion"):
             objeto = Cotizacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], lista[7], lista[8])
         if (tablaBD == "Evaluacion"):
-            objeto = Evaluacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], [], lista[8], lista[9], lista[10], lista[11])
+             #if en el caso de que no exista valor en idProyecto para que no de error al traerlo de base de datos.
+            if (lista[10] != None):
+                objeto = Evaluacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], [], lista[8], lista[9], lista[10], lista[11])
+            else:
+                objeto = Evaluacion(lista[0], lista[1], lista[2], lista[3], lista[4], lista[5], lista[6], [], lista[8], lista[9], 0, lista[11])
         if (tablaBD == "Perfil"):
             objeto = Perfil(lista[0], lista[1])
         if (tablaBD == "Funcionario"):
@@ -215,10 +223,6 @@ class SingletonDAO(metaclass=SingletonMeta):
         else:
             idCapacitacionCodigo = 'CA1'
 
-        print("Datos ingresados:")
-        valores = (nuevo_valor, idCapacitacionCodigo, nombre, descripcion, fechaCreacion, fechaEjecucion, [], idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente)
-        #si hay lista y no existe el idCapacitacion en los datos se crea
-        print(valores)
         if (self.readCapacitacion(idCapacitacion) == None):
             self.executeCommit(f"EXEC createCapacitacion '{idCapacitacionCodigo}', '{nombre}', '{descripcion}', '{fechaCreacion}', '{fechaEjecucion}', NULL ,{idEstado}, {horasDuracion}, '{fechaFinalizacion}', {modalidad}, {idFuncionario}, {precio}, {tipoCapacitacion}, NULL, {idCliente}")
             self.capacitacion += [Capacitacion(nuevo_valor, idCapacitacionCodigo, nombre, descripcion, fechaCreacion, fechaEjecucion, [], idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente)]
@@ -239,16 +243,22 @@ class SingletonDAO(metaclass=SingletonMeta):
             return -1
 
     #CRUDS Evaluacion
-    def createEvaluacion(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
-        if idEvaluacion == None or nombre == None or descripcion== None or fechaCreacion== None or tipoEvaluacion== None or fechaEjecucion== None or documentos== None or idEstado== None or precio== None or idProyecto== None or idCliente== None:
+    def createEvaluacion(self, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
+        if  nombre == None or descripcion== None or fechaCreacion== None or tipoEvaluacion== None or fechaEjecucion== None or idEstado== None or precio== None or idCliente== None:
             return -1 #No se puede crear una capacitacion con atributos nulos   
 
-        self.executeCommit(f"EXEC createEvaluacion {idEvaluacion}, {nombre}, {descripcion}, '{fechaCreacion}', {tipoEvaluacion}, '{fechaEjecucion}', null, {idEstado}, {precio}, {idProyecto}, {idCliente}")
-        result = self.execute(f"SELECT id from Evaluacion where idEvaluacion = '{idEvaluacion}'")
+        idEvaluacion = self.execute(f"SELECT MAX(id) FROM Evaluacion")
+        valor_maximo = idEvaluacion[0][0]
 
-        #si hay lista y no existe el idCapacitacion en los datos se crea
-        if result and (self.readEvaluacion(idEvaluacion) == None):
-            self.evaluacion += [Evaluacion(result[0][0], idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, [], idEstado, precio, idProyecto, idCliente)]
+        if valor_maximo is not None:
+            nuevo_valor = valor_maximo + 1
+            idEvaluacionCodigo = f'EVAL{nuevo_valor}'
+        else:
+            idEvaluacionCodigo = 'EVAL1'
+        
+        if (self.readEvaluacion(idEvaluacion) == None):
+            self.executeCommit(f"EXEC createEvaluacion '{idEvaluacionCodigo}', '{nombre}', '{descripcion}', '{fechaCreacion}', {tipoEvaluacion}, '{fechaEjecucion}', null, {idEstado}, {precio}, null, {idCliente}")
+            self.evaluacion += [Evaluacion(nuevo_valor, idEvaluacionCodigo, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, [], idEstado, precio, idProyecto, idCliente)]
         
     def readEvaluacion(self, idEvaluacion):
         for eval in self.evaluacion:
@@ -266,22 +276,30 @@ class SingletonDAO(metaclass=SingletonMeta):
             return -1
 
     #CRUDS Proyecto
-    def createProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
-        if idProyecto == None or nombre == None or descripcion== None or idCliente== None or documentos== None or fechaInicio==None or fechaFinalizacion==None or subTotal==None or estado== None or funcionariosIds == None:
+    def createProyecto(self, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado):
+        if  nombre == None or descripcion== None or documentos== None or fechaInicio==None or fechaFinalizacion==None or subTotal==None or estado== None:
             return -1 #No se puede crear una capacitacion con atributos nulos   
 
-        self.executeCommit(f"EXEC createProyecto {idProyecto}, {nombre}, {descripcion}, {idCliente}, null, '{fechaInicio}', '{fechaFinalizacion}', {subTotal}, {estado}")
-        result = self.execute(f"SELECT id from Proyecto where idProyecto = '{idProyecto}'")
+        idProyecto = self.execute(f"SELECT MAX(id) FROM Proyecto")
+        valor_maximo = idProyecto[0][0]
 
-        #si hay lista y no existe el idCapacitacion en los datos se crea
-        if result and (self.readProyecto(idProyecto) == None):
-            funcionarios = []
-            for fId in funcionariosIds:
-                f = self.readFuncionario(int(fId))
-                if f is not None:
-                    funcionarios += [f]
-                    self.executeCommit(f"EXEC createProyectoXFuncionario {result[0][0]}, {fId}")
-            self.proyecto += [Proyecto(result[0][0], idProyecto, nombre, descripcion, idCliente, [], fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)]
+        if valor_maximo is not None:
+            nuevo_valor = valor_maximo + 1
+            idProyectoCodigo = f'PRO{nuevo_valor}'
+        else:
+            idProyectoCodigo = 'PRO1'
+
+        print("AQUI SI LLEGO!")
+        if (self.readProyecto(nuevo_valor) == None):
+            #funcionarios = []
+            #for fId in funcionariosIds:
+                #f = self.readFuncionario(int(fId))
+                #if f is not None:
+                    #funcionarios += [f]
+                    #self.executeCommit(f"EXEC createProyectoXFuncionario {result[0][0]}, {fId}")
+            print("AQUI DEBERIA CREARLO!")
+            self.executeCommit(f"EXEC createProyecto '{idProyectoCodigo}','{nombre}', '{descripcion}', {idCliente}, null,'{fechaInicio}', '{fechaFinalizacion}', {subTotal}, {estado}")
+            self.proyecto += [Proyecto(nuevo_valor, idProyectoCodigo, nombre, descripcion, 0, [], fechaInicio, fechaFinalizacion, subTotal, estado, [])]
         
     def readProyecto(self, idProyecto):
         for p in self.proyecto:

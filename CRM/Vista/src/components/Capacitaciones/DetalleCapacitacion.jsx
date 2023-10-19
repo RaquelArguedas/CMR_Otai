@@ -89,19 +89,29 @@ export const DetalleCapacitacion = () => {
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,
         }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-
             if (result.isConfirmed) {
-                Swal.fire('La capacitación se ha eliminado satisfactoriamente')
-                const res = fetch(`${API}/deleteCapacitacion/${idCapacitacion}`); // cambiar por el id
+                const options = {method: 'POST',};
+                fetch(`${API}/deleteCapacitacion/${idCapacitacion}`, options)
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire('La capacitación se ha eliminado satisfactoriamente')
+                        gotoCapacitacion();
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Hubo un problema al eliminar la capacitación.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                            });
+                        }
+                })
                 gotoCapacitacion();
             } else if (result.isDenied) {
                 Swal.fire('No se guardaron los cambios')
             }
         })
-
-
     }
+    
     const handleFileClick = async (e, nombre, url) => {
         e.preventDefault(); // Evita la navegación predeterminada
         // Ahora puedes manejar la descarga del archivo, por ejemplo, mediante una solicitud AJAX

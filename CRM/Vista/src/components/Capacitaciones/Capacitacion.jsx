@@ -33,10 +33,10 @@ export function Capacitacion() {
     console.log(data)
     const rest = await fetch(`${API}/readCliente/${data[0][15]}`);
     const dato = await rest.json();
-    console.log(data[0][5])
     const formattedData = data.map((item) => {
+      console.log(item[7])
       var estado = '';
-      switch (item[9]) {
+      switch (item[8]) {
         case 1:
           estado = 'Eliminado';
           break;

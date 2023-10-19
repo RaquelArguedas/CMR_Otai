@@ -11,75 +11,99 @@ import './CrearEvaluacion.css';
 import Swal from 'sweetalert2';
 import { Table, columns, data, Styles } from './TablaSelectClientes';  // Importa Table, columns y data desde Tabla.jsxy
 const API = "http://127.0.0.1:5000";
+
 export  const CrearEvaluacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [costo, setCosto] = useState('');
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [fechaEjecucion, setFechaEjecucion] = useState(new Date());
+    const [fechaCreacion, setFechaCreacion] = useState(new Date());
     const [inputValue, setInputValue] = useState('');
+    const [inputValueCreacion, setInputValueCreacion] = useState('');
     const [estado, setEstado] = useState("");
-    const [tipoEvalaucion, setTipoEvaluacion] = useState("");
+    const [tipoEvaluacion, setTipoEvaluacion] = useState("");
+    const [tiposEvaluacion, setTiposEvaluacion] = useState([]);
     const [fileInputKey, setFileInputKey] = useState('');
-    //Esto va parte de la tabla que aun no esta creada
-    const [IdCliente, setIdCliente] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
+    const [IdCliente, setIdCliente] = useState(''); 
     const [nombreCliente, setNombreCliente] = useState('');
-    const [clientes, setClientes] = useState([]);//Meter los datos de los clientes ahi
+    const [clientes, setClientes] = useState([]);
     let navigate = useNavigate();
 
     const gotoMenu = () => { navigate('/', {}); }
     
     const handleSubmit = async (event) => {
-        event.preventDefault();  
-        //Es para enviar informacion al backend
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-        Swal.fire({
-            title: 'Confirmación',
-            text: 'La evaluación se ha creado exitosamente',
-            icon: 'success',
-            confirmButtonText: 'Aceptar',
-            allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
-            allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
-              gotoMenu();
-            }
-          });
-
-          console.log(IdCliente)
-        
+        event.preventDefault();
+        const data = {
+            nombre: nombre,
+            descripcion: descripcion, 
+            fechaCreacion: inputValueCreacion,
+            tipoEvaluacion: tipoEvaluacion, 
+            fechaEjecucion: inputValue, 
+            documentos: fileInputKey,
+            idEstado: estado,
+            precio: costo, 
+            idProyecto: 0, 
+            idCliente: IdCliente  
+        };
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        const res = await fetch(`${API}/createEvaluacion`, requestOptions);
+        if (res.ok) {
+            Swal.fire({
+                title: 'Confirmación',
+                text: 'La evaluación se ha creado exitosamente',
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                allowOutsideClick: false, 
+                allowEscapeKey: false,    
+            }).then((result) => {
+                if (result.isConfirmed) {
+                gotoMenu();
+                }
+            });
+        } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un problema al crear la evaluación.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar',
+            });
+        }        
     }
+
+    const handleTiposEvaluacion = async () => {
+        await fetch(`${API}/getTipoEvaluaciones`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            setTiposEvaluacion(data);
+          })
+          .catch(error => {
+            console.error("Error al obtener tipos de evaluación:", error);
+          });
+      };
+
     const handleSearch = async () => { 
-        //Obtener infromacion existente en la base de datos
-        //A esto me refiero recuperar los datos del cliente
         console.log(1)
         const res = await fetch(`${API}/getClientes`);
-        const data = await res.json();//resultado de la consulta
+        const data = await res.json();
         console.log(data)
-         // Realiza la conversión de datos aquí
-      const formattedData = data.map((item) => ({
-        cedula: item[1],
-        idCliente: item[0],
-        nombre: item[2],
-      }));
-
+        const formattedData = data.map((item) => ({
+            cedula: item[1],
+            idCliente: item[0],
+            nombre: item[2],
+        }));
       setClientes(formattedData);
-    
-
-        //(7), Array(7)]
-        // 0 :  Array(7)
-        // 0 :  1
-        // 1 :  123456789
-        // 2 :  "ICE"
-        // 3 :  22223333
-        // 4 :  "ice@gmail.com"
-        // 5 :  "2023-10-05"
-        // 6 :  5
-        // length  :  7
     }; 
     React.useEffect(() => {
       handleSearch()
+      handleTiposEvaluacion()
     }, []);
   
     const handleFileChange = (e) => {
@@ -117,15 +141,19 @@ export  const CrearEvaluacion = () => {
     const handleFechaEjecucionChange = (date) => {
         setFechaEjecucion(date);
 
-        const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
-        const day = date.getDate(); // Obtener el día
-        const year = date.getFullYear(); // Obtener el año
-        // Construir la cadena en el formato deseado (mm/dd/aaaa)
+        const month = date.getMonth() + 1;
+        const day = date.getDate(); 
+        const year = date.getFullYear(); 
         const formattedDate = `${month}/${day}/${year}`;
-        //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
-
         setInputValue(formattedDate);
+
+        const monthC = fechaCreacion.getMonth() + 1; 
+        const dayC = fechaCreacion.getDate(); 
+        const yearC = fechaCreacion.getFullYear(); 
+        const formattedDateC = `${yearC}/${monthC}/${dayC}`;
+        setInputValueCreacion(formattedDateC);
     };
+
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
       };
@@ -163,15 +191,20 @@ export  const CrearEvaluacion = () => {
                         
                         <select id="mySelect" value={estado} onChange={handleEstadoChange}>
                             <option value="">Seleccione el estado de la evaluación</option>
-                            <option value="1">Activo</option>
-                            <option value="2">Inactivo</option>
+                            <option value="1">Eliminado</option>
+                            <option value="2">En progreso</option>
+                            <option value="3">Solicitado</option>
+                            <option value="4">En planeación</option>
+                            <option value="5">Activo</option>
+                            <option value="6">Inactivo</option>
                         </select>
-                        <select id="mySelect2" value={tipoEvalaucion} onChange={handleTipoEvaluacionChange}>
-                            <option value="">Seleccione el tipo evaluación</option>
-                            <option value="1">Automática Aleatoria</option>
-                            <option value="2">Automática Específica</option>
-                            <option value="2">Manual Específica</option>
-                            <option value="2">Completa Aleatoria</option>
+                        <select id="mySelect2" value={tipoEvaluacion} onChange={handleTipoEvaluacionChange}>
+                        <option value="">Seleccione el tipo evaluación</option>
+                        {tiposEvaluacion.map(tipo => (
+                            <option key={tipo[0]} value={tipo[0]}>
+                            {tipo[1]}
+                            </option>
+                            ))}
                         </select>
                     </div>
                         
