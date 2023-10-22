@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap');
+
 /* Estilos para el componente Text */
 label {
     color: #000;
@@ -6,6 +9,9 @@ label {
     margin-top: 100px;
     margin-right: 70px;
     margin-bottom: 40px; 
+    font-family: 'Lato', sans-serif;
+  
+  font-weight: 700; /* Peso de la fuente 700 */
   }
   
   /* Estilos para el componente Control */
@@ -14,6 +20,9 @@ label {
     height: 30px; 
     margin-right: 20px; 
     margin-bottom: 40px; 
+    font-family: 'Lato', sans-serif;
+    font-weight: 300; /* Peso de la fuente 700 */
+    font-size: 15px;
   }
   select {
     height: 30px;
@@ -21,6 +30,9 @@ label {
     margin-right: 60px; 
     
     margin-bottom: 40px; 
+    font-family: 'Lato', sans-serif;
+    font-weight: 700; /* Peso de la fuente 700 */
+    font-size: 15px;
   }
   .icon {
     float: right;
@@ -47,3 +59,13 @@ label {
     
     margin-right: 60px; 
 } 
+.titulo-h1{
+    
+  font-family: 'Lato', sans-serif;
+  
+  font-weight: 700; /* Peso de la fuente 700 */
+  font-size: 24px;
+  color: #000000;
+  margin-bottom: 80px;
+  margin-top: 25px;
+  }

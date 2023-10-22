@@ -45,9 +45,12 @@ export const CrearFuncionarios = () => {
             inputPlaceholder: 'Ingrese el nombre del perfil',
             showDenyButton: true, // Agregar botones de confirmación y cancelación
             confirmButtonText: 'Aceptar', // Cambiar texto del botón de confirmación
+            confirmButtonColor:'#12959E',
             denyButtonText: 'Cancelar', // Cambiar texto del botón de cancelación
+            denyButtonColor: '#FF0000',
             allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,
+            
           }).then((result) => {
             if (result.isConfirmed) {
               const nombre = result.value; // Obtener el valor del input
@@ -160,106 +163,105 @@ export const CrearFuncionarios = () => {
           ...provided,
           width: '300px', // Establece el ancho deseado
           minHeight: '47px', // Establece la altura deseada
+          fontFamily: 'Lato, sans-serif',
         }),
         menu: (provided) => ({
           ...provided,
           overflowX: 'auto', // Habilita el desplazamiento horizontal
+          fontFamily: 'Lato, sans-serif',
         }),
       };
       React.useEffect(() => {
         handleSearch()
     }, []);
     return (
-        
-        <Fragment>
+      <Fragment>
         <div className="container"> 
-        <Navbar />
-        <div class="row">
-                    <div class="col-sm-3">
-                        <Title>Crear Funcionario</Title>
-                    </div>
-                    <form onSubmit={handleSubmit}>
-                        <div class="mb-3">
-                            <label style={{ marginRight: '150px' }} for="nameInput" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control custom-margin-right" id="nameInput"
-                            placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange}/>
-                            
-                        </div>
-                        <div class="mb-3">
-                            <label  style={{ marginRight: '150px'  }}for="apellidoInput" class="form-label">Apellido:</label>
-                            <input type="text" class="form-control custom-margin-right" id="nameInput"
-                            placeholder="Ingrese el primer apellido" value={apellido} onChange={handleApellidoChange}/>
-                            
-                        </div>
-                        <div class="mb-3">
-                            <label  style={{ marginRight: '160px' }}for="nameInput" class="form-label">Cédula:</label>
-                            <input type="text" class="form-control custom-margin-right" id="nameInput"
-                            placeholder="Ingrese la Cédula Juridica" value={cedula} onChange={handleCedulaChange}/>
-                            
-                        </div>
-                        <div class="mb-3">
-                            <label style={{ marginRight: '50px' }} for="nameInput" class="form-label">Número de teléfono:</label>
-                            <input type="text" class="form-control custom-margin-right" id="nameInput"
-                            placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}/>
-                            
-                        </div>
-                        <div class="mb-3">
-                            <label style={{ marginRight: '160px' }} for="nameInput" class="form-label">Correo:</label>
-                            <input type="text" class="form-control custom-margin-right" id="nameInput"
-                            placeholder="Ingrese el correo electronico" value={correo} onChange={handleCorreoChange}/>
-                        </div>
-                        <div className="mb-3"style={{ marginBottom:  '50px' }}>
-                        <label  for="inputDate" className="form-label" style={{ marginRight:  '100px' }} >
-                            Seleccione la fecha de nacimiento:
-                        </label>
-                        <label  for="inputDate" className="form-label" >
-                        Seleccione el o los tipo(s) de perfil(es)
-                        </label>
-                        </div>
-                        <div className="mb-3" style={{ display: 'flex', alignItems: 'flex-start'  }}>
-                            <DatePicker
-                                selected={fechaNacimiento}
-                                onChange={handleFechaNacimientoChange}
-                                dateFormat="dd/MM/yyyy"
-                                inline
-                                showYearDropdown
-                                showMonthDropdown
-                                maxDate={fechaNacimientoInicial}
-                            />
-                            <div style={{marginLeft: '150px'}}>
-                                <Select
-                                    options={options}
-                                    isMulti
-                                    name="colors"
-                                    classNamePrefix="select"
-                                    className="basic-multi-select"
-                                    value={selectedOption}
-                                    onChange={setSelectedOption}
-                                    styles={customStyles}
-                                />
-                            </div>
-                            <div style={{marginLeft: '150px'}}>
-                                <button className='button2' onClick={handleCrearPerfil}>
-                                    <AiOutlinePlusCircle style={{
-                                                fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'// Tamaño del icono
-                                            }} /> Crear perfil
-                                </button>
-                            </div>
-                        </div>
-                                                                    
-                        <div className="mb-3" style={{ marginRight: '140px', marginTop:  '100px' }} >
-                            <button type="submit" className='button1' >
-                                <AiOutlinePlusCircle style={{
-                                            fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'// Tamaño del icono
-                                        }} /> Crear funcionario
-                            </button>
-                        
-                        </div>
-        
-
-                    </form>
-
+          <Navbar />
+          <div class="row">
+            <div class="col-sm-3">
+              <h1 class="titulo-h1">Crear Funcionario</h1>
             </div>
+            <form onSubmit={handleSubmit}>
+              <div class="mb-3">
+                  <label style={{ marginRight: '150px' }} for="nameInput" class="form-label">Nombre:</label>
+                  <input type="text" class="form-control custom-margin-right" id="nameInput"
+                  placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange}/>
+                  
+              </div>
+              <div class="mb-3">
+                  <label  style={{ marginRight: '148px'  }}for="apellidoInput" class="form-label">Apellido:</label>
+                  <input type="text" class="form-control custom-margin-right" id="nameInput"
+                  placeholder="Ingrese el primer apellido" value={apellido} onChange={handleApellidoChange}/>
+                  
+              </div>
+              <div class="mb-3">
+                  <label  style={{ marginRight: '160px' }}for="nameInput" class="form-label">Cédula:</label>
+                  <input type="text" class="form-control custom-margin-right" id="nameInput"
+                  placeholder="Ingrese la Cédula Juridica" value={cedula} onChange={handleCedulaChange}/>
+                  
+              </div>
+              <div class="mb-3">
+                  <label style={{ marginRight: '43px' }} for="nameInput" class="form-label">Número de teléfono:</label>
+                  <input type="text" class="form-control custom-margin-right" id="nameInput"
+                  placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}/>
+                  
+              </div>
+              <div class="mb-3">
+                  <label style={{ marginRight: '160px' }} for="nameInput" class="form-label">Correo:</label>
+                  <input type="text" class="form-control custom-margin-right" id="nameInput"
+                  placeholder="Ingrese el correo electronico" value={correo} onChange={handleCorreoChange}/>
+              </div>
+              <div className="mb-3"style={{ marginBottom:  '50px' }}>
+                <label  for="inputDate" className="form-label" style={{ marginRight:  '100px' }} >
+                    Seleccione la fecha de nacimiento:
+                </label>
+                <label  for="inputDate" className="form-label" >
+                  Seleccione el o los tipo(s) de perfil(es)
+                </label>
+              </div>
+              <div className="mb-3" style={{ display: 'flex', alignItems: 'flex-start'  }}>
+                <DatePicker
+                    selected={fechaNacimiento}
+                    onChange={handleFechaNacimientoChange}
+                    dateFormat="dd/MM/yyyy"
+                    inline
+                    showYearDropdown
+                    showMonthDropdown
+                    maxDate={fechaNacimientoInicial}
+                />
+              <div style={{marginLeft: '162px'}}>
+                <Select
+                    options={options}
+                    isMulti
+                    name="colors"
+                    classNamePrefix="select"
+                    className="basic-multi-select"
+                    value={selectedOption}
+                    onChange={setSelectedOption}
+                    styles={customStyles}
+                />
+                </div>
+                <div style={{marginLeft: '150px'}}>
+                    <button className='button2' onClick={handleCrearPerfil}>
+                        <AiOutlinePlusCircle style={{
+                                    fontSize: '25px',  marginRight: '20px',  marginLeft: '20px', color: '#12959E'// Tamaño del icono
+                                }} /> Crear perfil
+                    </button>
+                </div>
+              </div>
+                                                          
+              <div className="mb-3" style={{ marginRight: '140px', marginTop:  '100px' }} >
+                <button type="submit" className='button1' >
+                    <AiOutlinePlusCircle style={{
+                                fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'// Tamaño del icono
+                            }} /> Crear funcionario
+                </button>
+              </div>
+
+            </form>
+
+          </div>
                      
                      
         </div>

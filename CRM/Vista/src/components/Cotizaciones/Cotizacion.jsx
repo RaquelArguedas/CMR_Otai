@@ -3,8 +3,11 @@ import React, { useState, useEffect, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Navbar } from '../Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
+
+import '../Clientes/CSSClientes/Clientes.css'
 import { matchSorter } from 'match-sorter'
 const API = "http://127.0.0.1:5000";
 
@@ -27,17 +30,6 @@ const FilterSelect = styled.select`
   margin-top: 10px;
   margin-left: 0px;
   box-shadow: 0 0 1px 0 #000000;
-`;
-
-const Button = styled.button`
-  background-color: #ffffff;
-  border: 1px solid #000000;
-  align-items: center; 
-  border-radius: 5px;
-  padding: 10px 20px;
-  color: #000000;
-  font-size: 16px;
-  cursor: pointer;
 `;
 
 const ButtonTbl = styled.button`
@@ -293,7 +285,10 @@ const Table = ({ columns, data }) => {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()} >{column.render('Header')} <div>{column.canFilter ? column.render('Filter') : null}</div></th>
+                <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
+                {column.render('Header')}
+                <div>{column.canFilter ? column.render('Filter') : null}</div>
+              </th>
               ))}
             </tr>
           ))}
@@ -360,7 +355,6 @@ const Table = ({ columns, data }) => {
   )
 }
 
-
 const columns = [
   {
     Header: 'ID Cotización',
@@ -392,7 +386,8 @@ const columns = [
 export function Cotizacion() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cotizaciones, setCotizaciones] = useState([[]]);
-
+  let navigate = useNavigate();
+  const gotoCrearCotizacion = () => { navigate('/crearCotizacion'); }
   const handleSearch = async () => {
     //Obtener infromacion existente en la base de datos
     const res = await fetch(`${API}/getCotizaciones`);
@@ -422,14 +417,27 @@ export function Cotizacion() {
         <Navbar />
         <div>
           <Title>Cotizaciones</Title>
-          <div>
-            <Button style={{ marginRight: '40px' }}>Crear Cotización</Button>
+          <div class="row" style={{marginTop: '30px'  }}>
+          <div className="mb-3" style={{ marginTop: '20px'}}>
+              <button  className="button3" style={{marginLeft: '0px', marginTop: '20px'  }} onClick={gotoCrearCotizacion}>
+                  <AiOutlinePlusCircle style={{
+                  fontSize: '25px',
+                  color: '#12959E', // Tamaño del icono
+                  marginRight: '20px',
+                  marginLeft: '10px',
+                  }} />Crear Cotización
+              </button>
           </div>
-          <div style={{ display: 'flex' }}>
-            <Styles>
-              <Table columns={columns} data={cotizaciones} />
-            </Styles>
-          </div>
+          <div className="mb-3" style={{ marginTop: '70px', marginLeft: '20px'}}></div>
+            <div style={{ display: 'flex' }}>
+                <Styles>
+                  <Table columns={columns} data={cotizaciones} />
+                </Styles>
+            </div>
+            
+
+        </div>
+         
         </div>
       </div>
     </Fragment>

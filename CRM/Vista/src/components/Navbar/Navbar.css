@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap');
+
 *{
   margin:0;
   padding:0;
@@ -32,10 +35,10 @@ main{
 }
 .text{
   color: #FFF;
-  font-family: Inter;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700; /* Peso de la fuente 700 */
   font-size: 25px;
   font-style: normal;
-  font-weight: 800;
   line-height: normal;
   margin-top: 15px; /* Margen superior del h2 (ajusta según tus preferencias) */
   margin-bottom: 5px; 
@@ -49,7 +52,10 @@ main{
 }
 .logo{
   color: #FFF;
-  font-family: Inter;
+ 
+  font-family: 'Lato', sans-serif;
+  
+  font-weight: 300; /* Peso de la fuente 700 */
   font-size: 32px;
   font-style: normal;
   font-weight: 700;
@@ -88,13 +94,19 @@ main{
 }
 .icon, .link_text{
   font-size: 20px;
-  font-family: Inter;
+ 
+  font-family: 'Lato', sans-serif;
+  
+  font-weight: 300; /* Peso de la fuente 700 */
 }
 .iconL{
   font-size: 30px;
 }
 .iconP, .link_textP{
   font-size: 20px;
-  font-family: Inter;
+ 
+  font-family: 'Lato', sans-serif;
+  
+  font-weight: 300; /* Peso de la fuente 700 */
   margin-top: 30px;
 }

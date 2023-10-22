@@ -102,9 +102,17 @@ export const DetalleFuncionario = () => {
             title: '¿Está seguro que desea eliminar el funcionario seleccionado?',
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
-            denyButtonText: `Cancelar`,
+            confirmButtonColor:'#12959E',
+            denyButtonText: 'Cancelar', // Cambiar texto del botón de cancelación
+            denyButtonColor: '#FF0000',
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
+            style: {
+                onOpen: function () {
+                  this.querySelector('.swal-title').style.color = 'black';
+                  this.querySelector('.swal-button').style.backgroundColor = '#12959E';
+                }
+              },
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             
@@ -127,53 +135,92 @@ export const DetalleFuncionario = () => {
         <div className="container"> 
         <Navbar />
             <div class="row">
-                    <div class="col-sm-3">
-                        <Title>{nombre}</Title>
+                    <h1 class="titulo-h1">
+                            {nombre}
+                    </h1>
+                    <div class="mb-3" style={{ marginTop: '-20px'}}>
+                        <h2 class="titulo-h2" >
+                            Información general
+                        </h2>
+                        <div className="dividers"></div>
                     </div>
-                    <div class="mb-3" >
-                        <label style={{ marginRight: '105px'}} for="idFuncionarioInput" class="form-label">ID Funcionario:</label>
-                        <label  style={{ marginLeft: '130px' }}for="idFuncionario" class="form-label">{idFuncionario}</label>
+                    <div style={{ marginLeft:'20px' }}>
+                        <div class="mb-3" >
+                            <label style={{ marginRight: '105px'}} for="idFuncionarioInput"  class="form-label custom-label">ID Funcionario:</label>
+                            <label  style={{ marginLeft: '125px' }}for="idFuncionario"  class="form-label custom-label">{idFuncionario}</label>
+                            
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}}>
+                            <label style={{ marginRight: '110px'}} for="nameInput"  class="form-label custom-label">Nombre completo:</label>
+                            <label  style={{ marginLeft: '100px' }}for="idNombre"  class="form-label custom-label">{nombre}</label>
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label  style={{ marginRight: '150px' }}for="cedulainput"  class="form-label custom-label">Cédula:</label>
+                            <label  style={{ marginLeft: '129px' }}for="cedula"  class="form-label custom-label">{cedula}</label>
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label  style={{ marginRight: '90px' }}for= "fechaNaciminetoinput" class="form-label custom-label">Fecha de nacimiento:</label>
+                            <label  style={{ marginLeft: '104px' }}for="fechaNacimiento"  class="form-label custom-label">{fechaNacimineto}</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style={{ marginTop: '40px'}}>
+                        <h2 class="titulo-h2" >
+                            Información de contacto
+                        </h2>
+                        <div className="dividers"></div>
+                    </div>
+                    <div style={{ marginLeft:'20px' }}>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label style={{ marginRight: '50px' }} for="telefonoInput"  class="form-label custom-label">Número de teléfono:</label>
+                            <label  style={{ marginLeft: '148px' }}for="telefono"  class="form-label custom-label">{telefono}</label>
+                            
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label style={{ marginRight: '150px' }} for="correoInput"  class="form-label custom-label">Correo:</label>
+                            <label  style={{ marginLeft: '129px' }}for="correo"  class="form-label custom-label">{correo}</label>  
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style={{ marginTop: '40px'}}>
+                        <h2 class="titulo-h2" >
+                            Perfil profecional
+                        </h2>
+                        <div className="dividers"></div>
+                    </div>
+                    <div style={{ marginLeft:'10px' }}>
+                        <div class="mb-3" style={{ marginBottom: '30px', marginTop:'30px' }}>
+                            <ul style={{ marginTop:'30px' }}>
+                                {selectedOption.map((opcion, index) => (
+                                    <li key={index} style={{marginLeft: '50px', fontFamily: 'Lato, sans-serif'}}>
+                                            {opcion.label}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style={{ marginTop: '40px'}}>
+                        <h2 class="titulo-h2" >
+                            Información adicional
+                        </h2>
+                        <div className="dividers"></div>
+                    </div>
+                    <div style={{ marginLeft:'20px' }}>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label  style={{ marginRight: '90px' }}for= "fechaIngresoinput"  class="form-label custom-label">Fecha de ingreso:</label>
+                            <label  style={{ marginLeft: '128px' }}for="fechaIngreso"  class="form-label custom-label">{fechaIngreso}</label>
+                        </div>
                         
+                    
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label style={{ marginRight: '150px' }} for="estadoInput"  class="form-label custom-label">Estado:</label>
+                            <label  style={{ marginLeft: '132px' }}for="estado"  class="form-label custom-label">{estado}</label>  
+                        </div>
+
                     </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}}>
-                        <label style={{ marginRight: '110px'}} for="nameInput" class="form-label">Nombre completo:</label>
-                        <label  style={{ marginLeft: '100px' }}for="idNombre" class="form-label">{nombre}</label>
-                    </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label  style={{ marginRight: '150px' }}for="cedulainput" class="form-label">Cédula:</label>
-                        <label  style={{ marginLeft: '150px' }}for="cedula" class="form-label">{cedula}</label>
-                    </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label  style={{ marginRight: '90px' }}for= "fechaIngresoinput" class="form-label">Fecha de ingreso:</label>
-                        <label  style={{ marginLeft: '130px' }}for="fechaIngreso" class="form-label">{fechaIngreso}</label>
-                    </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label  style={{ marginRight: '90px' }}for= "fechaNaciminetoinput"class="form-label">Fecha de nacimiento:</label>
-                        <label  style={{ marginLeft: '95px' }}for="fechaNacimiento" class="form-label">{fechaNacimineto}</label>
-                    </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label style={{ marginRight: '50px' }} for="telefonoInput" class="etiqueta-personalizada">Número de teléfono:</label>
-                        <label  style={{ marginLeft: '145px' }}for="telefono" class="etiqueta-personalizada">{telefono}</label>
-                        
-                    </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label style={{ marginRight: '150px' }} for="correoInput" class="form-label">Correo:</label>
-                        <label  style={{ marginLeft: '150px' }}for="correo" class="form-label">{correo}</label>  
-                    </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label style={{ marginRight: '150px' }} for="estadoInput" class="form-label">Estado:</label>
-                        <label  style={{ marginLeft: '150px' }}for="estado" class="form-label">{estado}</label>  
-                    </div>
-                    <div class="mb-3" style={{ marginBottom: '30px', marginTop:'50px' }}>
-                        <label for="idEvLave" class="form-label">Perfiles: </label>
-                        <ul style={{ marginTop:'30px' }}>
-                            {selectedOption.map((opcion, index) => (
-                                <li key={index} style={{marginLeft: '50px'}}>
-                                        {opcion.label}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                   
+                    
                     <div className="mb-3" style={{ marginTop: '100px', display: 'flex' }}>
                         <button type="submit" className="button2" onClick={gotoModificarFuncionario}>
                             <BsFillPencilFill style={{

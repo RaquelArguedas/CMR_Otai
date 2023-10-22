@@ -65,7 +65,7 @@ export const Clientes = () => {
         <Navbar />
             <div class="row" style={{marginTop: '30px'  }}>
                     <div class="col-sm-3">
-                        <Title>Clientes</Title>
+                        <h1 className='titulo-h1'>Clientes</h1>
                     </div>
                      <div className="mb-3" style={{ marginTop: '0px'}}>
                         <button  className="button3" style={{marginLeft: '20px', marginTop: '-20px'  }} onClick={gotoCrearCliente}>

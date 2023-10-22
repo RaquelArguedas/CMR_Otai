@@ -3,10 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
 import React, { useState, useEffect, Fragment } from 'react';
 import  { matchSorter } from 'match-sorter'
+import googleFonts from 'google-fonts';
+// Define un componente de título estilizado
 
+
+googleFonts.add({
+  'Lato': ['300', '700'],
+});
 const FilterSelect = styled.select`
   width: 100px;
   height: 35px;
+  
+  fontFamily: 'Lato, sans-serif';
+  fontWeight: 300;
   background-color: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 5px;
@@ -17,7 +26,21 @@ const FilterSelect = styled.select`
   margin-left: 0px;
   box-shadow: 0 0 1px 0 #000000;
 `;
-
+// Define un componente de botón estilizado
+export const Button = styled.button`
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  align-items: center; 
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: #000000;
+  font-size: 16px;
+  cursor: pointer;
+  
+  fontFamily: 'Lato, sans-serif';
+  fontWeight: 300;
+`;
+// Define otro componente de botón estilizado para la tabla
 const ButtonTbl = styled.button`
   background-color: #ffffff;
   border: 1px solid #000000;
@@ -27,8 +50,11 @@ const ButtonTbl = styled.button`
   color: #000000;
   font-size: 12px;
   cursor: pointer;
+  
+  fontFamily: 'Lato, sans-serif';
+  fontWeight: 300;
 `;
-
+// Define un componente de entrada de búsqueda estilizado
 const SearchInput = styled.input`
   padding: 10px;
   border: 1px solid #000000;
@@ -40,13 +66,18 @@ const SearchInput = styled.input`
   width: 100px;
   height: 15px;
   box-shadow: 0 0 1px 0 #000000;
+  
+  fontFamily: 'Lato, sans-serif';
+  fontWeight: 300;
 `;
-
+// Define un contenedor de estilos para la tabla
 export const Styles = styled.div`
   padding: 0.1rem;
   margin-left: 0px;
   margin-top: 30px;
 
+  fontFamily: 'Lato, sans-serif';
+  fontWeight: 300;
   table {
     border-spacing: 0;
     border: 1px solid black;
@@ -263,7 +294,7 @@ export const Table = ({ columns, data }) => {
 
     return (
       <>
-        <table {...getTableProps()}>
+        <table {...getTableProps()} style={{ fontFamily: 'Lato, sans-serif' }}>
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>

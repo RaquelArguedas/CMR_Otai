@@ -91,31 +91,46 @@ export const DetalleMiCuenta = () => {
             <Navbar />
                 <div class="row">
                         <div class="col-sm-3">
-                            <Title>{nombre}</Title>
+                            <h1 class="titulo-h1">{nombre}</h1>
                         </div>
-                        <div class="mb-3" style={{ marginTop: '50px'}}>
-                            <label style={{ marginRight: '110px'}} for="nameInput" class="form-label">Nombre completo:</label>
-                            <label  style={{ marginLeft: '100px' }}for="idNombre" class="form-label">{nombre}</label>
+                        <div class="mb-3" style={{ marginTop: '-20px'}}>
+                            <h2 class="titulo-h2" >
+                                Información general
+                            </h2>
+                            <div className="dividers"></div>
                         </div>
-                        <div class="mb-3" style={{ marginTop: '50px'}} >
-                            <label  style={{ marginRight: '150px' }}for="cedulainput" class="form-label">Cédula:</label>
-                            <label  style={{ marginLeft: '150px' }}for="cedula" class="form-label">{cedula}</label>
-                        </div>
-                        
-                        <div class="mb-3" style={{ marginTop: '50px'}} >
-                            <label  style={{ marginRight: '90px' }}for= "fechaNaciminetoinput"class="form-label">Fecha de nacimiento:</label>
-                            <label  style={{ marginLeft: '95px' }}for="fechaNacimiento" class="form-label">{fechaNacimineto}</label>
-                        </div>
-                        <div class="mb-3" style={{ marginTop: '50px'}} >
-                            <label style={{ marginRight: '50px' }} for="telefonoInput" class="etiqueta-personalizada">Número de teléfono:</label>
-                            <label  style={{ marginLeft: '145px' }}for="telefono" class="etiqueta-personalizada">{telefono}</label>
+                        <div style={{ marginLeft:'20px' }}>
+                            <div class="mb-3" style={{ marginTop: '30px'}}>
+                                <label style={{ marginRight: '110px'}} for="nameInput" class="form-label custom-label">Nombre completo:</label>
+                                <label  style={{ marginLeft: '100px' }}for="idNombre" class="form-label custom-label">{nombre}</label>
+                            </div>
+                            <div class="mb-3" style={{ marginTop: '30px'}} >
+                                <label  style={{ marginRight: '150px' }}for="cedulainput" class="form-label custom-label">Cédula:</label>
+                                <label  style={{ marginLeft: '130px' }}for="cedula" class="form-label custom-label">{cedula}</label>
+                            </div>
                             
+                            <div class="mb-3" style={{ marginTop: '30px'}} >
+                                <label  style={{ marginRight: '90px' }}for= "fechaNaciminetoinput"class="form-label custom-label">Fecha de nacimiento:</label>
+                                <label  style={{ marginLeft: '105px' }}for="fechaNacimiento" class="form-label custom-label">{fechaNacimineto}</label>
+                            </div>
                         </div>
-                        <div class="mb-3" style={{ marginTop: '50px'}} >
-                            <label style={{ marginRight: '150px' }} for="correoInput" class="form-label">Correo:</label>
-                            <label  style={{ marginLeft: '150px' }}for="correo" class="form-label">{correo}</label>  
+                        <div class="mb-3" style={{ marginTop: '40px'}}>
+                            <h2 class="titulo-h2" >
+                                Información de contacto
+                            </h2>
+                            <div className="dividers"></div>
                         </div>
-                        
+                        <div style={{ marginLeft:'20px' }}>
+                            <div class="mb-3" style={{ marginTop: '30px'}} >
+                                <label style={{ marginRight: '55px' }} for="telefonoInput" class="form-label custom-label">Número de teléfono:</label>
+                                <label  style={{ marginLeft: '145px' }}for="telefono" class="form-label custom-label">{telefono}</label>
+                                
+                            </div>
+                            <div class="mb-3" style={{ marginTop: '30px'}} >
+                                <label style={{ marginRight: '150px' }} for="correoInput" class="form-label custom-label">Correo:</label>
+                                <label  style={{ marginLeft: '131px' }}for="correo" class="form-label custom-label">{correo}</label>  
+                            </div>
+                        </div>
                         <div className="mb-3" style={{ marginTop: '100px', display: 'flex' }}>
                             <button type="submit" className="button2" onClick={gotoModificarMiCuenta}>
                                 <BsFillPencilFill style={{
@@ -124,7 +139,7 @@ export const DetalleMiCuenta = () => {
                                 marginLeft: '20px',
                                 color: '#12959E' // Tamaño del icono
                                 }} /><div style={{ textAlign: 'left' }}> 
-                                Modificar<br />Mi Información
+                                Modificar<br />Mi información
                             </div>
                             </button>
                             

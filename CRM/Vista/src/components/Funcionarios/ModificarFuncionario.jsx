@@ -183,10 +183,12 @@ export const ModificarFuncionario = () => {
           ...provided,
           width: '300px', // Establece el ancho deseado
           minHeight: '47px', // Establece la altura deseada
+          fontFamily: 'Lato, sans-serif',
         }),
         menu: (provided) => ({
           ...provided,
           overflowX: 'auto', // Habilita el desplazamiento horizontal
+          fontFamily: 'Lato, sans-serif',
         }),
       };
     React.useEffect(() => {
@@ -198,7 +200,7 @@ export const ModificarFuncionario = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Modificar Funcionario</Title>
+                    <h1 class="titulo-h1">Modificar Funcionario</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">
@@ -208,7 +210,7 @@ export const ModificarFuncionario = () => {
                             
                         </div>
                         <div class="mb-3">
-                            <label  style={{ marginRight: '150px'  }}for="apellidoInput" class="form-label">Apellido:</label>
+                            <label  style={{ marginRight: '148px'  }}for="apellidoInput" class="form-label">Apellido:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el primer apellido" value={apellido} onChange={handleApellidoChange}/>
                             
@@ -220,7 +222,7 @@ export const ModificarFuncionario = () => {
                             
                         </div>
                         <div class="mb-3">
-                            <label style={{ marginRight: '50px' }} for="nameInput" class="form-label">Número de teléfono:</label>
+                            <label style={{ marginRight: '43px' }} for="nameInput" class="form-label">Número de teléfono:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}/>
                             

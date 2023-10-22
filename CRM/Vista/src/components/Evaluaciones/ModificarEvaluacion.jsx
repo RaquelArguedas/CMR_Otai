@@ -202,19 +202,26 @@ export const ModificarEvaluacion = () => {
         <Navbar />
             <div class="row">
                     <div class="col-sm-3">
-                        <Title>Modificar Evaluación</Title>
+                    <h1 className='titulo-h1'>Modificar Evaluación</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                     <div class="mb-3">
-                        <label for="nameInput" class="form-label">Nombre</label>
+                        <label for="nameInput" class="form-label">Nombre:</label>
                         <input type="text" class="form-control custom-margin-right" id="nameInput"
                          placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange}/>
                         
                     </div>
                     <div class="mb-3">
-                        <label  style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción</label>
+                        <label  style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción:</label>
                         <input type="text" class="form-control custom-margin-right" id="descripInput"
                          placeholder="Ingrese la descripcion de la evaluación" value={descripcion} onChange={handleDescripcionChange}/>
+                        
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label  style={{ marginRight: '95px' }} for="costInput" class="form-label">Costo:</label>
+                        <input type="text" class="form-control custom-margin-right" id="costInput"
+                         placeholder="Ingrese el costo de la evaluación" value={costo} onChange={handleCostoChange}/>
                         
                     </div>
                     <div class="mb-3">
@@ -231,7 +238,7 @@ export const ModificarEvaluacion = () => {
                             <option value="2">Manual Específica</option>
                             <option value="2">Completa Aleatoria</option>
                         </select> */}
-                          <select id="mySelect2" value={tipoEvaluacion} onChange={handleTipoEvaluacionChange}>
+                          <select style={{ marginLeft: '30px' }} id="mySelect2" value={tipoEvaluacion} onChange={handleTipoEvaluacionChange}>
                             <option value="">Seleccione el tipo evaluación</option>
                             {tiposEvaluacion.map((tipo) => (
                             <option key={tipo.id} value={tipo.id}>
@@ -241,13 +248,10 @@ export const ModificarEvaluacion = () => {
                         </select>
                     </div>
                         
-                    <div className="mb-3">
-                        <label  for="inputDate" className="form-label">
+                    <div className="mb-3" style={{ marginBottom: '40px' }}>
+                        <label  for="inputDate" className="form-label" >
                             Seleccione la fecha de ejecución:
                         </label>
-                        <label  style={{ marginRight: '40px' }} for="costInput" class="form-label">Costo:</label>
-                        <input type="text" class="form-control custom-margin-right" id="costInput"
-                         placeholder="Ingrese el costo de la evaluación" value={costo} onChange={handleCostoChange}/>
                         
                         </div>
                         <div className="mb-3" style={{ display: 'flex',alignItems: 'flex-start',  }}>
@@ -261,13 +265,13 @@ export const ModificarEvaluacion = () => {
                             />
                             <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px' }}>
                                 <input
-                                    style={{ marginLeft: '70px' }}
+                                    style={{ marginLeft: '120px' }}
                                     type="file"
                                     key={fileInputKey}
                                     onChange={handleFileChange}
                                     multiple
                                 />
-                                <ul style={{ marginLeft: '80px' }}>
+                                <ul style={{ marginLeft: '150px' }}>
                                     {selectedFiles.map((file) => (
                                         <li key={file.nombre}>
                                         <a href={`${API}/blop/${file.nombre}/${file.url}`} target="_blank" onClick={(e) => handleFileClick(e, file.nombre, file.url)}>
@@ -295,7 +299,7 @@ export const ModificarEvaluacion = () => {
                             </div>
                         </div>
                         <div className="mb-3" 
-                                style={{ marginTop:  '100px' }} >
+                                style={{ marginTop:  '50px' }} >
                                 <div style={{ display: 'flex' }}>
                                 <Styles> 
                                 <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange} idCliente={IdCliente}/>

@@ -89,38 +89,65 @@ export const DetalleCliente = () => {
         <div className="container"> 
         <Navbar />
             <div class="row">
-                    <div class="col-sm-3">
-                        <Title>{nombre}</Title>
+                    <div class="col-sm-3" style={{ marginBottom: '20px'}}>
+                        <h1 class="titulo-h1">
+                            {nombre}
+                        </h1>
                     </div>
-                    <div class="mb-3" >
-                        <label style={{ marginRight: '145px'}} for="idClienteInput" class="form-label">ID Cliente:</label>
-                        <label  style={{ marginLeft: '130px' }}for="idCliente" class="form-label">{idClientes}</label>
-                        
+                    <div class="mb-3" style={{ marginTop: '-20px'}}>
+                        <h2 class="titulo-h2" >
+                            Información general
+                        </h2>
+                        <div className="dividers"></div>
                     </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}}>
-                        <label style={{ marginRight: '145px'}} for="nameInput" class="form-label">Nombre:</label>
-                        <label  style={{ marginLeft: '150px' }}for="idNombre" class="form-label">{nombre}</label>
+                    <div style={{ marginLeft:'20px' }}>
+                        <div class="mb-3" >
+                            <label style={{ marginRight: '145px'}} for="idClienteInput" class="form-label custom-label">ID Cliente:</label>
+                            <label  style={{ marginLeft: '130px' }}for="idCliente" class="form-label custom-label">{idClientes}</label>
+                            
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}}>
+                            <label style={{ marginRight: '145px'}} for="nameInput" class="form-label custom-label">Nombre:</label>
+                            <label  style={{ marginLeft: '143px' }}for="idNombre" class="form-label custom-label">{nombre}</label>
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label  style={{ marginRight: '95px' }}for="cedulainput" class="form-label custom-label">Cédula Jurídica:</label>
+                            <label  style={{ marginLeft: '148px' }}for="cedula" class="form-label custom-label">{cedula}</label>
+                        </div>
                     </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label  style={{ marginRight: '95px' }}for="cedulainput" class="form-label">Cédula Jurídica:</label>
-                        <label  style={{ marginLeft: '130px' }}for="cedula" class="form-label">{cedula}</label>
+                    
+                    <div class="mb-3" style={{ marginTop: '40px'}}>
+                        <h2 class="titulo-h2" >
+                            Información de contacto
+                        </h2>
+                        <div className="dividers"></div>
                     </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label  style={{ marginRight: '90px' }}for="fechaIngresoinput" class="form-label">Fecha de ingreso:</label>
-                        <label  style={{ marginLeft: '130px' }}for="fechaIngreso" class="form-label">{fechaIngreso}</label>
+                    <div style={{ marginLeft:'20px' }}>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label style={{ marginRight: '63px' }} for="telefonoInput" class="form-label custom-label">Número de teléfono:</label>
+                            <label  style={{ marginLeft: '150px' }}for="telefono" class="form-label custom-label">{telefono}</label>
+                            
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label style={{ marginRight: '150px' }} for="correoInput" class="form-label custom-label">Correo:</label>
+                            <label  style={{ marginLeft: '146px' }}for="correo" class="form-label custom-label">{correo}</label>  
+                        </div>
                     </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label style={{ marginRight: '50px' }} for="telefonoInput" class="etiqueta-personalizada">Número de teléfono:</label>
-                        <label  style={{ marginLeft: '145px' }}for="telefono" class="etiqueta-personalizada">{telefono}</label>
-                        
+                    <div class="mb-3" style={{ marginTop: '40px'}}>
+                        <h2 class="titulo-h2" >
+                            Información adicional
+                        </h2>
+                        <div className="dividers"></div>
                     </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label style={{ marginRight: '150px' }} for="correoInput" class="form-label">Correo:</label>
-                        <label  style={{ marginLeft: '150px' }}for="correo" class="form-label">{correo}</label>  
-                    </div>
-                    <div class="mb-3" style={{ marginTop: '50px'}} >
-                        <label style={{ marginRight: '150px' }} for="estadoInput" class="form-label">Estado:</label>
-                        <label  style={{ marginLeft: '150px' }}for="estadp" class="form-label">{estado}</label>  
+                    <div style={{ marginLeft:'20px' }}>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label  style={{ marginRight: '90px' }}for="fechaIngresoinput" class="form-label custom-label">Fecha de ingreso:</label>
+                            <label  style={{ marginLeft: '145px' }}for="fechaIngreso" class="form-label custom-label">{fechaIngreso}</label>
+                        </div>
+                        <div class="mb-3" style={{ marginTop: '30px'}} >
+                            <label style={{ marginRight: '150px' }} for="estadoInput" class="form-label custom-label">Estado:</label>
+                            <label  style={{ marginLeft: '150px' }}for="estadp" class="form-label custom-label">{estado}</label>  
+                        </div>
                     </div>
                     <div className="mb-3" style={{ marginTop: '100px', display: 'flex' }}>
                         <button type="submit" className="button2" onClick={gotoModificarCliente}>

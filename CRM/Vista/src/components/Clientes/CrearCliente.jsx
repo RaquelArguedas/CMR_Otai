@@ -70,7 +70,9 @@ export const CrearCliente = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Crear Cliente</Title>
+                        <h1 class="titulo-h1">
+                        Crear Cliente
+                        </h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">
@@ -80,19 +82,19 @@ export const CrearCliente = () => {
                             
                         </div>
                         <div class="mb-3">
-                            <label  style={{ marginRight: '82px' }}for="nameInput" class="form-label">Cédula Jurídica:</label>
+                            <label  style={{ marginRight: '85px' }}for="nameInput" class="form-label">Cédula Jurídica:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese la Cédula Juridica" value={cedula} onChange={handleCedulaChange}/>
                             
                         </div>
                         <div class="mb-3">
-                            <label style={{ marginRight: '50px' }} for="nameInput" class="form-label">Número de teléfono:</label>
+                            <label style={{ marginRight: '44px' }} for="nameInput" class="form-label">Número de teléfono:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}/>
                             
                         </div>
                         <div class="mb-3">
-                            <label style={{ marginRight: '150px' }} for="nameInput" class="form-label">Correo:</label>
+                            <label style={{ marginRight: '160px' }} for="nameInput" class="form-label">Correo:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el correo electronico" value={correo} onChange={handleCorreoChange}/>
                             

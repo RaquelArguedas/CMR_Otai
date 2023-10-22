@@ -92,7 +92,7 @@ export const Evaluacion = () => {
          <Navbar />
              <div class="row">
                      <div class="col-sm-3" style={{marginTop: '50px'  }}>
-                         <Title>Evaluaciones</Title>
+                         <h1 className='titulo-h1'>Evaluaciones</h1>
                      </div>
                      <div className="mb-3" style={{ marginTop: '100px', display: 'flex'}}>
                  <button  className="button3" style={{marginLeft: '25px', height: '50px', width: '180px'}} onClick={gotoCrearFuncionario}>

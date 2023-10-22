@@ -172,7 +172,9 @@ export const CrearUsuario = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Crear usuario</Title>
+                        <h1 class="titulo-h1">
+                        Crear Usuario
+                        </h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">
@@ -182,7 +184,7 @@ export const CrearUsuario = () => {
                             
                         </div>
                         <div class="mb-3">
-                            <label  style={{ marginRight: '150px'  }}for="apellidoInput" class="form-label">Apellido:</label>
+                            <label  style={{ marginRight: '149px'  }}for="apellidoInput" class="form-label">Apellido:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el primer apellido" value={apellido} onChange={handleApellidoChange}/>
                             
@@ -194,7 +196,7 @@ export const CrearUsuario = () => {
                             
                         </div>
                         <div class="mb-3">
-                            <label style={{ marginRight: '50px' }} for="nameInput" class="form-label">Número de teléfono:</label>
+                            <label style={{ marginRight: '45px' }} for="nameInput" class="form-label">Número de teléfono:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}/>
                             

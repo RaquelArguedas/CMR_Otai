@@ -179,7 +179,7 @@ export const ModficarMiCuenta = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Mi información</Title>
+                        <h1 class="titulo-h1">Mi información</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">
@@ -189,25 +189,25 @@ export const ModficarMiCuenta = () => {
                             
                         </div>
                         <div class="mb-3">
-                            <label  style={{ marginRight: '150px'  }}for="apellidoInput" class="form-label">Apellido:</label>
+                            <label  style={{ marginRight: '149px'  }}for="apellidoInput" class="form-label">Apellido:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el primer apellido" value={apellido} onChange={handleApellidoChange}/>
                             
                         </div>
                         <div class="mb-3">
-                            <label  style={{ marginRight: '160px' }}for="nameInput" class="form-label">Cédula:</label>
+                            <label  style={{ marginRight: '161px' }}for="nameInput" class="form-label">Cédula:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese la Cédula Juridica" value={cedula} onChange={handleCedulaChange}/>
                             
                         </div>
                         <div class="mb-3">
-                            <label style={{ marginRight: '50px' }} for="nameInput" class="form-label">Número de teléfono:</label>
+                            <label style={{ marginRight: '45px' }} for="nameInput" class="form-label">Número de teléfono:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}/>
                             
                         </div>
                         <div class="mb-3">
-                            <label style={{ marginRight: '160px' }} for="nameInput" class="form-label">Correo:</label>
+                            <label style={{ marginRight: '161px' }} for="nameInput" class="form-label">Correo:</label>
                             <input type="text" class="form-control custom-margin-right" id="nameInput"
                             placeholder="Ingrese el correo electronico" value={correo} onChange={handleCorreoChange}/>
                         </div>

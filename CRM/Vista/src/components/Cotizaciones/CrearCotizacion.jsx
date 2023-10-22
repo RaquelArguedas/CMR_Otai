@@ -128,12 +128,12 @@ export  const CrearCotizacion = () => {
                     </div>
                     <div class="mb-3">
                         
-                        <select id="mySelect" value={estado} onChange={handleEstadoChange}>
+                        <select style={{ marginRight: '40px' }}  id="mySelect" value={estado} onChange={handleEstadoChange}>
                             <option value="">Seleccione el estado de la cotización</option>
                             <option value="1">Activo</option>
                             <option value="2">Inactivo</option>
                         </select>
-                        <select id="mySelect2" value={tipoCotizacion} onChange={handleTipoCotizacionChange}>
+                        <select  style={{ marginLeft: '60px' }}  id="mySelect2" value={tipoCotizacion} onChange={handleTipoCotizacionChange}>
                             <option value="">Seleccione el tipo cotización</option>
                             <option value="1">Automática Aleatoria</option>
                             <option value="2">Automática Específica</option>
@@ -162,13 +162,13 @@ export  const CrearCotizacion = () => {
                             />
                             <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px' }}>
                                 <input
-                                    style={{ marginLeft: '70px' }}
+                                    style={{ marginLeft: '100px' }}
                                     type="file"
                                     key={fileInputKey}
                                     onChange={handleFileChange}
                                     multiple
                                 />
-                                <ul style={{ marginLeft: '80px'}}>
+                                <ul style={{ marginLeft: '120px'}}>
                                 {selectedFiles.map((file, index) => (
                                     <li key={index}>
                                         {file.name}
