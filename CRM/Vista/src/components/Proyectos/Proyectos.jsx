@@ -100,7 +100,7 @@ export const Proyectos = () => {
         <Navbar />
         <div class="row" style={{marginTop: '30px'  }}>
                     <div class="col-sm-3">
-                        <Title>Proyectos</Title>
+                        <h1 className='titulo-h1'>Proyectos</h1>
                     </div>
                      <div className="mb-3" style={{ marginTop: '0px'}}>
                         <button  className="button3" style={{marginLeft: '20px', marginTop: '-20px'  }} onClick={gotoCrearProyecto}>
@@ -114,14 +114,12 @@ export const Proyectos = () => {
                     </div>
             <div className="mb-3" style={{ marginTop: '70px', marginLeft: '20px'}}>
                 <div style={{ display: 'flex' }}>
-                <Styles> 
-                    <Table columns={columns} data={proyectos} />
-                </Styles>
+                    <Styles> 
+                        <Table columns={columns} data={proyectos} />
+                    </Styles>
                 </div>
             </div>
-            </div>
-           
-            {/* Aqui ponemos la tabla de los clientes, falta por hacer */}
+        </div>
             
         </div>
 

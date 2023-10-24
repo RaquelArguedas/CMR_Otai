@@ -56,7 +56,7 @@ export const Perfiles = () => {
       //Lo de abajo es la notificacion de que ya se creo la evalaucion
       //Recordar en el backend poner lo de fecha de ingreso que se hace alla
       Swal.fire({
-        title: 'Modifica perfil',
+        title: 'Modificar perfil',
         input: 'text',
         inputLabel: 'Nombre del perfil',
         inputPlaceholder: 'Ingrese el nombre del perfil',
@@ -87,7 +87,7 @@ export const Perfiles = () => {
             Swal.fire('Incorrecto', 'Debe ingresar un nombre válido', 'error');
           }
         } else if (result.isDenied) {
-          Swal.fire('Operación cancelada');
+          Swal.fire('No se guardo ningún cambio');
         }
       });
   };
@@ -165,7 +165,7 @@ export const Perfiles = () => {
          <Navbar />
              <div class="row">
                      <div class="col-sm-3">
-                         <Title>Tipos de Perfiles</Title>
+                     <h1 className='titulo-h1'>Tipos de Perfiles</h1>
                      </div>
              </div>
              

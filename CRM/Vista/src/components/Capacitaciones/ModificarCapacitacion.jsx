@@ -17,9 +17,15 @@ export const ModificarCapacitacion = () => {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [costo, setCosto] = useState('');
+  const [horas, setHora] = useState('');
+  const [modalidad, setModalidad] = useState('');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fechaEjecucion, setFechaEjecucion] = useState(new Date());
-  const [inputValue, setInputValue] = useState('');
+  const [fechaCreada, setFechaCreada] = useState(new Date());
+  const [fechaFinal, setFechaFinal] = useState(new Date());
+  const [inputValueEjecucion, setInputValueEjecucion] = useState('');
+  const [inputValueFinal, setInputValueFinal] = useState('');
+  const [inputValueCreacion, setInputValueCreacion] = useState('');
   const [estado, setEstado] = useState("");
   const [tipoCapacitacion, setTipoCapacitacion] = useState("");
   const [tiposCapacitacion, setTiposCapacitacion] = useState([]);
@@ -150,21 +156,36 @@ export const ModificarCapacitacion = () => {
   const handleClienteNombreChange = (event) => {
     setNombreCliente(event.target.value);
   };
-
+  const handleHoraChange = (event) => {
+    setHora(event.target.value);
+  };
   const handleFechaEjecucionChange = (date) => {
     setFechaEjecucion(date);
 
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    // Construir la cadena en el formato deseado (mm/dd/aaaa)
-    const formattedDate = `${month}/${day}/${year}`;
-    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
+    const formattedDate = `${year}/${month}/${day}`;
 
-    setInputValue(formattedDate);
+    setInputValueEjecucion(formattedDate);
   };
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+
+  const handleFechaFinalChange = (date) => {
+    setFechaFinal(date);
+
+    const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
+    const day = date.getDate(); // Obtener el día
+    const year = date.getFullYear(); // Obtener el año
+    const formattedDate = `${year}/${month}/${day}`;
+    setInputValueFinal(formattedDate);
+
+    const monthC = fechaCreada.getMonth() + 1; 
+    const dayC = fechaCreada.getDate(); 
+    const yearC = fechaCreada.getFullYear(); 
+    const formattedDateC = `${yearC}/${monthC}/${dayC}`;
+    setInputValueCreacion(formattedDateC);
+
+
   };
 
   const handleIdClienteChange = (idCliente) => {
@@ -174,7 +195,9 @@ export const ModificarCapacitacion = () => {
   const handleIdFuncionarioChange = (idFuncionario) => {
     setIdFuncionario(idFuncionario);
   };
-
+  const handleModalidadChange = (event) => {
+    setModalidad(event.target.value);
+  };
   const handleFileClick = async (e, nombre, url) => {
     e.preventDefault(); // Evita la navegación predeterminada
     const res = await fetch(`${API}/blop/${nombre}/${url}`);
@@ -195,99 +218,113 @@ export const ModificarCapacitacion = () => {
 
   return (
 
+   
     <Fragment>
       <div className="container">
         <Navbar />
         <div class="row">
           <div class="col-sm-3">
-            <Title>Modificar Capacitaciones</Title>
+          <h1 className='titulo-h1'>Modificar Capacitación</h1>
           </div>
           <form onSubmit={handleSubmit}>
             <div class="mb-3">
-              <label for="nameInput" class="form-label">Nombre</label>
-              <input type="text" class="form-control custom-margin-right" id="nameInput"
+              <label for="nameInput" class="form-label">Nombre:</label>
+              <input style={{ marginLeft: '70px' }}type="text" class="form-control custom-margin-right" id="nameInput"
                 placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange} />
             </div>
             <div class="mb-3">
-              <label style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción</label>
-              <input type="text" class="form-control custom-margin-right" id="descripInput"
+              <label style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción:</label>
+              <input style={{ marginLeft: '66px' }} type="text" class="form-control custom-margin-right" id="descripInput"
                 placeholder="Ingrese la descripcion de la capacitación" value={descripcion} onChange={handleDescripcionChange} />
             </div>
-            <div class="mb-3">
-              <select id="mySelect" value={estado} onChange={handleEstadoChange}>
-                <option value="">Seleccione el estado de la capacitación</option>
-                <option value="">Solicitado</option>
-                <option value="">En progreso</option>
-                <option value="">Finalizado</option>
-              </select>
-              <select id="mySelect2" value={tiposCapacitacion} onChange={handleTipoCapacitacionChange}>
-                            <option value="">Seleccione el tipo evaluación</option>
-                            {tiposCapacitacion.map((tipo) => (
-                            <option key={tipo.id} value={tipo.id}>
-                                {tipo.nombre}
-                            </option>
-                            ))}
-                        </select>
-              <select id="mySelect3" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
-                <option value="">Seleccione la modalidad</option>
-              </select>
-            </div>
             <div className="mb-3" >
-              <div style={{ display: 'flex' }}>
-                <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Costo:</label>
-                <input type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' }}
-                  placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
-
-                <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Horas:</label>
-                <input type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' }}
-                  placeholder="Ingrese la duración en horas de la capacitación" value={costo} onChange={handleCostoChange} />
-              </div>
+              <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Horas:</label>
+              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px', marginLeft: '150px' }}
+              placeholder="Ingrese la duración en horas de la capacitación" value={horas} onChange={handleHoraChange} />
             </div>
-            <label for="inputDate" className="form-label">
-              Fecha de inicio:
-            </label>
-            <label style={{ marginLeft: '40px' }} for="inputDate" className="form-label">
-              Fecha de finalización:
-            </label>
-            <div className="mb-3" style={{ display: 'flex' }}>
-              <DatePicker
-                selected={fechaEjecucion}
-                onChange={handleFechaEjecucionChange}
-                dateFormat="dd/MM/yyyy"
-                inline
-                showYearDropdown
-                showMonthDropdown
-              />
-              <DatePicker
-                selected={fechaEjecucion}
-                onChange={handleFechaEjecucionChange}
-                dateFormat="dd/MM/yyyy"
-                inline
-                showYearDropdown
-                showMonthDropdown
-              />
-              <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginTop: '-100px' }}>
-                <label class="form-label" style={{ marginLeft: '70px' }}>Subir archivos:</label>
-                <input
-                  style={{ marginLeft: '70px' }}
-                  type="file"
-                  key={fileInputKey}
-                  onChange={handleFileChange}
-                  multiple
+            <div className="mb-3">
+              <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Costo:</label>
+              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' , marginLeft: '151px' }}
+              placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
+            </div>
+            <div class="mb-3">
+              <select style={{  width: '250px'  }}id="mySelect" value={estado} onChange={handleEstadoChange}>
+              <option value="">Seleccione el estado</option>
+              <option value="1">Eliminado</option>
+              <option value="2">En progreso</option>
+              <option value="3">Solicitado</option>
+              <option value="4">En planeación</option>
+              <option value="5">Activo</option>
+              <option value="6">Inactivo</option>
+              </select>
+              <select style={{ marginLeft: '13px', width: '300px'  }} id="mySelect2" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
+              <option value="">Seleccione el tipo de capacitación</option>
+              {tiposCapacitacion.map(tipo => (
+                <option key={tipo[0]} value={tipo[0]}>
+                  {tipo[1]}
+                </option>
+              ))}
+              </select>
+              <select style={{ marginLeft: '13px', width: '300px'  }} id="mySelect3" value={modalidad} onChange={handleModalidadChange}>
+                <option value="">Seleccione la modalidad</option>
+                <option value="1">Presencial </option>
+                <option value="2">Virtual</option>
+                <option value="3">Hibrida</option>
+              </select>
+            </div>
+            
+            <div className="mb-3" style={{marginBottom: '50px'}}>
+              <label  for="inputDate" className="form-label">
+                  Seleccione la fecha de inicio:
+              </label>
+              <label  for="inputDate" className="form-label">
+                  Seleccione la fecha de finalización:
+              </label>
+              <label  for="inputDate" className="form-label">
+                  Seleccione los archivos adjuntos:
+              </label>
+            </div>
+            <div className="mb-3" style={{ display: 'flex',alignItems: 'flex-start'  }}>
+                <DatePicker
+                     selected={fechaEjecucion}
+                     onChange={handleFechaEjecucionChange}     
+                    dateFormat="dd/MM/yyyy"
+                    inline
+                    showYearDropdown
+                    showMonthDropdown
                 />
-                <ul style={{ marginLeft: '80px' }}>
-                  {selectedFiles.map((file, index) => (
-                    <li key={index}>
-                      {file.name}
-                      <button style={{ marginLeft: '10px', backgroundColor: '#ffffff', border: '0 transparent' }} onClick={() => handleRemoveFile(index)}>
-                        <MdOutlineDeleteForever style={{
-                          fontSize: '25px', // Tamaño del icono
-                        }} /></button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <div style={{ marginLeft: '81px' }}>
+                    <DatePicker
+                      selected={fechaFinal}
+                      onChange={handleFechaFinalChange}         
+                      dateFormat="dd/MM/yyyy"
+                      inline
+                      showYearDropdown
+                      showMonthDropdown
+                    />
+                </div>
+                <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px'}}>
+                    <input
+                        style={{ marginLeft: '135px' }}
+                        type="file"
+                        key={fileInputKey}
+                        onChange={handleFileChange}
+                        multiple
+                    />
+                    <ul style={{ marginLeft: '150px', marginTop : '-15px'}}>
+                    {selectedFiles.map((file, index) => (
+                        <li key={index}>
+                            {file.name}
+                            <button style={{ marginLeft: '10px', backgroundColor: '#ffffff', border: '0 transparent'} } onClick={() => handleRemoveFile(index)}>
+                                <MdOutlineDeleteForever style={{
+                                fontSize: '25px', // Tamaño del icono
+                            }}/></button>
+                        </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
+           
             <div style={{ marginTop: '30px' }}>
               <label class="form-label" style={{ marginBottom: '70px' }}>Cliente</label>
               <label class="form-label" style={{ marginLeft: '480px' }}>Funcionario</label>

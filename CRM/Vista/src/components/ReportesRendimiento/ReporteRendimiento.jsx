@@ -9,7 +9,16 @@ import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { Table, columns, Styles } from './TablaClientesReportes';
+import googleFonts from 'google-fonts';
+// Define un componente de título estilizado
+
+
+import '../Clientes/CSSClientes/Clientes.css'
 const API = "http://127.0.0.1:5000";
+
+googleFonts.add({
+  'Lato': ['300', '700'],
+});
 
 const Title = styled.h1`
   font-size: 24px;
@@ -200,130 +209,145 @@ export function ReporteRendimiento() {
     console.log(idCliente + 'Handle')
     setIdCliente(idCliente);
   };
+return(
+  <Fragment>
+  <div className='container'>
+    <Navbar />
+    <div>
+      <h1 class="titulo-h1">Reporte de rendimiento</h1>
+      <form onSubmit={handleSubmit}>
+      <div class="row">
+          <h2 class="titulo-h2" >Servicios:</h2>
+          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '10px', marginTop:'50px' }}>
+            <Checkbox>
+              <input
+                type="checkbox"
+                value="Cotización"
+                checked={servicioCheckboxArray.includes('Cotización')}
+                onChange={handleCheckboxChange}
+              /> Cotización
+            </Checkbox>
 
-  return (
-    <Fragment>
-      <div className='container'>
-        <Navbar />
-        <div>
-          <Title>Reporte de Rendimiento</Title>
-          <form onSubmit={handleSubmit}>
-            <div style={{ display: 'flex' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <SubTitle>Servicios:</SubTitle>
-                <Checkbox>
-                  <input
-                    type="checkbox"
-                    value="Cotización"
-                    checked={servicioCheckboxArray.includes('Cotización')}
-                    onChange={handleCheckboxChange}
-                  /> Cotización
-                </Checkbox>
-                <Checkbox>
-                  <input
-                    type="checkbox"
-                    value="Evaluación"
-                    checked={servicioCheckboxArray.includes('Evaluación')}
-                    onChange={handleCheckboxChange}
-                  /> Evaluación
-                </Checkbox>
-                <Checkbox>
-                  <input
-                    type="checkbox"
-                    value="Proyecto"
-                    checked={servicioCheckboxArray.includes('Proyecto')}
-                    onChange={handleCheckboxChange}
-                  /> Proyecto
-                </Checkbox>
-                <Checkbox>
-                  <input
-                    type="checkbox"
-                    value="Capacitación"
-                    checked={servicioCheckboxArray.includes('Capacitación')}
-                    onChange={handleCheckboxChange}
-                  /> Capacitación
-                </Checkbox>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '300px' }}>
-                <SubTitle>Estado:</SubTitle>
-                <Checkbox>
-                  <input
-                    type="checkbox"
-                    checked={estadoCheckbox}
-                    onChange={() => setCheckboxEstado(!estadoCheckbox)}
-                  /> Por estado
-                </Checkbox>
-                <Select
-                  value={estadoCheckbox ? estadoDropdown : ''}
-                  onChange={(e) => {
-                    if (estadoCheckbox) {
-                      console.log('Valor estadoDropdown:', e.target.value);
-                      setEstado(e.target.value);
-                    }
-                  }}
-                >
-                  <option value="-Seleccione Estado-" disabled={estadoDropdown !== '-Seleccione Estado-'}>-Seleccione Estado-</option>
-                  <option value="opcion1">En negociación</option>
-                  <option value="opcion2">En progreso</option>
-                  <option value="opcion3">Finalizado</option>
-                  <option value="opcion4">Entregado</option>
-                </Select>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px', marginLeft: '50px'}}>
-              <button type="submit" className='button1' >
-                <AiOutlinePlusCircle style={{
-                        fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'
-                        }} /> Crear reporte
-              </button>
-              </div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <SubTitle>Clientes:</SubTitle>
-                <Styles>
-                  <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange}/>
-                </Styles>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '100px' }}>
-                <SubTitle>Fecha:</SubTitle>
-                <Checkbox>
-                  <input
-                    type="checkbox"
-                    checked={fechaCheckbox}
-                    onChange={() => setFechaCheckbox(!fechaCheckbox)}
-                  />Por rango de fechas
-                </Checkbox>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', marginRight: '50px' }}>
-                    <SubTitleFecha>Fecha Inicio:</SubTitleFecha>
-                    <CustomDatePicker
-                      selected={fechaInicio}
-                      onChange={handleFechaInicioChange}
-                      dateFormat="dd/MM/yyyy"
-                      inline
-                      showYearDropdown
-                      showMonthDropdown
-                    />
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <SubTitleFecha>Fecha Final:</SubTitleFecha>
-                    <CustomDatePicker
-                      selected={fechaFinal}
-                      onChange={handleFechaFinalChange}
-                      dateFormat="dd/MM/yyyy"
-                      inline
-                      showYearDropdown
-                      showMonthDropdown
-                    />
-                  </div>
+            <Checkbox>
+              <input
+                type="checkbox"
+                value="Evaluación"
+                checked={servicioCheckboxArray.includes('Evaluación')}
+                onChange={handleCheckboxChange}
+              /> Evaluación
+            </Checkbox>
+
+           
+          </div>
+
+          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginTop:  '5px'   }}>
+          <Checkbox>
+              <input
+                type="checkbox"
+                value="Proyecto"
+                checked={servicioCheckboxArray.includes('Proyecto')}
+                onChange={handleCheckboxChange}
+              /> Proyecto
+          </Checkbox>
+
+            <Checkbox>
+              <input
+                type="checkbox"
+                value="Capacitación"
+                checked={servicioCheckboxArray.includes('Capacitación')}
+                onChange={handleCheckboxChange}
+                style={{marginLeft: '-218px' }}
+              /> Capacitación
+            </Checkbox>
+
+          </div>  
+
+          <h2 class="titulo-h2" >Estado:</h2>
+          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '5px', marginTop:'50px' }}>
+
+
+          <Checkbox>
+              <input
+                type="checkbox"
+                checked={estadoCheckbox}
+                onChange={() => setCheckboxEstado(!estadoCheckbox)}
+                
+              /> Por estado
+            </Checkbox>
+            <Select
+              value={estadoCheckbox ? estadoDropdown : ''}
+              onChange={(e) => {
+                if (estadoCheckbox) {
+                  console.log('Valor estadoDropdown:', e.target.value);
+                  setEstado(e.target.value);
+                }
+              }}
+              style={{  marginTop:  '-25px', marginLeft:'50px'   }}
+            >
+              <option value="-Seleccione Estado-" disabled={estadoDropdown !== '-Seleccione Estado-'}>-Seleccione Estado-</option>
+              <option value="opcion1">En negociación</option>
+              <option value="opcion2">En progreso</option>
+              <option value="opcion3">Finalizado</option>
+              <option value="opcion4">Entregado</option>
+            </Select>
+          </div>
+
+          <h2 class="titulo-h2" >Fecha:</h2>
+          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginTop:  '50px'   }}>
+            
+              <Checkbox>
+                <input
+                  type="checkbox"
+                  checked={fechaCheckbox}
+                  onChange={() => setFechaCheckbox(!fechaCheckbox)}
+                />Por rango de fechas
+              </Checkbox>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'row', marginTop:'-30px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', marginRight: '50px' }}>
+                  <h2 class="titulo-h2" style={{marginBottom:'30px', marginTop:'15px' }}>Fecha Inicio:</h2>
+                  <CustomDatePicker
+                    selected={fechaInicio}
+                    onChange={handleFechaInicioChange}
+                    dateFormat="dd/MM/yyyy"
+                    inline
+                    showYearDropdown
+                    showMonthDropdown
+                  />
                 </div>
-              </div>
-            </div>
-          </form>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <h2 class="titulo-h2" style={{marginBottom:'30px', marginTop:'15px' }}>Fecha Final:</h2>
+                  <CustomDatePicker
+                    selected={fechaFinal}
+                    onChange={handleFechaFinalChange}
+                    dateFormat="dd/MM/yyyy"
+                    inline
+                    showYearDropdown
+                    showMonthDropdown
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', marginLeft:'50px', marginTop:'30px'  }}>
+                  <Styles>
+                    <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange} />
+                  </Styles>
+                </div>
+          </div>
+
         </div>
-      </div>
-    </Fragment>
-  );
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px'}}>
+          <button type="submit" className='button1' >
+            <AiOutlinePlusCircle style={{
+            fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'
+            }} /> Crear reporte
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</Fragment>
+);
 }
 
 export default ReporteRendimiento;

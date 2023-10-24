@@ -189,7 +189,7 @@ export  const CrearEvaluacion = () => {
                     </div>
                     <div class="mb-3">
                         <label  style={{ marginRight: '95px' }} for="costInput" class="form-label">Costo:</label>
-                        <input type="text" class="form-control custom-margin-right" id="costInput"
+                        <input type="number" class="form-control custom-margin-right" id="costInput"
                          placeholder="Ingrese el costo de la evaluación" value={costo} onChange={handleCostoChange}/>
                         
                     </div>

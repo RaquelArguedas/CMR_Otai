@@ -268,20 +268,25 @@ export const ModificarProyecto = () => {
         <Navbar />
             <div class="row">
                     <div class="col-sm-3">
-                        <Title>Modificar proyecto</Title>
+                        <h1 class="titulo-h1">Modificar proyecto</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                     <div class="mb-3">
-                        <label for="nameInput" class="form-label">Nombre</label>
+                        <label for="nameInput" class="form-label">Nombre:</label>
                         <input type="text" class="form-control custom-margin-right" id="nameInput"
                          placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange}/>
                         
                     </div>
                     <div class="mb-3">
-                        <label  style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción</label>
+                        <label  style={{ marginRight: '37px' }} for="descripInput" class="form-label">Descripción:</label>
                         <input type="text" class="form-control custom-margin-right" id="descripInput"
                          placeholder="Ingrese la descripcion de la evaluación" value={descripcion} onChange={handleDescripcionChange}/>
                         
+                    </div>
+                    <div class="mb-3">
+                        <label  style={{ marginRight: '61px'}} for="costInput" class="form-label">Sub Total:</label>
+                        <input type="number" class="form-control custom-margin-right" id="costInput"
+                        placeholder="Ingrese el costo del proyecto" value={costo} onChange={handleCostoChange}/>
                     </div>
                     <div class="mb-3">
                         
@@ -294,10 +299,6 @@ export const ModificarProyecto = () => {
                             <option value="5">Activo</option>
                             <option value="6">Inactivo</option>
                         </select>
-                        
-                        <label  style={{ marginRight: '40px'}} for="costInput" class="form-label">Sub Total:</label>
-                        <input type="text" class="form-control custom-margin-right" id="costInput"
-                         placeholder="Ingrese el costo del proyecto" value={costo} onChange={handleCostoChange}/>
                     </div>
                         
                     <div className="mb-3" style={{marginBottom: '50px'}}>
@@ -332,13 +333,13 @@ export const ModificarProyecto = () => {
                         </div>
                             <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px' }}>
                                 <input
-                                    style={{ marginLeft: '110px' }}
+                                    style={{ marginLeft: '135px' }}
                                     type="file"
                                     key={fileInputKey}
                                     onChange={handleFileChange}
                                     multiple
                                 />
-                                <ul style={{ marginLeft: '130px' }}>
+                                <ul style={{ marginLeft: '150px', marginTop : '-15px' }}>
                                     {selectedFiles.map((file) => (
                                         <li key={file.nombre}> {/* Cambia key a file.url si es único */}
                                         {file.nombre} {/* Muestra el nombre del archivo */}
@@ -364,7 +365,7 @@ export const ModificarProyecto = () => {
                             </div>
                         </div>
                         <div className="mb-3" 
-                                style={{ marginTop:  '100px' }} >
+                                style={{ marginTop:  '40px' }} >
                                 <div style={{ display: 'flex' }}>
                                 <Styles> 
                                 <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio}/>
@@ -373,7 +374,7 @@ export const ModificarProyecto = () => {
                             </div>
                             
                             <div className="mb-3" 
-                                style={{ marginTop:  '100px' }} >
+                                style={{ marginTop:  '50px' }} >
                             <button type="submit" className="button1" >
                                 <BsFillPencilFill style={{
                                             fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'// Tamaño del icono

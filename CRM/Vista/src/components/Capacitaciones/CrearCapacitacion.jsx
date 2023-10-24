@@ -241,21 +241,31 @@ export const CrearCapacitacion = () => {
         <Navbar />
         <div class="row">
           <div class="col-sm-3">
-            <Title>Crear Capacitaciones</Title>
+          <h1 className='titulo-h1'>Crear Capacitaciones</h1>
           </div>
           <form onSubmit={handleSubmit}>
             <div class="mb-3">
-              <label for="nameInput" class="form-label">Nombre</label>
-              <input type="text" class="form-control custom-margin-right" id="nameInput"
+              <label for="nameInput" class="form-label">Nombre:</label>
+              <input style={{ marginLeft: '70px' }}type="text" class="form-control custom-margin-right" id="nameInput"
                 placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange} />
             </div>
             <div class="mb-3">
-              <label style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción</label>
-              <input type="text" class="form-control custom-margin-right" id="descripInput"
+              <label style={{ marginRight: '40px' }} for="descripInput" class="form-label">Descripción:</label>
+              <input style={{ marginLeft: '66px' }} type="text" class="form-control custom-margin-right" id="descripInput"
                 placeholder="Ingrese la descripcion de la capacitación" value={descripcion} onChange={handleDescripcionChange} />
             </div>
+            <div className="mb-3" >
+              <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Horas:</label>
+              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px', marginLeft: '150px' }}
+              placeholder="Ingrese la duración en horas de la capacitación" value={horas} onChange={handleHoraChange} />
+            </div>
+            <div className="mb-3">
+              <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Costo:</label>
+              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' , marginLeft: '151px' }}
+              placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
+            </div>
             <div class="mb-3">
-              <select id="mySelect" value={estado} onChange={handleEstadoChange}>
+              <select style={{  width: '250px'  }}id="mySelect" value={estado} onChange={handleEstadoChange}>
               <option value="">Seleccione el estado</option>
               <option value="1">Eliminado</option>
               <option value="2">En progreso</option>
@@ -264,7 +274,7 @@ export const CrearCapacitacion = () => {
               <option value="5">Activo</option>
               <option value="6">Inactivo</option>
               </select>
-              <select id="mySelect2" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
+              <select style={{ marginLeft: '13px', width: '300px'  }} id="mySelect2" value={tipoCapacitacion} onChange={handleTipoCapacitacionChange}>
               <option value="">Seleccione el tipo de capacitación</option>
               {tiposCapacitacion.map(tipo => (
                 <option key={tipo[0]} value={tipo[0]}>
@@ -272,69 +282,66 @@ export const CrearCapacitacion = () => {
                 </option>
               ))}
               </select>
-              <select id="mySelect3" value={modalidad} onChange={handleModalidadChange}>
+              <select style={{ marginLeft: '13px', width: '300px'  }} id="mySelect3" value={modalidad} onChange={handleModalidadChange}>
                 <option value="">Seleccione la modalidad</option>
                 <option value="1">Presencial </option>
                 <option value="2">Virtual</option>
                 <option value="3">Hibrida</option>
               </select>
             </div>
-            <div className="mb-3" >
-              <div style={{ display: 'flex' }}>
-                <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Costo:</label>
-                <input type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' }}
-                  placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
-
-                <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Horas:</label>
-                <input type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' }}
-                  placeholder="Ingrese la duración en horas de la capacitación" value={horas} onChange={handleHoraChange} />
-              </div>
+            
+            <div className="mb-3" style={{marginBottom: '50px'}}>
+              <label  for="inputDate" className="form-label">
+                  Seleccione la fecha de inicio:
+              </label>
+              <label  for="inputDate" className="form-label">
+                  Seleccione la fecha de finalización:
+              </label>
+              <label  for="inputDate" className="form-label">
+                  Seleccione los archivos adjuntos:
+              </label>
             </div>
-            <label for="inputDate" className="form-label">
-              Fecha de inicio:
-            </label>
-            <label style={{ marginLeft: '40px' }} for="inputDate" className="form-label">
-              Fecha de finalización:
-            </label>
-            <div className="mb-3" style={{ display: 'flex' }}>
-              <DatePicker
-                selected={fechaEjecucion}
-                onChange={handleFechaEjecucionChange}
-                dateFormat="dd/MM/yyyy"
-                inline
-                showYearDropdown
-                showMonthDropdown
-              />
-              <DatePicker
-                selected={fechaFinal}
-                onChange={handleFechaFinalChange}
-                dateFormat="dd/MM/yyyy"
-                inline
-                showYearDropdown
-                showMonthDropdown
-              />
-              <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginTop: '-100px' }}>
-                <label class="form-label" style={{ marginLeft: '70px' }}>Subir archivos:</label>
-                <input
-                  style={{ marginLeft: '70px' }}
-                  type="file"
-                  key={fileInputKey}
-                  onChange={handleFileChange}
-                  multiple
+            <div className="mb-3" style={{ display: 'flex',alignItems: 'flex-start'  }}>
+                <DatePicker
+                     selected={fechaEjecucion}
+                     onChange={handleFechaEjecucionChange}     
+                    dateFormat="dd/MM/yyyy"
+                    inline
+                    showYearDropdown
+                    showMonthDropdown
                 />
-                <ul style={{ marginLeft: '80px' }}>
-                  {selectedFiles.map((file, index) => (
-                    <li key={index}>
-                      {file.name}
-                      <button style={{ marginLeft: '10px', backgroundColor: '#ffffff', border: '0 transparent' }} onClick={() => handleRemoveFile(index)}>
-                        <MdOutlineDeleteForever style={{
-                          fontSize: '25px', // Tamaño del icono
-                        }} /></button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <div style={{ marginLeft: '81px' }}>
+                    <DatePicker
+                      selected={fechaFinal}
+                      onChange={handleFechaFinalChange}         
+                      dateFormat="dd/MM/yyyy"
+                      inline
+                      showYearDropdown
+                      showMonthDropdown
+                    />
+                </div>
+                <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px'}}>
+                    <input
+                        style={{ marginLeft: '135px' }}
+                        type="file"
+                        key={fileInputKey}
+                        onChange={handleFileChange}
+                        multiple
+                    />
+                    <ul style={{ marginLeft: '150px', marginTop : '-15px'}}>
+                    {selectedFiles.map((file, index) => (
+                        <li key={index}>
+                            {file.name}
+                            <button style={{ marginLeft: '10px', backgroundColor: '#ffffff', border: '0 transparent'} } onClick={() => handleRemoveFile(index)}>
+                                <MdOutlineDeleteForever style={{
+                                fontSize: '25px', // Tamaño del icono
+                            }}/></button>
+                        </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
+           
             <div style={{ marginTop: '30px' }}>
               <label class="form-label" style={{ marginBottom: '70px' }}>Cliente</label>
               <label class="form-label" style={{ marginLeft: '480px' }}>Funcionario</label>

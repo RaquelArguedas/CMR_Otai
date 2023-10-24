@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from '../Navbar/Navbar';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import './DetalleCapacitacion.css';
+import '../Evaluaciones/DetalleEvaluacion.css'; 
 
 import { BsFillPencilFill } from 'react-icons/bs';
 import { RiDeleteBinLine } from 'react-icons/ri';
@@ -139,33 +139,62 @@ export const DetalleCapacitacion = () => {
         <Navbar />
             <div class="row">
                     <div class="col-sm-3">
-                        <Title>{nombre}</Title>
+                        <h1 class="titulo-h1">{nombre}</h1>
+                    </div>
+                    <div class="mb-3" style={{ marginTop: '-20px'}}>
+                    <h2 class="titulo-h2" >
+                        Información general
+                    </h2>
+                    <div className="dividers"></div>
+                </div>
+                <div style={{ marginLeft:'20px' }}>
+                    <div class="mb-3" style={{ marginBottom: '30px' }}>
+                        <label  for="idEvlabel"class="form-label custom-label">ID Evaluación:</label>
+                        <label  style={{ marginLeft: '130px' }}for="idevaluacion" class="form-label custom-label">{idCapacitacion}</label>
                     </div>
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label  for="idEvlabel" class="form-label">ID Evaluación:</label>
-                        <label  style={{ marginLeft: '130px' }}for="idevaluacion" class="form-label">{idCapacitacion}</label>
+                        <label for="namelabel"class="form-label custom-label">Nombre:</label>
+                        <label style={{ marginLeft: '165px' }} for="nameevaluacion" class="form-label custom-label">{nombre}</label>
                     </div>
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="namelabel" class="form-label">Nombre:</label>
-                        <label style={{ marginLeft: '180px' }} for="nameevaluacion" class="form-label">{nombre}</label>
+                        <label for="descripcionLabel"class="form-label custom-label">Descripción:</label>
+                        <label style={{ marginLeft: '142px' }} for="descripcion"class="form-label custom-label">{descripcion}</label>
                     </div>
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="descripcionLabel" class="form-label">Descripción:</label>
-                        <label style={{ marginLeft: '150px' }} for="descripcion" class="form-label">{descripcion}</label>
+                        <label for="idEvLave"class="form-label custom-label">Tipo de capacitación:</label>
+                        <label style={{ marginLeft: '92px' }} for="idevaluacion" class="form-label custom-label">{tipoCapacitacion}</label>
+                    </div>
+                </div>
+                <div class="mb-3" style={{ marginTop: '20px'}}>
+                    <h2 class="titulo-h2" >
+                        Gestión del servicio
+                    </h2>
+                    <div className="dividers"></div>
+                </div>
+                <div style={{ marginLeft:'20px' }}>     
+
+                    <div class="mb-3" style={{ marginBottom: '30px' }}>
+                        <label for="fecha"class="form-label custom-label">Fecha de ejecución:</label>
+                        <label style={{ marginLeft: '100px' }}  for="fecha" class="form-label custom-label">{fechaEjecucion}</label>
+                    </div>
+                    <div class="mb-3" style={{ marginBottom: '30px' }}>
+                        <label for="idEvLave"class="form-label custom-label">Estado:</label>
+                        <label style={{ marginLeft: '175px' }} for="idevaluacion" class="form-label custom-label">{estado}</label>
                     </div>
                     
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="fecha" class="form-label">Fecha de ejecución:</label>
-                        <label style={{ marginLeft: '90px' }}  for="fecha" class="form-label">{fechaEjecucion}</label>
+                        <label for="idEvLave"class="form-label custom-label">Costo:</label>
+                        <label style={{ marginLeft: '180px' }} for="idevaluacion" class="form-label custom-label">{costo}</label>
                     </div>
                     
+                    {nombreProyecto !== '' && (
+                        <div class="mb-3" style={{ marginBottom: '30px' }}>
+                            <label for="idEvLave"class="form-label custom-label">Proyecto asociado:</label>
+                            <label style={{ marginLeft: '102px' }} for="idevaluacion" class="form-label custom-label">{nombreProyecto}</label>
+                        </div>
+                        )}
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="idEvLave" class="form-label">Tipo de capacitación:</label>
-                        <label style={{ marginLeft: '77px' }} for="idevaluacion" class="form-label">{tipoCapacitacion}</label>
-                    </div>
-                    
-                    <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="idEvLave" class="form-label">Documentos adjuntos: </label>
+                        <label for="idEvLave"class="form-label custom-label">Documentos adjuntos: </label>
                         <ul>
                             {archivosAdjuntos.map((file) => (
                                         <li key={file.nombre}>
@@ -176,32 +205,25 @@ export const DetalleCapacitacion = () => {
                             ))}
                         </ul>
                     </div>
-                    
-                    <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="idEvLave" class="form-label">Estado:</label>
-                        <label style={{ marginLeft: '190px' }} for="idevaluacion" class="form-label">{estado}</label>
+                </div>  
+                <h2 class="titulo-h2">
+                   Servicios asociados
+                </h2>
+                <div className="dividers"></div>
+                <div style={{ marginLeft:'20px' }}>
+                     
+                <div class="mb-3" style={{ marginBottom: '30px' }}>
+                        <label for="idEvLave"class="form-label custom-label">Cédula Juridica: </label>
+                        <label style={{ marginLeft: '117px' }} for="idevaluacion"class="form-label custom-label">{cedula}</label>
                     </div>
                     
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="idEvLave" class="form-label">Costo:</label>
-                        <label style={{ marginLeft: '200px' }} for="idevaluacion" class="form-label">{costo}</label>
+                        <label for="idEvLave"class="form-label custom-label">Nombre del cliente o entidad:</label>
+                        <label style={{ marginLeft: '36px' }} for="idevaluacion" class="form-label custom-label">{nombreCliente}</label>
                     </div>
-                    <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="idEvLave" class="form-label">Cédula Juridica: </label>
-                        <label style={{ marginLeft: '100px' }} for="idevaluacion" class="form-label">{cedula}</label>
-                    </div>
-                    
-                    <div class="mb-3" style={{ marginBottom: '30px' }}>
-                        <label for="idEvLave" class="form-label">Nombre del cliente o entidad:</label>
-                        <label for="idevaluacion" class="form-label">{nombreCliente}</label>
-                    </div>
-                    
-                    {nombreProyecto !== '' && (
-                        <div class="mb-3" style={{ marginBottom: '30px' }}>
-                            <label for="idEvLave" class="form-label">Proyecto asociado:</label>
-                            <label style={{ marginLeft: '95px' }} for="idevaluacion" class="form-label">{nombreProyecto}</label>
-                        </div>
-                        )}
+                
+                </div>    
+                  
                         <div className="mb-3" style={{ marginTop: '100px', display: 'flex' }}>
                             <button type="submit" className="button2" onClick={gotoModificarCapacitacion}>
                                 <BsFillPencilFill style={{
