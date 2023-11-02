@@ -1,7 +1,7 @@
 from Enums import *
-
+from Perfil import *
 class Funcionario:
-    def __init__(self, idFuncionario, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfil):
+    def __init__(self, idFuncionario, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfiles):
         try:
             self.idFuncionario = int(idFuncionario)
             self.nombre = str(nombre)
@@ -12,12 +12,16 @@ class Funcionario:
             self.correo = str(correo)
             self.estado = Estado(estado)
             self.fechaIngreso = str(fechaIngreso)
-            self.perfil = int(perfil)
+            # Verificar si 'funcionarios' es una lista de instancias de la clase 'Funcionario'
+            if isinstance(perfiles, list) and all(isinstance(item, Perfil) for item in perfiles):
+                self.perfiles = perfiles
+            else:
+                raise TypeError("'funcionarios' no es una lista de instancias de la clase 'Funcionario'")
             
         except (ValueError, TypeError):
             raise TypeError("Tipos de atributos no válidos")
 
-    def editar(self, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfil):
+    def editar(self, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, estado, fechaIngreso, perfiles):
         try:
             if nombre is not None:
                 self.nombre = str(nombre)
@@ -35,13 +39,21 @@ class Funcionario:
                 self.estado = Estado(estado)
             if fechaIngreso is not None:
                 self.fechaIngreso = str(fechaIngreso)
-            if perfil is not None:
-                self.perfil = int(perfil)
+            if perfiles is not None:
+                print("perfiles: ", perfiles)
+                # Verificar si 'documentos' es una lista de enteros
+                if isinstance(perfiles, list) and all(isinstance(item, Perfil) for item in perfiles):
+                    self.perfiles = perfiles
+                else:
+                    raise TypeError("'perfiles' no es una lista de enteros")
             
         except (ValueError, TypeError):
             raise TypeError("Tipos de atributos no válidos")
 
     def toList(self):
+        listaPerfiles = []
+        for f in self.perfiles:
+            listaPerfiles += [f.toList()]
         lista = [
             self.idFuncionario,
             self.nombre,
@@ -50,8 +62,8 @@ class Funcionario:
             self.cedula,
             self.numTelefono,
             self.correo,
-            self.estado,
+            self.estado.value,
             self.fechaIngreso,
-            self.perfil,
+            listaPerfiles,
         ]
         return lista

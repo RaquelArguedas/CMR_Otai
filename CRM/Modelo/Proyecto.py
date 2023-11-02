@@ -55,7 +55,8 @@ class Proyecto:
             if subTotal is not None:
                 self.subTotal = float(subTotal)
             if estado is not None:
-                self.estado = Estado(estado)
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOOOOOOOOOOOOOOOOOOOOOO")
+                self.estado = Estado(int(estado))
             
             if funcionarios is not None:
                 # Verificar si 'funcionarios' es una lista de instancias de la clase 'Funcionario'
@@ -80,7 +81,7 @@ class Proyecto:
             self.fechaInicio,
             self.fechaFinalizacion,
             self.subTotal,
-            self.estado,
+            self.estado.value,
             listaFuncionarios
         ]
         return lista

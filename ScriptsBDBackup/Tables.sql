@@ -21,9 +21,7 @@ CREATE TABLE Funcionario (
     correo VARCHAR(50),
     idEstado INT,
     fechaIngreso DATE,
-    idPerfil INT,
-    FOREIGN KEY (idEstado) REFERENCES Estado(idEstado),
-    FOREIGN KEY (idPerfil) REFERENCES Perfil(idPerfil)
+    FOREIGN KEY (idEstado) REFERENCES Estado(idEstado)
 );
 
 -- Tabla Modalidad
@@ -72,6 +70,14 @@ CREATE TABLE Proyecto (
     idEstado INT,
     FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
     FOREIGN KEY (idEstado) REFERENCES Estado(idEstado)
+);
+
+CREATE TABLE PerfilXFuncionario ( 
+	PerfilXFuncionario INT IDENTITY(1,1) PRIMARY KEY,
+    idPerfil INT,
+    idFuncionario INT, 
+	FOREIGN KEY (idPerfil) REFERENCES Perfil(idPerfil),
+    FOREIGN KEY (idFuncionario) REFERENCES Funcionario(idFuncionario)
 );
 
 -- Tabla Evaluacion
@@ -130,7 +136,7 @@ CREATE TABLE Usuario (
     numTelefono INT,
     correo VARCHAR(100),
     fechaIngreso DATE,
-    contrasenha VARCHAR(10),
+    contrasenha VARCHAR(20),
     idEstado INT,
     FOREIGN KEY (idEstado) REFERENCES Estado(idEstado)
 );

@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  text-decoration: none;
+}
+.container{
+  display:flex;
+}
+main{
+  width: 100%;
+  padding: 20px;
+}
+.sidebar{
+  background: #233D4D;
+  color: #fff;
+  width: 370px;
+  height: 1500px;
+  flex-shrink: 0;
+  transition: all 0.5s;
+}
+.divider {
+  width: 50px;
+}
+.divider.small {
+   /* Establece el ancho reducido cuando sea necesario */
+  width: 300px;
+  height: 1px;
+  display: flex;
+  transition: all 0.5s;
+  background: #12959E;
+  margin-bottom: 20px; 
+}
+.text{
+  color: #FFF;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700; /* Peso de la fuente 700 */
+  font-size: 25px;
+  font-style: normal;
+  line-height: normal;
+  margin-top: 15px; /* Margen superior del h2 (ajusta según tus preferencias) */
+  margin-bottom: 5px; 
+}
+.top_section{
+  display: flex;
+  padding:20px 15px;
+  flex-direction: column; 
+  margin-bottom: 30px; 
+  background: rgba(255, 255, 255, 0.15);
+}
+.logo{
+  color: #FFF;
+ 
+  font-family: 'Lato', sans-serif;
+  
+  font-weight: 300; /* Peso de la fuente 700 */
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-right: 20px;
+}
+.bars{
+  display: flex;
+  font-size: 25px;
+  margin-bottom: 20px; 
+  
+}
+
+.link{
+  display: flex;
+  color: #fff;
+  padding: 10px 15px;
+  gap: 15px;
+  transition: all 0.5s;
+}
+.linkP{
+  display: flex;
+  color: #fff;
+  padding: 10px 0px;
+  gap: 15px;
+  transition: all 0.5s;
+}
+.link:hover{
+  background:lightskyblue;
+  color: #000;
+  transition: all 0.5s;
+}
+.active{
+  background: lightskyblue;
+  color: #000;
+}
+.icon, .link_text{
+  font-size: 20px;
+ 
+  font-family: 'Lato', sans-serif;
+  
+  font-weight: 300; /* Peso de la fuente 700 */
+}
+.iconL{
+  font-size: 30px;
+}
+.iconP, .link_textP{
+  font-size: 20px;
+ 
+  font-family: 'Lato', sans-serif;
+  
+  font-weight: 300; /* Peso de la fuente 700 */
+  margin-top: 30px;
+}

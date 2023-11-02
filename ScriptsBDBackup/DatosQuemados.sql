@@ -12,10 +12,16 @@ INSERT INTO Estado (nombre) VALUES ('Activo');
 INSERT INTO Estado (nombre) VALUES ('Inactivo');
 
 -- Sentencias INSERT para la tabla Funcionario
-INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso, idPerfil)
-VALUES ('Catalina', 'Espinach', '1990-01-15', 123456789, 88888888, 'cat.esp@itcr.com', 5, '2021-05-10', 3);
-INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso, idPerfil)
-VALUES ('Mario', 'Chacón', '1985-09-25', 987654321, 88888888, 'mar.cha@itcr.com', 5, '2020-08-20', 3);
+INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso)
+VALUES ('Catalina', 'Espinach', '1990-01-15', 123456789, 88888888, 'cat.esp@itcr.com', 5, '2021-05-10');
+INSERT INTO Funcionario (nombre, apellido, fechaNacimiento, cedula, numTelefonno, correo, idEstado, fechaIngreso)
+VALUES ('Mario', 'Chacón', '1985-09-25', 987654321, 88888888, 'mar.cha@itcr.com', 5, '2020-08-20');
+
+-- Sentencias INSERT para la tabla Perfil
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,1);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (1,2);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,1);
+INSERT INTO PerfilXFuncionario (idPerfil, idFuncionario) VALUES (2,2);
 
 -- Sentencias INSERT para la tabla Modalidad
 INSERT INTO Modalidad (nombre, descripcion)
@@ -51,11 +57,11 @@ VALUES (567890123, 'ESPH', 66667777, 'esph@gmail.com', '2023-10-05', 5);
 
 -- Sentencias INSERT para la tabla Proyecto
 INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('CA001', 'Proyecto A', 'Descripción del Proyecto A', 1, null, '2023-10-05', '2023-12-31', 1000.00, 1);
+VALUES ('PRO001', 'Proyecto A', 'Descripción del Proyecto A', 1, null, '2023-10-05', '2023-12-31', 1000.00, 1);
 INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('CA001', 'Proyecto B', 'Descripción del Proyecto B', 2, null, '2023-11-01', '2024-01-31', 1500.00, 2);
+VALUES ('PRO002', 'Proyecto B', 'Descripción del Proyecto B', 2, null, '2023-11-01', '2024-01-31', 1500.00, 2);
 INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('CA001', 'Proyecto C', 'Descripción del Proyecto C', 3, null, '2023-12-15', '2024-03-15', 2000.00, 3);
+VALUES ('PRO003', 'Proyecto C', 'Descripción del Proyecto C', 3, null, '2023-12-15', '2024-03-15', 2000.00, 3);
 
 -- Sentencias INSERT para la tabla Evaluacion
 INSERT INTO Evaluacion (idEvaluacion, nombre, descripcion, fechaCreacion, idTipo, fechaEjecucion, documento, idEstado, precio, idProyecto, idCliente)
@@ -85,7 +91,7 @@ VALUES (0.1, 0.05, 0.03, 0.13, '2023-10-05', 1);
 INSERT INTO Cotizacion (nombre, descripcion, idCliente, idPorcentajesC, total, idServicio, idEstado, fechaCreacion)
 VALUES ('Cotización 1', 'Descripción de la cotización 1', 1, 1, 1500.00, 'CA001', 2, '2023-10-05');
 INSERT INTO Cotizacion (nombre, descripcion, idCliente, idPorcentajesC, total, idServicio, idEstado, fechaCreacion)
-VALUES ('Cotización 2', 'Descripción de la cotización 2', 2, 1, 1500.00, 'EVAL001', 2, '2023-10-05');
+VALUES ('Cotización 2', 'Descripción de la cotización 2', 2, 1, 1500.00, 'CA002', 2, '2023-10-05');
 
 -- Insertar valores en la tabla ProyectoXFuncionario
 INSERT INTO ProyectoXFuncionario (idProyecto, idFuncionario)
