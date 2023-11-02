@@ -35,9 +35,9 @@ export function Capacitacion() {
     const rest = await fetch(`${API}/readCliente/${data[0][15]}`);
     const dato = await rest.json();
     const formattedData = data.map((item) => {
-      console.log(item[8])
+      console.log(item[7])
       var estado = '';
-      switch (item[7]) {
+      switch (item[8]) {
         case 1:
           estado = 'Eliminado';
           break;
@@ -65,15 +65,14 @@ export function Capacitacion() {
           nombre: item[2],
           idcliente: item[15],
           nombreCliente: item[16],
-          estado: estado , // Utiliza el valor de 'estado' calculado anteriormente
+          estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
           fecha: item[5],
           tipoE: item[17],
           detalle: 'Ver más',
         };
       }
     });
-    const filteredData = formattedData.filter(item => item !== undefined);
-    setCapacitaciones(filteredData);
+    setCapacitaciones(formattedData);
   };
   React.useEffect(() => {
     handleSearch()
