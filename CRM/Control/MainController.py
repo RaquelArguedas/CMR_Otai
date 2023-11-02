@@ -6,7 +6,7 @@ from bson import ObjectId
 import os
 
 import sys
-sys.path.append('C:\\Users\\adrie\\Documents\\Adriel\\TEC\\Aseguramiento\\CMR_Otai-AjustesStacy\\CRM\\Modelo') 
+sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo') 
 from Capacitacion import *
 from Cliente import *
 from Cotizacion import *
@@ -66,7 +66,7 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-HKIV0DA\\OTAI2'  # Nombre del servidor local
+        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
 
@@ -104,7 +104,7 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-HKIV0DA\\OTAI2'  # Nombre del servidor local
+        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
 
