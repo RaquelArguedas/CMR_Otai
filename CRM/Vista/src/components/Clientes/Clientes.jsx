@@ -18,12 +18,7 @@ export const Clientes = () => {
     let navigate = useNavigate();
     const gotoCrearCliente = () => { navigate('/crearClientes'); }
     
-    const Title = styled.h1`
-    font-size: 24px;
-    color: #000000;
-    margin-bottom: 80px;
-    margin-top: 25px;
-    `;
+   
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
         //A esto me refiero recuperar los datos del cliente

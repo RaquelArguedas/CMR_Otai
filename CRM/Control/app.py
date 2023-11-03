@@ -79,7 +79,7 @@ def createCliente():
     nombre = request.form.get('nombre')
     numTelefono = request.form.get('telefono')
     correo = request.form.get('correo')
-
+    print(cedJuridica, nombre,numTelefono,correo)
     id = control.createCliente(cedJuridica, nombre, numTelefono, correo, fecha_actual, 5)
     return jsonify(str(id))
 
@@ -467,6 +467,7 @@ def deleteTipoCapacitacion(idTipo):
 #CRUD TipoEvaluacion
 @app.route('/createTipoEvaluacion', methods=['POST'])
 def createTipoEvaluacion():
+    print(request.json['nombre'], request.json['precio'])
     id = control.createTipoEvaluacion(request.json['nombre'], request.json['precio'])
     return jsonify(str(id))
 
@@ -477,12 +478,15 @@ def readTipoEvaluacion(idTipoEvaluacion):
         return jsonify("No existe")
     return jsonify(t.toList())
 
+
 @app.route('/updateTipoEvaluacion', methods=['POST'])
 def updateTipoEvaluacion():
-    id = control.updateTipoEvaluacion(
-        request.json['idTipoEvaluacion'],
-        request.json['nombre'],
-        request.json['precio']
+    nombre = request.form.get('nombre')
+    precio = request.form.get('precio')
+    idTipoEvaluacion=request.form.get('idTipoEvaluacion')
+    print(idTipoEvaluacion, nombre, precio
+    )
+    id = control.updateTipoEvaluacion(idTipoEvaluacion, nombre, precio
     )
     return jsonify(str(id))
 

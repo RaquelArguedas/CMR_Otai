@@ -16,7 +16,7 @@ export const TiposCapacitaciones = () => {
     const handleidTiposCapacitacionesChange = (event) => {
         setidTiposCapacitaciones(event.target.value);
     };
-    const { idTipoCapacitación } = useParams();
+    
     let navigate = useNavigate();
     const gotoCrearTipo = () => { navigate('/crearTipoCapacitacion'); }
     const gotoTipoCapacitacion = () => { navigate('/tiposCapacitaciones'); }
@@ -43,8 +43,9 @@ export const TiposCapacitaciones = () => {
         handleSearch()
     }, []);
     
-    const handleDelete = async () =>{
-        Swal.fire({
+    const handleDelete = async (event, idTipoCapacitación) =>{
+      event.preventDefault();  
+      Swal.fire({
             title: '¿Está seguro que desea eliminar el tipo capacitación seleccionado?',
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
@@ -55,7 +56,12 @@ export const TiposCapacitaciones = () => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
+              const updatedTipos = tiposCapacitaciones.filter((tiposCapacitaciones) => tiposCapacitaciones.idTipoCapacitacion !== idTipoCapacitación);
+              setTiposCapacitaciones(updatedTipos);
               Swal.fire('El tipo de capacitación se ha eliminado satisfactoriamente')
+              const res = fetch(`${API}/deleteTipoCapacitacion/${idTipoCapacitación}`, {
+                method: 'POST'
+            });
               gotoTipoCapacitacion();
             } else if (result.isDenied) {
               Swal.fire('No se guardaron los cambios')
@@ -70,7 +76,7 @@ export const TiposCapacitaciones = () => {
         <Navbar />
             <div class="row">
                     <div class="col-sm-3">
-                        <Title>Tipos de Capacitaciones</Title>
+                      <h1 className='titulo-h1'>Tipos de Capacitaciones</h1>
                     </div>
             </div>
             <div className="mb-3" style={{ marginTop: '100px'}}>
@@ -80,7 +86,10 @@ export const TiposCapacitaciones = () => {
                     color: '#12959E', // Tamaño del icono
                     marginRight: '20px',
                     marginLeft: '20px',
-                    }} />Crear Tipo Capacitación
+                    }} />
+                    <div style={{ textAlign: 'left' }}>
+                    Crear Tipo Capacitación
+                      </div>
                 </button>
             <div style={{ display: 'flex' , marginLeft: '-220px' }}>
                 <Styles> 

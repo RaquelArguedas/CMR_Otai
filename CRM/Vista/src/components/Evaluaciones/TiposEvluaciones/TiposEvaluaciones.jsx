@@ -54,9 +54,11 @@ export const TiposEvaluaciones = () => {
             if (result.isConfirmed) {
                 const updatedTipos = tiposEvaluaciones.filter((tiposEvaluaciones) => tiposEvaluaciones.idTipoEvaluacion !== idTipoEvaluacion);
                 setTiposEvaluaciones(updatedTipos);
+                console.log(idTipoEvaluacion)
+                const res = fetch(`${API}/deleteTipoEvaluacion/${idTipoEvaluacion}`, {
+                  method: 'POST'
+              });
               Swal.fire('El tipo de evaluación se ha eliminado satisfactoriamente')
-              //Aqui se debe enviar a eliminar
-            //   gotoTipoEvaluacion();
             } else if (result.isDenied) {
               Swal.fire('No se guardaron los cambios')
             }
@@ -70,7 +72,7 @@ export const TiposEvaluaciones = () => {
         <Navbar />
             <div class="row">
                     <div class="col-sm-3">
-                        <Title>Tipos de Evaluaciones</Title>
+                    <h1 className='titulo-h1'>Tipos de Evaluaciones</h1>
                     </div>
             </div>
             <div className="mb-3" style={{ marginTop: '100px'}}>
@@ -80,7 +82,10 @@ export const TiposEvaluaciones = () => {
                     color: '#12959E', // Tamaño del icono
                     marginRight: '20px',
                     marginLeft: '20px',
-                    }} />Crear Tipo Evaluación
+                    }} />
+                    <div style={{ textAlign: 'left' }}>
+                    Crear Tipo Evaluación
+                      </div>
                 </button>
                 <div style={{ display: 'flex' , marginLeft: '-220px' }}>
                 <Styles> 

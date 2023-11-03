@@ -22,6 +22,7 @@ export const CrearCliente = () => {
         setCedulaError('');
         setTelefonoError('');
 
+        console.log(correo,telefono,cedula,nombre);
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
@@ -32,10 +33,7 @@ export const CrearCliente = () => {
             confirmButtonText: 'Aceptar',
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
-
+          })
                 const formData = new FormData();
                 formData.append('correo', correo);
                 formData.append('telefono', telefono);
@@ -47,9 +45,8 @@ export const CrearCliente = () => {
                 });
               gotoCliente();
             }
-          });
         
-    }
+    
   
 
     const Title = styled.h1`
@@ -64,7 +61,7 @@ export const CrearCliente = () => {
     const handleCedulaChange = (event) => {
         setCedula(event.target.value);
         
-        if (!/^\d+$/.test(value)) {
+        if (!/^\d+$/.test(event.target.value)) {
             setCedulaError('La cédula debe contener solo números.');
         } else {
             setCedulaError('');
@@ -72,7 +69,7 @@ export const CrearCliente = () => {
     };
     const handleTelefonoChange = (event) => {
         setTelefono(event.target.value);
-        if (!/^\d+$/.test(value)) {
+        if (!/^\d+$/.test(event.target.value)) {
             setTelefonoError('El número de teléfono debe contener solo números.');
         } else {
             setTelefonoError('');
@@ -100,7 +97,7 @@ export const CrearCliente = () => {
                         </div>
                         <div class="mb-3">
                             <label  style={{ marginRight: '85px' }}for="cedulaInput" class="form-label">Cédula Jurídica:</label>
-                            <input type="text" class="form-control custom-margin-right" id="cedulaInput"
+                            <input type="number" class="form-control custom-margin-right" id="cedulaInput"
                             placeholder="Ingrese la Cédula Juridica" value={cedula} onChange={handleCedulaChange}
                             aria-describedby="cedulaError"/>
                             {cedulaError && (
@@ -111,11 +108,11 @@ export const CrearCliente = () => {
                         </div>
                         <div class="mb-3">
                             <label style={{ marginRight: '44px' }} for="telefonoInput" class="form-label">Número de teléfono:</label>
-                            <input type="text" class="form-control custom-margin-right" id="telefonoInput"
+                            <input type="number" class="form-control custom-margin-right" id="telefonoInput"
                             placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}
                             aria-describedby="telefonoError"/>
                             {telefonoError && (
-                            <span id="telefonoError" role="alert" aria-live="assertive">
+                            <span class="form-label" id="telefonoError" role="alert" aria-live="assertive">
                                 {telefonoError}
                             </span>
                         )}

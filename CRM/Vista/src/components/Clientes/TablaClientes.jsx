@@ -301,7 +301,7 @@ export const Table = ({ columns, data }) => {
   
     return (
       <>
-        <table style={{ fontFamily: 'Lato, sans-serif' }}>
+        <table {...getTableProps()} style={{ fontFamily: 'Lato, sans-serif' }}>
           <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>

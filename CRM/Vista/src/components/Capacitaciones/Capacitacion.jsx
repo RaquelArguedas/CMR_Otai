@@ -32,10 +32,8 @@ export function Capacitacion() {
     const res = await fetch(`${API}/getCapacitaciones`);
     const data = await res.json();//resultado de la consulta
     console.log(data)
-    const rest = await fetch(`${API}/readCliente/${data[0][15]}`);
-    const dato = await rest.json();
     const formattedData = data.map((item) => {
-      console.log(item[8])
+      console.log(item)
       var estado = '';
       switch (item[7]) {
         case 1:
@@ -72,6 +70,7 @@ export function Capacitacion() {
         };
       }
     });
+    console.log(formattedData)
     const filteredData = formattedData.filter(item => item !== undefined);
     setCapacitaciones(filteredData);
   };

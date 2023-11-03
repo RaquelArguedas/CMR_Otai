@@ -76,12 +76,14 @@ export const Evaluacion = () => {
         idcliente: item[5],
         nombreCliente: item[12],
         estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
-        fecha: item[4],
+        fecha: item[6],
         tipoE:item[13],
         detalle: 'Ver más',
       };
+    
     });
     setEvaluaciones(formattedData);
+    console.log(formattedData)
   }; 
   React.useEffect(() => {
     handleSearch()

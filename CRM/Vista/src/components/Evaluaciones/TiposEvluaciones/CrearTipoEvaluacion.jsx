@@ -14,21 +14,30 @@ export const CrearTipoEvaluacion = () => {
     const [nombre, setNombre] = useState('');
     const [costo, setCosto] = useState('');
     
-    const data = {
-        nombre: nombre,  
-        precio: costo,
-      };
-    const requestOptions = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-    };
-    const res = fetch(`${API}/createTipoEvaluacion`,requestOptions);
    
     const handleSubmit = async (event) => {
         event.preventDefault();  
+        const data = {
+            nombre: nombre,  
+            precio: costo
+          };
+          console.log(nombre, costo)
+        const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        };
+        const res = fetch(`${API}/createTipoEvaluacion`,requestOptions);
+        // const requestOptions = {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(data),
+        // };
+        // const res = await fetch(`${API}/createEvaluacion`, requestOptions);
         Swal.fire({
             title: 'Confirmación',
             text: 'El tipo de evaluación se ha creado satisfactoriamente',
@@ -67,7 +76,7 @@ export const CrearTipoEvaluacion = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Crear tipo de evaluación</Title>
+                    <h1 className='titulo-h1'>Crear tipo de evaluación</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">

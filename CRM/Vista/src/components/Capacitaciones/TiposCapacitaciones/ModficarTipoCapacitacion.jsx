@@ -12,25 +12,12 @@ export const ModficarTipoCapacitacion = () => {
     const gotoTipoCapacitacion = () => { navigate('/tiposCapacitaciones'); }
 
     const [nombre, setNombre] = useState('');
-    const [costo, setCosto] = useState('');
 
     const { idTipoCapacitacion } = useParams();
    
     const handleSubmit = async (event) => {
         event.preventDefault();   
-        const data = {
-            id: idTipoCapacitacion,
-            nombre: nombre,  
-          };
-          
-        const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-        };
-        const res = await fetch(`${API}/updateTipoCapacitacion`, requestOptions);
+       
         Swal.fire({
             title: '¿Está seguro que desea modificar el tipo de capacitación?',
             showDenyButton: true,
@@ -38,21 +25,38 @@ export const ModficarTipoCapacitacion = () => {
             denyButtonText: `Cancelar`,
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
-          }).then((result) => {
+          }).then(async (result) => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
-              Swal.fire('El tipo de capacitación se ha modificado satisfactoriamente')
-              gotoTipoCapacitacion();
+              const data = {
+                id: idTipoCapacitacion,
+                nombre: nombre,  
+              };
+              
+                const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+                };
+                const res = await fetch(`${API}/updateTipoCapacitacion`, requestOptions);
+                Swal.fire('El tipo de capacitación se ha modificado satisfactoriamente')
+                gotoTipoCapacitacion();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }
           })
         
     };
+    
     const handleSearch = async () => { 
-        setNombre(nombre)
-        setCosto('100000')
+        const res = await fetch(`${API}/readTipoCapacitacion/${idTipoCapacitacion}`); // cambiar por el id
+        const data = await res.json();//resultado de la consulta
+        console.log(data)
+
+        setNombre(data[1])
     }
     React.useEffect(() => {
         handleSearch()
@@ -68,9 +72,6 @@ export const ModficarTipoCapacitacion = () => {
     const handleNameChange = (event) => {
         setNombre(event.target.value);
     };
-    const handleCostoChange = (event) => {
-        setCosto(event.target.value);
-    };
   
     return (
         
@@ -79,7 +80,7 @@ export const ModficarTipoCapacitacion = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Modificar tipo de capacitación</Title>
+                    <h1 className='titulo-h1'>Modificar tipo de capacitación</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">

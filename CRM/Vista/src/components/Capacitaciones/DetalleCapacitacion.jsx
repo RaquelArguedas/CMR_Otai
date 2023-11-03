@@ -18,6 +18,7 @@ export const DetalleCapacitacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [fechaEjecucion, setFechaEjecucion] = useState('');
+    const [fechaFinal, setFechaFinal] = useState('');
     const [tipoCapacitacion, setTipoCapacitacion] = useState('');
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [estado, setEstado] = useState('');
@@ -45,8 +46,8 @@ export const DetalleCapacitacion = () => {
         setidCapacitacion(data[1])
         setNombre(data[2])
         setDescripcion(data[3])
-        setFechaEjecucion(data[4])
-
+        setFechaEjecucion(data[5])
+        setFechaFinal(data[9])
         setTipoCapacitacion(dataT[1])
         var est = ''
         if (data[7] === 1) { est = 'Eliminado' }
@@ -57,7 +58,7 @@ export const DetalleCapacitacion = () => {
         if (data[7] === 6) { est = 'Inactivo' }
         console.log('est: ', est)
         setEstado(est)
-        setCosto(data[9])
+        setCosto(data[12])
         setCedula(datac[1])
         setNombreCliente(datac[2])
         setNombreProyecto(datap[2])// Si es nulo no se mete 
@@ -176,6 +177,10 @@ export const DetalleCapacitacion = () => {
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
                         <label for="fecha"class="form-label custom-label">Fecha de ejecución:</label>
                         <label style={{ marginLeft: '100px' }}  for="fecha" class="form-label custom-label">{fechaEjecucion}</label>
+                    </div>
+                    <div class="mb-3" style={{ marginBottom: '30px' }}>
+                        <label for="fecha"class="form-label custom-label">Fecha de finalización:</label>
+                        <label style={{ marginLeft: '89px' }}  for="fecha" class="form-label custom-label">{fechaFinal}</label>
                     </div>
                     <div class="mb-3" style={{ marginBottom: '30px' }}>
                         <label for="idEvLave"class="form-label custom-label">Estado:</label>

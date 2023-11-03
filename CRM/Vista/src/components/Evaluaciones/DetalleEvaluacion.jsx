@@ -47,7 +47,7 @@ export const DetalleEvaluacion = () => {
         setidEvaluacion(data[1])
         setNombre(data[2])
         setDescripcion(data[3])
-        setFechaEjecucion(data[4])
+        setFechaEjecucion(data[6])
 
         setTipoEvaluacion(dataT[1])
         var est = ''
@@ -95,7 +95,11 @@ export const DetalleEvaluacion = () => {
             
             if (result.isConfirmed) {
               Swal.fire('La evaluación se ha eliminado satisfactoriamente')
-              const res = fetch(`${API}/deleteEvaluacion/${idEvaluacion}`); // cambiar por el id
+            
+              const res = fetch(`${API}/deleteEvaluacion/${idEvaluacion}`, {
+                method: 'POST'
+            });
+              
               gotoEvaluacion();
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')

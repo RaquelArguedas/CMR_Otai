@@ -23,6 +23,7 @@ class Evaluacion:
             raise TypeError("documentos no es lista de enteros")
 
     def editar(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
+        
         try:
             if idEvaluacion is not None:
                 self.idEvaluacion = str(idEvaluacion)

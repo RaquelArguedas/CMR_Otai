@@ -100,6 +100,7 @@ export  const CrearEvaluacion = () => {
             nombre: item[2],
         }));
       setClientes(formattedData);
+      handleFechaEjecucionChange(new Date())
     }; 
     React.useEffect(() => {
       handleSearch()
@@ -144,13 +145,13 @@ export  const CrearEvaluacion = () => {
         const month = date.getMonth() + 1;
         const day = date.getDate(); 
         const year = date.getFullYear(); 
-        const formattedDate = `${month}/${day}/${year}`;
+        const formattedDate = `${year}-${month}-${day}`;
         setInputValue(formattedDate);
 
         const monthC = fechaCreacion.getMonth() + 1; 
         const dayC = fechaCreacion.getDate(); 
         const yearC = fechaCreacion.getFullYear(); 
-        const formattedDateC = `${yearC}/${monthC}/${dayC}`;
+        const formattedDateC = `${yearC}-${monthC}-${dayC}`;
         setInputValueCreacion(formattedDateC);
     };
 

@@ -144,10 +144,10 @@ export const TableF = ({ columns, data, handleIdFuncionarioChange }) => {
     
     const [selectedFuncId, setSelectedFuncId] = useState(null);
 
-    const handleSelectClient = ( idFuncionario) => {
+    const handleSelectFuncio = ( idFuncionario) => {
       console.log(idFuncionario)
-    setSelectedFuncId(idFuncionario);
-    handleIdFuncionarioChange(idFuncionario)
+      setSelectedFuncId(idFuncionario);
+      handleIdFuncionarioChange(idFuncionario)
     };
 
   const filterTypes = React.useMemo(
@@ -232,7 +232,7 @@ export const TableF = ({ columns, data, handleIdFuncionarioChange }) => {
                         type="checkbox"
                         checked={row.original.idFuncionario === selectedFuncId}
                         onChange={() => {
-                           handleSelectClient( row.original.idFuncionario)
+                           handleSelectFuncio( row.original.idFuncionario)
                             
                         
                           }}

@@ -1,4 +1,4 @@
-import React, { useState,  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
@@ -247,22 +247,24 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
 
-export const Table = ({ columns, data, handleIdClienteChange }) => {
+export const TableF = ({ columns, data, handleIdFuncionarioChange, idFuncionario }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
     
-    const [selectedClientId, setSelectedClientId] = useState(null);
+    const [selectedClientId, setSelectedFuncId] = useState(idFuncionario);
 
-    const handleSelectClient = ( idCliente) => {
-      console.log(idCliente)
-    setSelectedClientId(idCliente);
-    handleIdClienteChange(idCliente)
+    const handleSelectFuncio = ( idFuncionario) => {
+      console.log(idFuncionario)
+    setSelectedFuncId(idFuncionario);
+    handleIdFuncionarioChange(idFuncionario)
     };
-
+    useEffect(() => {
+        setSelectedFuncId(idFuncionario);
+      }, [idFuncionario]);
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, overridCliente the default text filter to use
+      // Or, overridFuncionario the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
@@ -333,30 +335,27 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
             return (
               <tr {...row.getRowProps()}>
                  {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()} style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {cell.column.id === 'select' ? (
-                    // Aquí agregamos la lógica para los checkboxes
-                    <input
+                  <td {...cell.getCellProps()}>
+                    {cell.column.id === 'select' ? (
+                      // Aquí agregamos la lógica para los checkboxes
+                      <input
                       type="checkbox"
-                      checked={row.original.idCliente === selectedClientId}
+                      checked={row.original.idFuncionario === selectedClientId}
                       onChange={() => {
-                         handleSelectClient( row.original.idCliente)
-                          
-                      
-                        }}
-                        
-                    style={{ width: '30px',
-                    height: '30px',  // Establece la altura del checkbox para centrarlo verticalmente
-                    display: 'flex',
-                    alignItems: 'center', // Centra verticalmente
-                    justifyContent: 'center', margin: '0', // Establece el margen a 0 para eliminar cualquier espaciado no deseado
-                    padding: '0', }} 
+                        handleSelectFuncio(row.original.idFuncionario);
+                      }}
+                      style={{ width: '30px',
+                      height: '30px',  // Establece la altura del checkbox para centrarlo verticalmente
+                      display: 'flex',
+                      alignItems: 'center', // Centra verticalmente
+                      justifyContent: 'center', margin: '0', // Establece el margen a 0 para eliminar cualquier espaciado no deseado
+                      padding: '0', }} 
                     />
-                    
-                  ) : (
-                    cell.render('Cell')
-                  )}
-                </td>
+                      
+                    ) : (
+                      cell.render('Cell')
+                    )}
+                  </td>
                 ))}
               </tr>
             );
@@ -401,17 +400,16 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
     )
   }
   
-
 // Define las columnas de la tabla
-export const columns = [
+export const columnsF = [
     {
-    Header: 'Cédula Jurídica',
+    Header: 'Cédula',
     accessor: 'cedula',
     filter: 'fuzzyText',
   },
   {
-    Header: 'ID Cliente',
-    accessor: 'idCliente',
+    Header: 'ID Funcionario',
+    accessor: 'idFuncionario',
     filter: 'fuzzyText',
   },
   {
@@ -427,4 +425,3 @@ export const columns = [
   },
   
 ];
-

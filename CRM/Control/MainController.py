@@ -6,7 +6,7 @@ from bson import ObjectId
 import os
 
 import sys
-sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo') 
+sys.path.append('C:/Users/STACY/Documents/GitHub/Proyecto aseguramineto/CMR_Otai/CRM/Modelo') 
 from Capacitacion import *
 from Cliente import *
 from Cotizacion import *
@@ -66,7 +66,7 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
+        server_name = 'DESKTOP-AKI22R4'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
 
@@ -270,7 +270,9 @@ class SingletonDAO(metaclass=SingletonMeta):
         eval = self.readEvaluacion(idEvaluacion)
         if eval != None:
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
-            eval.editar(idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente)
+            eval.editar(idEvaluacion, nombre, descripcion, 
+            fechaCreacion, tipoEvaluacion, fechaEjecucion, 
+            documentos, idEstado, precio, idProyecto, idCliente)
             self.executeCommit(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado.value}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
         else:
             return -1
@@ -526,7 +528,7 @@ class SingletonDAO(metaclass=SingletonMeta):
             for p in self.tipoCapacitacion:
                 if p.idTipoCapacitacion == idTipo:
                     self.tipoCapacitacion.remove(p)
-            self.executeCommit(f"DELETE FROM TipoCapacitacion WHERE idTipo = {p.idTipo}")
+            self.executeCommit(f"DELETE FROM TipoCapacitacion WHERE idTipo = {idTipo}")
         else:
             return -1
 
@@ -534,7 +536,7 @@ class SingletonDAO(metaclass=SingletonMeta):
     def createTipoEvaluacion(self, nombre, precio):
         if nombre is None or precio is None:
             return -1  # No se puede crear un tipo de evaluación con atributos nulos
-
+        print('Minimo llegue aqui', nombre, precio)
         self.executeCommit(f"EXEC createTipoEvaluacion '{nombre}', {precio}")
         idTipoEvaluacion = self.execute(f"SELECT MAX(idTipo) FROM TipoEvaluacion")
 
@@ -549,10 +551,23 @@ class SingletonDAO(metaclass=SingletonMeta):
         return None
 
     def updateTipoEvaluacion(self, idTipoEvaluacion, nombre, precio):
+        print(nombre, precio, idTipoEvaluacion)
         t = self.readTipoEvaluacion(idTipoEvaluacion)
         if t is not None:
             t.editar(nombre, precio)
+            print(nomre, precio, idTipoEvaluacion)
             self.executeCommit(f"EXEC updateTipoEvaluacion {t.idTipoEvaluacion}, '{t.nombre}', {t.precio}")
+        else:
+            return -1
+
+    def deleteTipoEvaluacion(self, idTipo):
+        p = self.readTipoEvaluacion(idTipo)
+        if p != None:
+            #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            for p in self.tipoEvaluacion:
+                if p.idTipoEvaluacion == idTipo:
+                    self.tipoEvaluacion.remove(p)
+            self.executeCommit(f"DELETE FROM TipoEvaluacion WHERE idTipo = {idTipo}")
         else:
             return -1
 
@@ -582,17 +597,7 @@ class SingletonDAO(metaclass=SingletonMeta):
         else:    
             return -1
 
-    def deleteTipoEvaluacion(self, idTipo):
-        p = self.readTipoEvaluacion(idTipo)
-        if p != None:
-            #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
-            for p in self.tipoEvaluacion:
-                if p.idTipoEvaluacion == idTipo:
-                    self.tipoEvaluacion.remove(p)
-            self.executeCommit(f"DELETE FROM TipoEvaluacion WHERE idTipo = {p.idTipo}")
-        else:
-            return -1
-
+    
     #Consultar papelera
     def consultarPapelera(self):
         listaA = self.capacitacion + self.evaluacion

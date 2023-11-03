@@ -35,10 +35,11 @@ export const ModficarTipoEvaluacion = () => {
             if (result.isConfirmed) {  
               Swal.fire('El tipo de evaluación se ha modificado satisfactoriamente')
               const formData = new FormData();
-              
-              formData.append('precio', costo);
+              formData.append('idTipoEvaluacion', idTipoEvaluacion);
               formData.append('nombre', nombre);
-              const res = fetch(`${API}/updateTipoEvaluacion/${idTipoEvaluacion}`, {
+              formData.append('precio', costo);
+              console.log(nombre, costo, idTipoEvaluacion);
+              const res = fetch(`${API}/updateTipoEvaluacion`, {
                   method: 'POST',
                   body: formData
               });
@@ -82,7 +83,7 @@ export const ModficarTipoEvaluacion = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Modificar tipo de evaluación</Title>
+                    <h1 className='titulo-h1'>Modificar tipo de evaluación</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">

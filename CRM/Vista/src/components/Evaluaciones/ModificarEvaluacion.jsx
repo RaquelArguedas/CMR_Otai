@@ -24,9 +24,9 @@ export const ModificarEvaluacion = () => {
     const [tipoEvaluacion, setTipoEvaluacion] = useState(''); // Estado para el tipo de evaluación seleccionado
     const [cedula, setCedula] = useState('');
     const [IdCliente, setIdCliente] = useState(''); //FALTA AGREGAR LA TABLA DE AHI ES DONDE SE RECOGE
-    
+    const [inputValueCreacion, setInputValueCreacion] = useState('');
     const [clientes, setClientes] = useState([]);//Meter los datos de los clientes ahi
-    
+    const [idProyecto, setidProyecto] = useState('');
     const { idEvaluacion } = useParams();
     let navigate = useNavigate();
 
@@ -39,6 +39,29 @@ export const ModificarEvaluacion = () => {
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
   
         //Notificacion de que se realizaron los cambios
+        const data = {
+            idEvaluacion:idEvaluacion,
+            nombre: nombre,
+            descripcion: descripcion, 
+            fechaCreacion: inputValueCreacion,
+            tipoEvaluacion: tipoEvaluacion, 
+            fechaEjecucion: inputValue, 
+            documentos: fileInputKey,
+            idEstado: estado,
+            precio: costo, 
+            idProyecto: idProyecto, 
+            idCliente: IdCliente  
+        };
+        console.log(idEvaluacion,descripcion,inputValueCreacion,tipoEvaluacion,inputValue
+            ,fileInputKey,estado,costo,idProyecto,IdCliente)
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        const res = await fetch(`${API}/updateEvaluacion`, requestOptions);
         Swal.fire({
             title: '¿Está seguro desea modificar la evaluación?',
             showDenyButton: true,
@@ -79,17 +102,19 @@ export const ModificarEvaluacion = () => {
         setIdCliente(data[11])
         setNombre(data[2])
         setDescripcion(data[3])
+        setInputValueCreacion(data[4])
         //setFechaEjecucion('20/09/2023')
         setTipoEvaluacion(data[5])
         setEstado(data[8])
         setCosto(data[9])
-       
+        setidProyecto(data[10])
         
         //La fecha
         // const fechaBaseDatos = "2023-11-08T00:00:00Z"; // Ejemplo
         // Parsear la fecha de la base de datos en un objeto Date
         // Convertir la cadena de fecha en un objeto Date en zona horaria UTC
         //Tiene que se como el de abajo ya que es necesario la zona horaria entoces se agrega lo de T
+        
         const fechaDesdeBaseDatos = new Date(data[6] + "T00:00:00Z");
         // const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
         // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno

@@ -116,7 +116,8 @@ export const CrearProyectos = () => {
           }));
 
       setServicios(formattedData);
-    
+      handlefechaIncioChange(new Date())
+      handlefechaFinalizacionChange(new Date())
     
     }; 
     React.useEffect(() => {
@@ -151,7 +152,7 @@ export const CrearProyectos = () => {
         const day = date.getDate(); // Obtener el día
         const year = date.getFullYear(); // Obtener el año
         // Construir la cadena en el formato deseado (mm/dd/aaaa)
-        const formattedDate = `${year}/${month}/${day}`;
+        const formattedDate = `${year}-${month}-${day}`;
         //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
 
         setInputValueIncio(formattedDate);
@@ -162,13 +163,13 @@ export const CrearProyectos = () => {
         const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
         const day = date.getDate(); // Obtener el día
         const year = date.getFullYear(); // Obtener el año
-        const formattedDate = `${year}/${month}/${day}`;
+        const formattedDate = `${year}-${month}-${day}`;
         setInputValueFinalizacion(formattedDate);
 
         const monthC = fechaCreacion.getMonth() + 1; 
         const dayC = fechaCreacion.getDate(); 
         const yearC = fechaCreacion.getFullYear(); 
-        const formattedDateC = `${yearC}/${monthC}/${dayC}`;
+        const formattedDateC = `${yearC}-${monthC}-${dayC}`;
         setInputValueCreacion(formattedDateC);
 
         

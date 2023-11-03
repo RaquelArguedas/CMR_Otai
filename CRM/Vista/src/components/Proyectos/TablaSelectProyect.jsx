@@ -369,18 +369,18 @@ export const Table = ({ columns, data, handleidServicioChange }) => {
           </tbody>
         </table>
         <div className="pagination"> 
-          <ButtonTbl onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            {'<<'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            {'>>'}
-          </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </ButtonTbl>{' '}
           <span style={{ marginLeft: '10px' }}>
             Página{' '}
             <strong>

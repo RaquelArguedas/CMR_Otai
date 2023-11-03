@@ -78,16 +78,17 @@ export const ModificarProyecto = () => {
 
               const formData = new FormData();
               const añoN = fechaIncio.getFullYear();
-            const mesN = String(fechaIncio.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-            const diaN = String(fechaIncio.getDate()).padStart(2, "0");
-            const año = fechaFinalizacion.getFullYear();
-            const mes = String(fechaFinalizacion.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-            const dia = String(fechaFinalizacion.getDate()).padStart(2, "0");
+                const mesN = String(fechaIncio.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+                const diaN = String(fechaIncio.getDate()).padStart(2, "0");
+                const año = fechaFinalizacion.getFullYear();
+                const mes = String(fechaFinalizacion.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+                const dia = String(fechaFinalizacion.getDate()).padStart(2, "0");
                 formData.append('nombre', nombre);
                 formData.append('descripcion', descripcion);
                 formData.append('fechaInicio', `${añoN}-${mesN}-${diaN}`);
                 formData.append('fechaFinalizacion', `${año}-${mes}-${dia}`);
-                formData.append('subTotal', estado);
+                console.log(costo)
+                formData.append('subTotal', costo);
                 formData.append('estado', estado);
                 formData.append('servicios', idServicio);
                 formData.append('doc', selectedFilesModified);
@@ -220,6 +221,7 @@ export const ModificarProyecto = () => {
     };
     const handleCostoChange = (event) => {
         setCosto(event.target.value);
+        console.log(costo)
     };
     const handleIncioChange = (date) => {
         setfechaIncio(date);
@@ -271,108 +273,105 @@ export const ModificarProyecto = () => {
                         <h1 class="titulo-h1">Modificar proyecto</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
-                    <div class="mb-3">
-                        <label for="nameInput" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control custom-margin-right" id="nameInput"
-                         placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange}/>
-                        
-                    </div>
-                    <div class="mb-3">
-                        <label  style={{ marginRight: '37px' }} for="descripInput" class="form-label">Descripción:</label>
-                        <input type="text" class="form-control custom-margin-right" id="descripInput"
-                         placeholder="Ingrese la descripcion de la evaluación" value={descripcion} onChange={handleDescripcionChange}/>
-                        
-                    </div>
-                    <div class="mb-3">
-                        <label  style={{ marginRight: '61px'}} for="costInput" class="form-label">Sub Total:</label>
-                        <input type="number" class="form-control custom-margin-right" id="costInput"
-                        placeholder="Ingrese el costo del proyecto" value={costo} onChange={handleCostoChange}/>
-                    </div>
-                    <div class="mb-3">
-                        
-                        <select id="mySelect" value={estado} onChange={handleEstadoChange} style={{ marginRight: '95px'}} >
-                            <option value="">Seleccione el estado del proyecto</option>
-                            <option value="1">Eliminado</option>
-                            <option value="2">En progreso</option>
-                            <option value="3">Solicitado</option>
-                            <option value="4">En planeación</option>
-                            <option value="5">Activo</option>
-                            <option value="6">Inactivo</option>
-                        </select>
-                    </div>
-                        
-                    <div className="mb-3" style={{marginBottom: '50px'}}>
-                        <label  for="inputDate" className="form-label">
-                            Seleccione la fecha de inicio:
-                        </label>
-                        <label  for="inputDate" className="form-label">
-                            Seleccione la fecha de finalización:
-                        </label>
-                        <label  for="inputDate" className="form-label">
-                            Seleccione los archivos adjuntos:
-                        </label>
-                        </div>
-                        <div className="mb-3" style={{ display: 'flex',alignItems: 'flex-start',  }}>
-                            <DatePicker
-                                selected={fechaIncio}
-                                onChange={handleIncioChange}
-                                dateFormat="dd/MM/yyyy"
-                                inline
-                                showYearDropdown
-                                showMonthDropdown
-                            />
-                            <div style={{ marginLeft: '90px' }}>
-                            <DatePicker
-                                selected={fechaFinalizacion}
-                                onChange={handleFinalizacionChange}
-                                dateFormat="dd/MM/yyyy"
-                                inline
-                                showYearDropdown
-                                showMonthDropdown
-                            />
-                        </div>
-                            <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px' }}>
-                                <input
-                                    style={{ marginLeft: '135px' }}
-                                    type="file"
-                                    key={fileInputKey}
-                                    onChange={handleFileChange}
-                                    multiple
-                                />
-                                <ul style={{ marginLeft: '150px', marginTop : '-15px' }}>
-                                    {selectedFiles.map((file) => (
-                                        <li key={file.nombre}> {/* Cambia key a file.url si es único */}
-                                        {file.nombre} {/* Muestra el nombre del archivo */}
-                                        <button
-                                            style={{
-                                                marginLeft: '10px',
-                                                backgroundColor: '#ffffff',
-                                                border: '0 transparent',
-                                            }}
-                                            onClick={() => handleRemoveFile(file.url)}
-                                            >
-                                            <MdOutlineDeleteForever
-                                            style={{
-                                                fontSize: '25px',
-                                            }}
-                                            />
-                                        </button>
-                                        </li>
-                                    ))}
-                                    </ul>
-
-
-                            </div>
-                        </div>
-                        <div className="mb-3" 
-                                style={{ marginTop:  '40px' }} >
-                                <div style={{ display: 'flex' }}>
-                                <Styles> 
-                                <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio}/>
-                                </Styles>
-                                </div>     
-                            </div>
+                        <div class="mb-3">
+                            <label for="nameInput" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control custom-margin-right" id="nameInput"
+                            placeholder="Ingrese el nombre" value={nombre} onChange={handleNameChange}/>
                             
+                        </div>
+                        <div class="mb-3">
+                            <label  style={{ marginRight: '37px' }} for="descripInput" class="form-label">Descripción:</label>
+                            <input type="text" class="form-control custom-margin-right" id="descripInput"
+                            placeholder="Ingrese la descripcion de la evaluación" value={descripcion} onChange={handleDescripcionChange}/>
+                            
+                        </div>
+                        <div class="mb-3">
+                            <label  style={{ marginRight: '61px'}} for="costInput" class="form-label">Sub Total:</label>
+                            <input type="number" class="form-control custom-margin-right" id="costInput"
+                            placeholder="Ingrese el costo del proyecto" value={costo} onChange={handleCostoChange}/>
+                        </div>
+                        <div class="mb-3">
+                            
+                            <select id="mySelect" value={estado} onChange={handleEstadoChange} style={{ marginRight: '95px'}} >
+                                <option value="">Seleccione el estado del proyecto</option>
+                                <option value="1">Eliminado</option>
+                                <option value="2">En progreso</option>
+                                <option value="3">Solicitado</option>
+                                <option value="4">En planeación</option>
+                                <option value="5">Activo</option>
+                                <option value="6">Inactivo</option>
+                            </select>
+                        </div>
+                            
+                        <div className="mb-3" style={{marginBottom: '50px'}}>
+                            <label  for="inputDate" className="form-label">
+                                Seleccione la fecha de inicio:
+                            </label>
+                            <label  for="inputDate" className="form-label">
+                                Seleccione la fecha de finalización:
+                            </label>
+                            <label  for="inputDate" className="form-label">
+                                Seleccione los archivos adjuntos:
+                            </label>
+                            </div>
+                            <div className="mb-3" style={{ display: 'flex',alignItems: 'flex-start',  }}>
+                                <DatePicker
+                                    selected={fechaIncio}
+                                    onChange={handleIncioChange}
+                                    dateFormat="dd/MM/yyyy"
+                                    inline
+                                    showYearDropdown
+                                    showMonthDropdown
+                                />
+                                <div style={{ marginLeft: '90px' }}>
+                                <DatePicker
+                                    selected={fechaFinalizacion}
+                                    onChange={handleFinalizacionChange}
+                                    dateFormat="dd/MM/yyyy"
+                                    inline
+                                    showYearDropdown
+                                    showMonthDropdown
+                                />
+                            </div>
+                                <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', marginBottom: '5px' }}>
+                                    <input
+                                        style={{ marginLeft: '135px' }}
+                                        type="file"
+                                        key={fileInputKey}
+                                        onChange={handleFileChange}
+                                        multiple
+                                    />
+                                    <ul style={{ marginLeft: '150px', marginTop : '-15px' }}>
+                                        {selectedFiles.map((file) => (
+                                            <li key={file.nombre}> {/* Cambia key a file.url si es único */}
+                                            {file.nombre} {/* Muestra el nombre del archivo */}
+                                            <button
+                                                style={{
+                                                    marginLeft: '10px',
+                                                    backgroundColor: '#ffffff',
+                                                    border: '0 transparent',
+                                                }}
+                                                onClick={() => handleRemoveFile(file.url)}
+                                                >
+                                                <MdOutlineDeleteForever
+                                                style={{
+                                                    fontSize: '25px',
+                                                }}
+                                                />
+                                            </button>
+                                            </li>
+                                        ))}
+                                        </ul>
+
+
+                                </div>
+                            </div>
+                            <div className="mb-3"  style={{ display: 'flex', marginTop:  '40px' }}>
+                                <Styles> 
+                                    <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio}/>
+                                </Styles> 
+                            </div>
+                                
                             <div className="mb-3" 
                                 style={{ marginTop:  '50px' }} >
                             <button type="submit" className="button1" >
@@ -382,7 +381,7 @@ export const ModificarProyecto = () => {
                                 </button>
                             
                             </div>
-        
+            
 
                     </form>
 

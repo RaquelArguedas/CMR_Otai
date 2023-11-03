@@ -252,10 +252,11 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio }) => 
       if (selectProyectosID.includes(idServicios)) {
         // Si está seleccionado, quítalo del array
         setSelectProyectosID(selectProyectosID.filter(servicioID => servicioID !== idServicio));
+        handleidServicioChange(selectProyectosID)
       } else {
         // Si no está seleccionado, agrégalo al array
         setSelectProyectosID([...selectProyectosID, idServicios]);
-        
+        handleidServicioChange(selectProyectosID)
       console.log('Estos es  '+selectProyectosID)
       }
     };
@@ -324,7 +325,7 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio }) => 
   )
     return (
       <>
-        <table style={{ fontFamily: 'Lato, sans-serif' }}>
+        <table {...getTableProps()} style={{ fontFamily: 'Lato, sans-serif' }}>
           <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -374,18 +375,18 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio }) => 
           </tbody>
         </table>
         <div className="pagination"> 
-          <ButtonTbl onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            {'<<'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            {'>>'}
-          </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </ButtonTbl>{' '}
           <span style={{ marginLeft: '10px' }}>
             Página{' '}
             <strong>

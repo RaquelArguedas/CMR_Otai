@@ -19,7 +19,7 @@ export const CrearTipoCapacitacion = () => {
         const data = {
             nombre: nombre,  
           };
-          
+        console.log(nombre)  
         const requestOptions = {
         method: 'POST',
         headers: {
@@ -65,7 +65,7 @@ export const CrearTipoCapacitacion = () => {
         <Navbar />
         <div class="row">
                     <div class="col-sm-3">
-                        <Title>Crear tipo de capacitación</Title>
+                        <h1 className='titulo-h1'>Crear tipo de capacitación</h1>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div class="mb-3">

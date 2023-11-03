@@ -138,6 +138,8 @@ export const CrearCapacitacion = () => {
       nombre: item[1] + ' ' + item[2],
     }));
     setFuncionarios(formattedData2);
+    handleFechaEjecucionChange(new Date())
+    handleFechaFinalChange(new Date())
   };
 
   React.useEffect(() => {
@@ -185,7 +187,7 @@ export const CrearCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    const formattedDate = `${year}/${month}/${day}`;
+    const formattedDate = `${year}-${month}-${day}`;
 
     setInputValueEjecucion(formattedDate);
   };
@@ -196,13 +198,13 @@ export const CrearCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    const formattedDate = `${year}/${month}/${day}`;
+    const formattedDate = `${year}-${month}-${day}`;
     setInputValueFinal(formattedDate);
 
     const monthC = fechaCreada.getMonth() + 1; 
     const dayC = fechaCreada.getDate(); 
     const yearC = fechaCreada.getFullYear(); 
-    const formattedDateC = `${yearC}/${monthC}/${dayC}`;
+    const formattedDateC = `${yearC}-${monthC}-${dayC}`;
     setInputValueCreacion(formattedDateC);
 
 
