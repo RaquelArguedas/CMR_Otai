@@ -195,20 +195,22 @@ def updateEvaluacion():
         request.json['idEvaluacion'],
         request.json['nombre'],
         request.json['descripcion'],
-        request.json['fechaCreacion'],
-        request.json['tipoEvaluacion'],
+        None,
+        int(request.json['tipoEvaluacion']),
         request.json['fechaEjecucion'],
-        request.json['documentos'],
-        request.json['idEstado'],
-        request.json['precio'],
-        request.json['idProyecto'],
-        request.json['idCliente']
+        None,
+        int(request.json['idEstado']),
+        int(request.json['precio']),
+        int(request.json['idProyecto']),
+        int(request.json['idCliente'])
     )
     return jsonify(str(id))
 
 @app.route('/deleteEvaluacion/<idEvaluacion>', methods=['POST'])
 def deleteEvaluacion(idEvaluacion): 
+    print('ALO', idEvaluacion)
     id = control.updateEvaluacion( idEvaluacion, None,None,None,None,None,None,1,None,None,None)
+    print('id',id)
     return jsonify(str(id))
 
 
@@ -504,6 +506,11 @@ def deleteTipoEvaluacion(idTipo):
     id = control.deleteTipoEvaluacion(int(idTipo))
     print(id)
     return jsonify(str(id))
+
+@app.route('/isTipoEvaluacionFK/<idTipoEvaluacion>', methods=['GET'])
+def isTipoEvaluacionFK(idTipoEvaluacion):
+    res = control.isTipoEvaluacionFK(idTipoEvaluacion)
+    return jsonify(res)
 
 #CRUD Estado
 @app.route('/getEstado', methods=['GET'])

@@ -6,7 +6,7 @@ from bson import ObjectId
 import os
 
 import sys
-sys.path.append('C:/Users/STACY/Documents/GitHub/Proyecto aseguramineto/CMR_Otai/CRM/Modelo') 
+sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo') 
 from Capacitacion import *
 from Cliente import *
 from Cotizacion import *
@@ -64,24 +64,13 @@ class SingletonDAO(metaclass=SingletonMeta):
     #ejecuta algun comando 
     def execute(self, command):
 
-        # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-AKI22R4'  # Nombre del servidor local
+        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
-
         # Define la cadena de conexión
         connection_string = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server_name};DATABASE={database_name};Trusted_Connection={trusted_connection}'
-        # ___________________FIN BORRAR _____________________
-        
-        # Define los parámetros de la conexión
-        # server_name = 'crmotaidb.cpx8e9dy0ty7.us-east-2.rds.amazonaws.com'
-        # database_name = 'otai'
-        # username = 'admin'
-        # password = 'Otaicrm2023!'
 
-        # connection_string = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server_name};DATABASE={database_name};UID={username};PWD={password}'
-                
         # Intenta establecer la conexión
         try:
             conn = pyodbc.connect(connection_string)
@@ -102,32 +91,22 @@ class SingletonDAO(metaclass=SingletonMeta):
     #ejecuta algun comando que no devuelve nada como create o update
     def executeCommit(self, command):
 
-        # ___________________BORRAR _____________________
         # Define los parámetros de la conexión
         server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
-
         # Define la cadena de conexión
         connection_string = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server_name};DATABASE={database_name};Trusted_Connection={trusted_connection}'
-        # ___________________FIN BORRAR _____________________
-        
-        # Define los parámetros de la conexión
-        # server_name = 'crmotaidb.cpx8e9dy0ty7.us-east-2.rds.amazonaws.com'
-        # database_name = 'otai'
-        # username = 'admin'
-        # password = 'Otaicrm2023!'
-
-        # connection_string = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server_name};DATABASE={database_name};UID={username};PWD={password}'
-                
+      
         # Intenta establecer la conexión
         try:
             conn = pyodbc.connect(connection_string)
             cursor = conn.cursor()
             #print("Conexión exitosa a SQL Server en AWS con " + command)
-            
+            print(command)
             # Ejecuta consultas o comandos SQL aquí
             r = cursor.execute(command)
+            print(r)
             conn.commit()  # Realiza el commit para aplicar los cambios en la base de datos
             cursor.close()
             conn.close()
@@ -267,13 +246,18 @@ class SingletonDAO(metaclass=SingletonMeta):
         return None
     
     def updateEvaluacion(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
-        eval = self.readEvaluacion(idEvaluacion)
-        if eval != None:
+        e = self.readEvaluacion(idEvaluacion)
+        if e != None:
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
-            eval.editar(idEvaluacion, nombre, descripcion, 
-            fechaCreacion, tipoEvaluacion, fechaEjecucion, 
-            documentos, idEstado, precio, idProyecto, idCliente)
-            self.executeCommit(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado.value}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            try:
+                e.editar(idEvaluacion, nombre, descripcion, 
+                fechaCreacion, tipoEvaluacion, fechaEjecucion, 
+                documentos, idEstado, precio, idProyecto, idCliente)
+                if (idEstado != None):
+                    e.idEstado = Estado(idEstado)
+                self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, {e.idProyecto}, {e.idCliente}")
+            except Exception as ex:
+                 print("Se ha producido una excepción:", ex)
         else:
             return -1
 
@@ -536,10 +520,8 @@ class SingletonDAO(metaclass=SingletonMeta):
     def createTipoEvaluacion(self, nombre, precio):
         if nombre is None or precio is None:
             return -1  # No se puede crear un tipo de evaluación con atributos nulos
-        print('Minimo llegue aqui', nombre, precio)
         self.executeCommit(f"EXEC createTipoEvaluacion '{nombre}', {precio}")
         idTipoEvaluacion = self.execute(f"SELECT MAX(idTipo) FROM TipoEvaluacion")
-
         # Si hay una lista y no existe el idTipoEvaluacion en los datos, se crea
         if self.readTipoEvaluacion(idTipoEvaluacion[0][0]) is None:
             self.tipoEvaluacion += [TipoEvaluacion(idTipoEvaluacion[0][0], nombre, precio)]
@@ -551,25 +533,40 @@ class SingletonDAO(metaclass=SingletonMeta):
         return None
 
     def updateTipoEvaluacion(self, idTipoEvaluacion, nombre, precio):
-        print(nombre, precio, idTipoEvaluacion)
-        t = self.readTipoEvaluacion(idTipoEvaluacion)
+        # print("ESTOY")
+        # print(nombre, precio, idTipoEvaluacion)
+        t = self.readTipoEvaluacion(int(idTipoEvaluacion))
         if t is not None:
             t.editar(nombre, precio)
-            print(nomre, precio, idTipoEvaluacion)
+            #print(t.nombre, t.precio, idTipoEvaluacion)
             self.executeCommit(f"EXEC updateTipoEvaluacion {t.idTipoEvaluacion}, '{t.nombre}', {t.precio}")
         else:
             return -1
 
     def deleteTipoEvaluacion(self, idTipo):
+        for e in self.evaluacion:
+            if e.tipoEvaluacion == idTipo:
+                print("No puede borrar FKs")
+                return -1
+        print("ESTOY")
         p = self.readTipoEvaluacion(idTipo)
+        print(p.toList())
         if p != None:
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
+            print(self.tipoEvaluacion)
             for p in self.tipoEvaluacion:
                 if p.idTipoEvaluacion == idTipo:
                     self.tipoEvaluacion.remove(p)
+            print(self.tipoEvaluacion)
             self.executeCommit(f"DELETE FROM TipoEvaluacion WHERE idTipo = {idTipo}")
         else:
             return -1
+
+    def isTipoEvaluacionFK(self, idTipoEvaluacion):
+        for e in self.evaluacion:
+            if e.tipoEvaluacion == int(idTipoEvaluacion):
+                return 1
+        return 0
 
     #CRUDS Usuario
     def createUsuario(self, nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, fechaIngreso, contrasenha, estado):

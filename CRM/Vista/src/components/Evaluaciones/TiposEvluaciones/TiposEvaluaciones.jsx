@@ -40,6 +40,12 @@ export const TiposEvaluaciones = () => {
         handleSearch()
     }, []);
     const handleDelete =async (event, idTipoEvaluacion) =>{
+        const res = await fetch(`${API}/isTipoEvaluacionFK/${idTipoEvaluacion}`);
+        const showError = await res.json();
+        if (showError){
+          Swal.fire('No se pueden eliminar porque ya ha sido utilizado en evaluaciones.');
+          return;
+        }
         event.preventDefault();
         Swal.fire({
             title: '¿Está seguro que desea eliminar el tipo evaluación seleccionado?',
