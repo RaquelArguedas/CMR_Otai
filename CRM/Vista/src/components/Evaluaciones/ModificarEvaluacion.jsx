@@ -115,12 +115,12 @@ export const ModificarEvaluacion = () => {
         // Convertir la cadena de fecha en un objeto Date en zona horaria UTC
         //Tiene que se como el de abajo ya que es necesario la zona horaria entoces se agrega lo de T
         
-        // const fechaDesdeBaseDatos = new Date(data[6] + "T00:00:00Z");
-        // // const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
-        // // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
-        // fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
-        // // Luego, establece esa fecha en el estado fechaEjecucion
-        // setFechaEjecucion(fechaDesdeBaseDatos);
+        const fechaDesdeBaseDatos = new Date(data[6] + "T00:00:00Z");
+        // const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
+        // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
+        fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
+        // Luego, establece esa fecha en el estado fechaEjecucion
+        setFechaEjecucion(fechaDesdeBaseDatos);
 
         const res2 = await fetch(`${API}/getDocs/${data[1]}`);
         const data2 = await res2.json();
