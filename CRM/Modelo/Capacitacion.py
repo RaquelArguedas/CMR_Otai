@@ -94,3 +94,6 @@ class Capacitacion:
             self.idCliente
         ]
         return lista
+    
+    def __str__(self):
+        return f"Capacitacion -> id:{self.id}, idCapacitacion:{self.idCapacitacion}, nombre:{self.nombre}, descripcion:{self.descripcion}"

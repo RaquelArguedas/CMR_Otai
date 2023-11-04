@@ -70,4 +70,5 @@ class Evaluacion:
         ]
         return lista
 
-
+    def __str__(self):
+        return f"Evaluacion -> idEvaluacion:{self.idEvaluacion}, nombre:{self.nombre}, descripcion:{self.descripcion}"

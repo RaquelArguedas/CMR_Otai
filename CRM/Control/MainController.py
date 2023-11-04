@@ -6,7 +6,7 @@ from bson import ObjectId
 import os
 
 import sys
-sys.path.append('C:/Users/STACY/Documents/GitHub/Proyecto aseguramineto/CMR_Otai/CRM/Modelo') 
+sys.path.append('C:/Users/raque/OneDrive - Estudiantes ITCR/Documentos/GitHub/CMR_Otai/CRM/Modelo') 
 from Capacitacion import *
 from Cliente import *
 from Cotizacion import *
@@ -65,7 +65,7 @@ class SingletonDAO(metaclass=SingletonMeta):
     def execute(self, command):
 
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-AKI22R4'  # Nombre del servidor local
+        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
         # Define la cadena de conexión
@@ -92,7 +92,7 @@ class SingletonDAO(metaclass=SingletonMeta):
     def executeCommit(self, command):
 
         # Define los parámetros de la conexión
-        server_name = 'DESKTOP-AKI22R4'  # Nombre del servidor local
+        server_name = 'DESKTOP-K69I3NM'  # Nombre del servidor local
         database_name = 'otai2'  # Nombre de tu base de datos
         trusted_connection = 'yes'  # Indica autenticación de Windows
         # Define la cadena de conexión
@@ -635,10 +635,10 @@ class SingletonDAO(metaclass=SingletonMeta):
 
         for itemB in listaB:
             if itemB.estado == Estado.ELIMINADO:
-                listaSalida += [itemB]
+                listaSalida += [str(itemB)]
         for itemA in listaA:
             if itemA.idEstado == Estado.ELIMINADO:
-                listaSalida += [itemA]
+                listaSalida += [str(itemA)]
         
         return listaSalida
         

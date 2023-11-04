@@ -85,3 +85,6 @@ class Proyecto:
             listaFuncionarios
         ]
         return lista
+
+    def __str__(self):
+        return f"Proyecto -> idProyecto:{self.idProyecto}, nombre:{self.nombre}, descripcion:{self.descripcion}"

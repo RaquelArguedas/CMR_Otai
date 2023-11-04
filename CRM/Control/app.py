@@ -618,7 +618,9 @@ def consultarPapelera():
     l = control.consultarPapelera()
     if (l == []):
         return jsonify("vacia")
-    return json.dumps(l.__dict__)
+    print("LISTA")
+    print(l)
+    return jsonify(l)
 
 
 #funciones de los documentos

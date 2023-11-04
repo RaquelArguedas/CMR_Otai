@@ -49,3 +49,6 @@ class Cotizacion:
             self.fechaCreacion
         ]
         return lista
+
+    def __str__(self):
+        return f"Cotizacion -> idCotizacion:{self.idCotizacion}, nombre:{self.nombre}, descripcion:{self.descripcion}"

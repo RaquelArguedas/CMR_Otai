@@ -19,3 +19,6 @@ class Perfil:
             self.nombre
         ]
         return lista
+
+    def __str__(self):
+        return f"Perfil -> idPerfil:{self.idPerfil}, nombre:{self.nombre}"

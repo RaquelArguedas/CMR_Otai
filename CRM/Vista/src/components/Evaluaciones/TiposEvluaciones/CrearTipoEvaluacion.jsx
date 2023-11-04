@@ -30,6 +30,7 @@ export const CrearTipoEvaluacion = () => {
         body: JSON.stringify(data),
         };
         const res = fetch(`${API}/createTipoEvaluacion`,requestOptions);
+        console.log("LLEGUE")
         // const requestOptions = {
         //     method: 'POST',
         //     headers: {

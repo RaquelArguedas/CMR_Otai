@@ -39,3 +39,6 @@ class Porcentaje:
             self.idUsuario
         ]
         return list
+    
+    def __str__(self):
+        return f"Porcentaje -> idPorcentaje:{self.idPorcentaje}"

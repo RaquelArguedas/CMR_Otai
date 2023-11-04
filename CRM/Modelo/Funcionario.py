@@ -67,3 +67,6 @@ class Funcionario:
             listaPerfiles,
         ]
         return lista
+
+    def __str__(self):
+        return f"Funcionario -> idFuncionario:{self.idFuncionario}, nombre:{self.nombre}, apellido:{self.apellido}, cedula:{self.cedula}"

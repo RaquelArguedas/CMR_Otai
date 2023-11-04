@@ -12,7 +12,7 @@ googleFonts.add({
   'Lato': ['300', '700'],
 });
 const FilterSelect = styled.select`
-  width: 100px;
+  width: 1000px;
   height: 35px;
   
   fontFamily: 'Lato, sans-serif';
@@ -64,7 +64,7 @@ const SearchInput = styled.input`
   margin-bottom: 10px;
   margin-top: 10px;
   margin-left: 0px;
-  width: 100px;
+  width: 1000px;
   height: 15px;
   box-shadow: 0 0 1px 0 #000000;
   
@@ -76,10 +76,11 @@ export const Styles = styled.div`
   padding: 0.1rem;
   margin-left: 0px;
   margin-top: 30px;
-
   fontFamily: 'Lato, sans-serif';
   fontWeight: 300;
+
   table {
+    width: 1000px; 
     border-spacing: 0;
     border: 1px solid black;
 
@@ -103,10 +104,11 @@ export const Styles = styled.div`
       }
     }
   }
+
   .pagination {
     padding: 0.5rem;
   }
-`
+`;
 // Define a default UI for filtering
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
@@ -301,7 +303,6 @@ export const Table = ({ columns, data }) => {
                 {headerGroup.headers.map(column => (
                   <th {...column.getHeaderProps()} style={{ backgroundColor: '#12959E', color: '#233D4D' }}>
                   {column.render('Header')}
-                  <div>{column.canFilter ? column.render('Filter') : null}</div>
                 </th>
                 ))}
               </tr>
@@ -373,41 +374,7 @@ export const Table = ({ columns, data }) => {
 
   export const columns = [
   {
-    Header: 'ID Proyecto',
-    accessor: 'idProyecto',
-    filter: 'fuzzyText',
-  },
-  {
-    Header: 'Nombre',
-    accessor: 'nombre',
-    filter: 'fuzzyText',
-  },
-  {
-    Header: 'ID Cliente',
-    accessor: 'idCliente',
-    filter: 'fuzzyText',
-  },
-  {
-    Header: 'Nombre Cliente',
-    accessor: 'nombreCliente',
-    filter: 'fuzzyText',
-  },
-  {
-    Header: 'Estado',
-    accessor: 'estado',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-  },
-  {
-    Header: 'Fecha de Ejecución',
-    accessor: 'fecha',
-    Filter: DateRangeColumnFilter,
-    filter: dateBetweenFilterFn,
-  },
-  
-  {
-    Header: 'Detalle',
-    accessor: 'detalle',
-    disableFilters: true,
-  },
+    Header: 'Información',
+    accessor: 'item',
+  }
 ];

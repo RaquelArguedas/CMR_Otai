@@ -39,4 +39,7 @@ class Cliente:
             self.estado.value
         ]
         return lista
+    
+    def __str__(self):
+        return f"Cliente - cedJuridica:{self.cedJuridica}, nombre:{self.nombre}"
 

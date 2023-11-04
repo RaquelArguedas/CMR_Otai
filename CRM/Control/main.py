@@ -4,15 +4,10 @@ import zipfile
 
 if __name__ == "__main__":
     dao = SingletonDAO()
-    l = dao.consultarPapelera()
-    for i in l:
-        try:
-            print(i.estado)
-        except Exception as ex:
-            try:
-                print(i.idEstado)
-            except Exception as ex:
-                print(ex)
+    cliente = dao.cliente[0]
+    nombre_clase = cliente.__class__.__name__
+
+    print(cliente.__class__.__name__) 
 
     # fun = [2]
     # mi_dict = {}
