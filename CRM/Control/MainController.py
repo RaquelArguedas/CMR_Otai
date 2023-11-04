@@ -217,7 +217,17 @@ class SingletonDAO(metaclass=SingletonMeta):
         if cap != None:
             print("HOLA CAMARON SIN COLA")
             cap.editar(idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, None, idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente)
-            self.executeCommit(f"EXEC updateCapacitacion {cap.id}, {cap.idCapacitacion}, {cap.nombre}, {cap.descripcion}, '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
+            print("idProyecto:", cap.idProyecto)
+            print(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
+            if cap.idProyecto == 0:
+                print("DESDE IF")
+                print(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
+                self.executeCommit(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, null, {cap.idCliente}")
+            else:
+                print("DESDE ELSE")
+                print(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
+
+                self.executeCommit(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
         else:
             return -1
 
@@ -262,8 +272,8 @@ class SingletonDAO(metaclass=SingletonMeta):
             return -1
 
     #CRUDS Proyecto
-    def createProyecto(self, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado):
-        if  nombre == None or descripcion== None or documentos== None or fechaInicio==None or fechaFinalizacion==None or subTotal==None or estado== None:
+    def createProyecto(self, nombre, descripcion, idServicios, documentos, fechaInicio, fechaFinalizacion, subTotal, estado):        
+        if  nombre == None or descripcion== None or fechaInicio==None or fechaFinalizacion==None or subTotal==None or estado== None:
             return -1 #No se puede crear una capacitacion con atributos nulos   
 
         idProyecto = self.execute(f"SELECT MAX(id) FROM Proyecto")
@@ -284,9 +294,25 @@ class SingletonDAO(metaclass=SingletonMeta):
                     #funcionarios += [f]
                     #self.executeCommit(f"EXEC createProyectoXFuncionario {result[0][0]}, {fId}")
             print("AQUI DEBERIA CREARLO!")
-            self.executeCommit(f"EXEC createProyecto '{idProyectoCodigo}','{nombre}', '{descripcion}', {idCliente}, null,'{fechaInicio}', '{fechaFinalizacion}', {subTotal}, {estado}")
-            self.proyecto += [Proyecto(nuevo_valor, idProyectoCodigo, nombre, descripcion, 0, [], fechaInicio, fechaFinalizacion, subTotal, estado, [])]
-        
+            servicios = self.capacitacion+self.evaluacion
+            servicioIndicados = [];
+            for servicio in servicios:
+                idServ = servicio.toList()[1]
+                for idS in idServicios:
+                    if idServ == idS:
+                        print("existe el servicio")
+                        servicioIndicados += [servicio]
+            if servicioIndicados == []:
+                print("No se encontro el servicio, operacion cancelada")
+                return -1
+            self.executeCommit(f"EXEC createProyecto '{idProyectoCodigo}','{nombre}', '{descripcion}', {servicioIndicados[0].idCliente}, null,'{fechaInicio}', '{fechaFinalizacion}', {subTotal}, {estado}")
+            self.proyecto += [Proyecto(nuevo_valor, idProyectoCodigo, nombre, descripcion, servicioIndicados[0].idCliente, [], fechaInicio, fechaFinalizacion, subTotal, estado, [])]
+
+            for servicio in servicioIndicados:
+                resCap = self.updateCapacitacion(servicio.toList()[1],None,None, None, None, None, None, None, None, None, None, None, None, nuevo_valor, None)
+                if resCap == -1:
+                    self.updateEvaluacion(servicio.toList()[1],None,None, None, None, None, None, None, None,nuevo_valor ,None)
+
     def readProyecto(self, idProyecto):
         for p in self.proyecto:
             if p.idProyecto == idProyecto: 
@@ -501,7 +527,7 @@ class SingletonDAO(metaclass=SingletonMeta):
         t = self.readTipoCapacitacion(idTipoCapacitacion)
         if t is not None:
             t.editar(nombre)
-            self.executeCommit(f"EXEC updateTipoCapacitacion '{t.nombre}'")
+            self.executeCommit(f"EXEC updateTipoCapacitacion {t.idTipoCapacitacion}, '{t.nombre}'")
         else:
             return -1
         
@@ -515,6 +541,12 @@ class SingletonDAO(metaclass=SingletonMeta):
             self.executeCommit(f"DELETE FROM TipoCapacitacion WHERE idTipo = {idTipo}")
         else:
             return -1
+        
+    def isTipoCapacitacionFK(self, idTipoCapacitacion):
+        for e in self.capacitacion:
+            if e.tipoCapacitacion == int(idTipoCapacitacion):
+                return 1
+        return 0
 
     #CRUDS TipoEvaluacion
     def createTipoEvaluacion(self, nombre, precio):

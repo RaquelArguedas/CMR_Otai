@@ -23,7 +23,10 @@ class Capacitacion:
             self.idFuncionario = int(idFuncionario)
             self.precio = float(precio)
             self.tipoCapacitacion = int(tipoCapacitacion)
-            self.idProyecto = int(idProyecto)
+            if (idProyecto == None):
+                self.idProyecto = None
+            else:
+                self.idProyecto = int(idProyecto)
             self.idCliente = int(idCliente)
         
         except (ValueError, TypeError):

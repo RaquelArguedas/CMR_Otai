@@ -4,6 +4,16 @@ import zipfile
 
 if __name__ == "__main__":
     dao = SingletonDAO()
+    l = dao.consultarPapelera()
+    for i in l:
+        try:
+            print(i.estado)
+        except Exception as ex:
+            try:
+                print(i.idEstado)
+            except Exception as ex:
+                print(ex)
+
     # fun = [2]
     # mi_dict = {}
     # mi_dict["nombre"] = "Juan"
@@ -12,10 +22,10 @@ if __name__ == "__main__":
     # print(mi_dict)
 
     #dao.createFuncionario('nombre222', 'apellido', '2023-10-10', 1212, 888888, 'correo', 1, '2023-10-10', [1])
-    dao.updateFuncionario(6, 'nombreupdate', None, None, None, None, None, None, None, [2])
-    print("MMMMMMMMMMMMMMMMMMMMMMMMMM")
-    dao.deletePerfil(25)
-    # d = dao.getDoc(1)
+    # dao.updateFuncionario(6, 'nombreupdate', None, None, None, None, None, None, None, [2])
+    # print("MMMMMMMMMMMMMMMMMMMMMMMMMM")
+    # dao.deletePerfil(25)
+    # # d = dao.getDoc(1)
     # l=list(d)
     # print(d)
     # carpeta_descargas = os.path.expanduser("~" + os.sep + "Downloads")
@@ -73,9 +83,9 @@ if __name__ == "__main__":
     #     print("Funcionario:", item.toList())
     # print("\n")
     # # Perfil
-    for item in dao.perfil:
-        print("Perfil:", item.toList())
-    print("\n")
+    # for item in dao.perfil:
+    #     print("Perfil:", item.toList())
+    # print("\n")
     # # Porcentaje
     # for item in dao.porcentaje:
     #     print("Porcentaje:", item.toList())

@@ -47,6 +47,8 @@ import { CrearProyectos } from "./components/Proyectos/CrearProyectos";
 import { DetalleProyecto } from "./components/Proyectos/DetalleProyecto";
 import { ModificarProyecto } from "./components/Proyectos/ModificarProyecto";
 
+import { Papelera } from "./components/Papelera/Papelera";
+
 export function App() {
     return (
     <Router>
@@ -102,6 +104,7 @@ export function App() {
             <Route exact path= "/detalleProyecto/:idProyecto" element = {<DetalleProyecto/>} />
             <Route exact path= "/modificarProyecto/:idProyecto" element = {<ModificarProyecto/>} />
 
+            <Route exact path= "/papelera" element = {<Papelera/>} />
             </Routes>
         </div>
     </Router>

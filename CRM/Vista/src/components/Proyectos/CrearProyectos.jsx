@@ -43,7 +43,7 @@ export const CrearProyectos = () => {
         const data = {
             nombre: nombre,
             descripcion: descripcion, 
-            idCliente: null,
+            idServicios: ['CA001','CA5','EVAL001'], // cambielo por la lista de idServicio(ejemplo.CA001), yo en el BE busco el idCliente
             documentos: fileInputKey,
             fechaCreacion: inputValueCreacion,
             fechaInicio: inputValueIncio,
@@ -108,6 +108,7 @@ export const CrearProyectos = () => {
         //Se supoene que ahi abajo mandamos a llamar a todos los servicios
         const res = await fetch(`${API}/getServicios`);
         const data = await res.json();//resultado de la consulta
+        console.log("servicios")
         console.log(data)
          // Realiza la conversión de datos aquí
          const formattedData = data.map((item) => ({

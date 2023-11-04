@@ -43,7 +43,13 @@ export const TiposCapacitaciones = () => {
         handleSearch()
     }, []);
     
-    const handleDelete = async (event, idTipoCapacitación) =>{
+    const handleDelete = async (event, idTipoCapacitacion) =>{
+      const res = await fetch(`${API}/isTipoCapacitacionFK/${idTipoCapacitacion}`);
+        const showError = await res.json();
+        if (showError){
+          Swal.fire('No se pueden eliminar porque ya ha sido utilizado en evaluaciones.');
+          return;
+        }
       event.preventDefault();  
       Swal.fire({
             title: '¿Está seguro que desea eliminar el tipo capacitación seleccionado?',
@@ -56,10 +62,10 @@ export const TiposCapacitaciones = () => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
-              const updatedTipos = tiposCapacitaciones.filter((tiposCapacitaciones) => tiposCapacitaciones.idTipoCapacitacion !== idTipoCapacitación);
+              const updatedTipos = tiposCapacitaciones.filter((tiposCapacitaciones) => tiposCapacitaciones.idTipoCapacitacion !== idTipoCapacitacion);
               setTiposCapacitaciones(updatedTipos);
               Swal.fire('El tipo de capacitación se ha eliminado satisfactoriamente')
-              const res = fetch(`${API}/deleteTipoCapacitacion/${idTipoCapacitación}`, {
+              const res = fetch(`${API}/deleteTipoCapacitacion/${idTipoCapacitacion}`, {
                 method: 'POST'
             });
               gotoTipoCapacitacion();
