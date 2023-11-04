@@ -34,6 +34,7 @@ export  const CrearEvaluacion = () => {
     
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(nombre, descripcion, inputValue,tipoEvaluacion, inputValue, fileInputKey,estado,costo,IdCliente)
         const data = {
             nombre: nombre,
             descripcion: descripcion, 
@@ -145,14 +146,26 @@ export  const CrearEvaluacion = () => {
         const month = date.getMonth() + 1;
         const day = date.getDate(); 
         const year = date.getFullYear(); 
-        const formattedDate = `${year}-${month}-${day}`;
+        // Utilizar padStart para asegurarse de que day tenga dos dígitos
+        const formattedDay = day.toString().padStart(2, '0');
+        
+        // Construir la cadena en el formato deseado (aaaa/dd/mm)
+        const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${formattedDay}`;
+        //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
         setInputValue(formattedDate);
+
+
 
         const monthC = fechaCreacion.getMonth() + 1; 
         const dayC = fechaCreacion.getDate(); 
         const yearC = fechaCreacion.getFullYear(); 
-        const formattedDateC = `${yearC}-${monthC}-${dayC}`;
+        const formattedDayC = dayC.toString().padStart(2, '0');
+        
+        // Construir la cadena en el formato deseado (aaaa/dd/mm)
+        const formattedDateC = `${yearC}-${monthC.toString().padStart(2, '0')}-${formattedDayC}`;
+        //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
         setInputValueCreacion(formattedDateC);
+
     };
 
     const handleInputChange = (e) => {

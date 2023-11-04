@@ -39,6 +39,7 @@ export const ModificarEvaluacion = () => {
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
   
         //Notificacion de que se realizaron los cambios
+        console.log(nombre, descripcion, inputValueCreacion,inputValue,tipoEvaluacion, inputValue, fileInputKey,estado,costo,IdCliente, idProyecto)
         const data = {
             idEvaluacion:idEvaluacion,
             nombre: nombre,
@@ -114,8 +115,9 @@ export const ModificarEvaluacion = () => {
         // Parsear la fecha de la base de datos en un objeto Date
         // Convertir la cadena de fecha en un objeto Date en zona horaria UTC
         //Tiene que se como el de abajo ya que es necesario la zona horaria entoces se agrega lo de T
-        
+        setInputValue(data[6])
         const fechaDesdeBaseDatos = new Date(data[6] + "T00:00:00Z");
+        
         // const fechaDesdeBaseDatos = new Date(fechaBaseDatos);
         // Sumar un día a la fecha, ya que hay un desface de un dia ejemplo si es 8, pone 7 por eso la suma de uno
         fechaDesdeBaseDatos.setDate(fechaDesdeBaseDatos.getDate() + 1);
@@ -186,10 +188,12 @@ export const ModificarEvaluacion = () => {
         const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
         const day = date.getDate(); // Obtener el día
         const year = date.getFullYear(); // Obtener el año
+       // Utilizar padStart para asegurarse de que day tenga dos dígitos
+        const formattedDay = day.toString().padStart(2, '0');
+        
         // Construir la cadena en el formato deseado (aaaa/dd/mm)
-        const formattedDate = `${year}-${month}-${day}`;
+        const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${formattedDay}`;
         //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
-
         setInputValue(formattedDate);
         
     };
@@ -253,8 +257,12 @@ export const ModificarEvaluacion = () => {
                         
                         <select id="mySelect" value={estado} onChange={handleEstadoChange}>
                             <option value="">Seleccione el estado de la evaluación</option>
-                            <option value="1">Activo</option>
-                            <option value="2">Inactivo</option>
+                            <option value="1">Eliminado</option>
+                            <option value="2">En progreso</option>
+                            <option value="3">Solicitado</option>
+                            <option value="4">En planeación</option>
+                            <option value="5">Activo</option>
+                            <option value="6">Inactivo</option>
                         </select>
                         {/* <select id="mySelect2" value={tipoEvalaucion} onChange={handleTipoEvaluacionChange}>
                             <option value="">Seleccione el tipo evaluación</option>

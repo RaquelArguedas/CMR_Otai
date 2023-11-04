@@ -4,7 +4,8 @@ import { Navbar } from '../Navbar/Navbar';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import './CSSClientes/Clientes.css'
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { BsFillPencilFill } from 'react-icons/bs';
 const API = "http://127.0.0.1:5000";
 export const ModificarCliente = () => {
@@ -22,6 +23,48 @@ export const ModificarCliente = () => {
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+    
+        // Validación del campo "cedula"
+        if (cedula.length < 5) {
+            toast.error('La cédula debe ser mayor 5 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+
+    
+        // Validación del campo "telefono"
+        if (telefono.length < 5) {
+            toast.error('El número de teléfono debe ser mayor 4 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+
+    
+        // Validación del campo "correo"
+        if (correo.length < 5) {
+            toast.error('El correo electrónico debe tener al menos 5 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+    
+        // Validación del formato de correo electrónico
+        const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    
+        if (!emailPattern.test(correo)) {
+            toast.error('Por favor, ingrese un correo electrónico válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
         Swal.fire({
             title: '¿Está seguro que desea modificar el cliente?',
             showDenyButton: true,
@@ -80,16 +123,63 @@ export const ModificarCliente = () => {
     margin-top: 25px;
     `;
     const handleNameChange = (event) => {
-        setNombreCliente(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setNombreCliente(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El nombre no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleCedulaChange = (event) => {
-        setCedula(event.target.value);
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCedula(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleTelefonoChange = (event) => {
-        setTelefono(event.target.value);
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setTelefono(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            // alert('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.');
+        }
     };
     const handleCorreoChange = (event) => {
-        setCorreo(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 100) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setCorreo(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El correo no debe superar los 100 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleEstadoChange = (event) => {
         setEstado(event.target.value);
@@ -151,7 +241,7 @@ export const ModificarCliente = () => {
                         
                         </div>
         
-
+                        <ToastContainer />
                     </form>
 
             </div>

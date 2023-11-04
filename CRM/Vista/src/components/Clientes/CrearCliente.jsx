@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import './CSSClientes/Clientes.css'
 import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const API = "http://127.0.0.1:5000";
 export const CrearCliente = () => {
     let navigate = useNavigate();
@@ -13,14 +15,54 @@ export const CrearCliente = () => {
     const [telefono, setTelefono] = useState('');
     const [cedula, setCedula] = useState('');
     const [nombre, setNombreCliente] = useState('');
-    const [cedulaError, setCedulaError] = useState('');
-    const [telefonoError, setTelefonoError] = useState('');
-
+    
     const handleSubmit = async (event) => {
         event.preventDefault();  
         // Restablecer errores si la validación pasa
-        setCedulaError('');
-        setTelefonoError('');
+        
+        // Validación del campo "nombre"
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+    
+        // Validación del campo "cedula"
+        if (cedula.length < 5) {
+            toast.error('La cédula debe ser mayor 5 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+
+    
+        // Validación del campo "telefono"
+        if (telefono.length < 5) {
+            toast.error('El número de teléfono debe ser mayor 4 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+
+    
+        // Validación del campo "correo"
+        if (correo.length < 5) {
+            toast.error('El correo electrónico debe tener al menos 5 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+    
+        // Validación del formato de correo electrónico
+        const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    
+        if (!emailPattern.test(correo)) {
+            toast.error('Por favor, ingrese un correo electrónico válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
 
         console.log(correo,telefono,cedula,nombre);
         //Es para enviar informacion al backend
@@ -34,15 +76,15 @@ export const CrearCliente = () => {
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
           })
-                const formData = new FormData();
-                formData.append('correo', correo);
-                formData.append('telefono', telefono);
-                formData.append('cedula', cedula);
-                formData.append('nombre', nombre);
-                const res = fetch(`${API}/createCliente`, {
-                    method: 'POST',
-                    body: formData
-                });
+            const formData = new FormData();
+            formData.append('correo', correo);
+            formData.append('telefono', telefono);
+            formData.append('cedula', cedula);
+            formData.append('nombre', nombre);
+            const res = fetch(`${API}/createCliente`, {
+                method: 'POST',
+                body: formData
+            });
               gotoCliente();
             }
         
@@ -56,27 +98,63 @@ export const CrearCliente = () => {
     margin-top: 25px;
     `;
     const handleNameChange = (event) => {
-        setNombreCliente(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setNombreCliente(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El nombre no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleCedulaChange = (event) => {
-        setCedula(event.target.value);
-        
-        if (!/^\d+$/.test(event.target.value)) {
-            setCedulaError('La cédula debe contener solo números.');
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCedula(inputValue);
         } else {
-            setCedulaError('');
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
         }
     };
     const handleTelefonoChange = (event) => {
-        setTelefono(event.target.value);
-        if (!/^\d+$/.test(event.target.value)) {
-            setTelefonoError('El número de teléfono debe contener solo números.');
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setTelefono(inputValue);
         } else {
-            setTelefonoError('');
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            // alert('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.');
         }
     };
     const handleCorreoChange = (event) => {
-        setCorreo(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 100) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setCorreo(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El correo no debe superar los 100 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     return (
         
@@ -97,25 +175,17 @@ export const CrearCliente = () => {
                         </div>
                         <div class="mb-3">
                             <label  style={{ marginRight: '85px' }}for="cedulaInput" class="form-label">Cédula Jurídica:</label>
-                            <input type="number" class="form-control custom-margin-right" id="cedulaInput"
+                            <input type="text" class="form-control custom-margin-right" id="cedulaInput"
                             placeholder="Ingrese la Cédula Juridica" value={cedula} onChange={handleCedulaChange}
                             aria-describedby="cedulaError"/>
-                            {cedulaError && (
-                            <span id="cedulaError" role="alert" aria-live="assertive">
-                                {cedulaError}
-                            </span>
-                        )}
+                            
                         </div>
                         <div class="mb-3">
                             <label style={{ marginRight: '44px' }} for="telefonoInput" class="form-label">Número de teléfono:</label>
-                            <input type="number" class="form-control custom-margin-right" id="telefonoInput"
+                            <input type="text" class="form-control custom-margin-right" id="telefonoInput"
                             placeholder="Ingrese el número de teléfono " value={telefono} onChange={handleTelefonoChange}
                             aria-describedby="telefonoError"/>
-                            {telefonoError && (
-                            <span class="form-label" id="telefonoError" role="alert" aria-live="assertive">
-                                {telefonoError}
-                            </span>
-                        )}
+                            
                             
                         </div>
                         <div class="mb-3">
@@ -135,7 +205,7 @@ export const CrearCliente = () => {
                         
                         </div>
         
-
+                        <ToastContainer />
                     </form>
 
             </div>

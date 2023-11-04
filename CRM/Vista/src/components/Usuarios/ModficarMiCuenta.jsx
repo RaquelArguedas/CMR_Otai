@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../Clientes/CSSClientes/Clientes.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
 const API = "http://127.0.0.1:5000";
 export const ModficarMiCuenta = () => {
@@ -31,7 +33,65 @@ export const ModficarMiCuenta = () => {
     const [fechaNacimiento, setFechaNacimiento] = useState(null);
     
     const handleSubmit = async (event) => {
-        event.preventDefault();  
+        event.preventDefault();
+
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+    
+        // Validación del campo "apellido"
+        if (apellido.length < 2) {
+            toast.error('El apellido debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+        // Validación del campo "cedula"
+        if (cedula.length < 5) {
+            toast.error('La cédula debe ser mayor 5 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+
+    
+        // Validación del campo "telefono"
+        if (telefono.length < 5) {
+            toast.error('El número de teléfono debe ser mayor 4 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+
+        // Validación del campo "contrasenna"
+        if (contrasenna.length < 5) {
+            toast.error('La contraseña debe tener al menos 5 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            
+            return;
+        }
+    
+        // Validación del campo "correo"
+        if (correo.length < 5) {
+            toast.error('El correo electrónico debe tener al menos 5 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+    
+        // Validación del formato de correo electrónico
+        const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    
+        if (!emailPattern.test(correo)) {
+            toast.error('Por favor, ingrese un correo electrónico válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
 
         const res = await fetch(`${API}/readUsuario/${1}`); // cambiar por el id
         const data = await res.json();//resultado de la consulta
@@ -114,6 +174,7 @@ export const ModficarMiCuenta = () => {
         // INACTIVO = 6
         setEstado(data[7])
         //setFechaNacimiento(data[3])
+        setInputValue(data[3]);
         const fechaDesdeBackend = data[3];
         console.log(fechaDesdeBackend)
         //La fecha
@@ -136,25 +197,92 @@ export const ModficarMiCuenta = () => {
     margin-top: 25px;
     `;
     const handleNameChange = (event) => {
-        setNombre(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setNombre(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El nombre no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleApellidoChange = (event) => {
-        setApellido(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setApellido(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El apellido no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleCedulaChange = (event) => {
-        setCedula(event.target.value);
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCedula(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleTelefonoChange = (event) => {
-        setTelefono(event.target.value);
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setTelefono(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            // alert('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.');
+        }
     };
     const handleCorreoChange = (event) => {
-        setCorreo(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 100) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setCorreo(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El correo no debe superar los 100 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleEstadoChange = (event) => {
         setEstado(event.target.value);
     };
     const handleContrasennaChange = (event) => {
-        setContrasenna(event.target.value);
+        const inputValue = event.target.value;
+    
+        if (inputValue.length <= 20) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setContrasenna(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('La contraseña no debe superar los 20 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleFechaNacimientoChange = (date) => {
         setFechaNacimiento(date);
@@ -244,7 +372,7 @@ export const ModficarMiCuenta = () => {
                             </button>
                         
                         </div>
-
+                        <ToastContainer />
                     </form>
 
             </div>

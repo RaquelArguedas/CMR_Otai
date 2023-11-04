@@ -10,6 +10,8 @@ import { Navbar } from '../Navbar/Navbar';
 import './CrearCapacitacion.css';
 import { Table, columns, Styles } from './TablaSelectClientes';
 import { TableF, columnsF } from './TablaSelectFuncionario';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
 const API = "http://127.0.0.1:5000";
 
@@ -27,13 +29,11 @@ export const CrearCapacitacion = () => {
   const [inputValueFinal, setInputValueFinal] = useState('');
   const [inputValueCreacion, setInputValueCreacion] = useState('');
   const [estado, setEstado] = useState('');
-  const [opciones, setOpciones] = useState([]);
   const [tipoCapacitacion, setTipoCapacitacion] = useState('');
   const [tiposCapacitacion, setTiposCapacitacion] = useState([]);
   const [fileInputKey, setFileInputKey] = useState('');
   const [IdCliente, setIdCliente] = useState('');
   const [IdFuncionario, setIdFuncionario] = useState('');
-  const [nombreCliente, setNombreCliente] = useState('');
   const [clientes, setClientes] = useState([]);
   const [funcionarios, setFuncionarios] = useState([]);
   let navigate = useNavigate();
@@ -42,6 +42,26 @@ export const CrearCapacitacion = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // Validación del campo "nombre"
+    if (nombre.length < 2) {
+      toast.error('El nombre debe ser mayor a un caracter.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    // Validación del campo "nombre"
+    if (descripcion.length < 2) {
+      toast.error('La descripción debe ser mayor a un caracter.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (estado === '') {
+      toast.error('Seleccione un estado válido.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
     const data = {
         nombre: nombre,
         descripcion: descripcion, 
@@ -166,20 +186,51 @@ export const CrearCapacitacion = () => {
     console.log()
   };
   const handleNameChange = (event) => {
-    setNombre(event.target.value);
+    const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setNombre(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El nombre no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
   };
   const handleDescripcionChange = (event) => {
-    setDescripcion(event.target.value);
+    const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setDescripcion(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('La descripción no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
   };
   const handleCostoChange = (event) => {
-    setCosto(event.target.value);
+    const inputValue = event.target.value;
+    // Expresión regular que valida un número decimal positivo
+    const validPattern = /^\d*\.?\d*$/;
+
+    if (validPattern.test(inputValue)) {
+        // La entrada es válida, puedes actualizar el estado
+        setCosto(inputValue);
+    } else {
+        // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+        // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+        toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    }
   };
   const handleHoraChange = (event) => {
     setHora(event.target.value);
   };
-  const handleClienteNombreChange = (event) => {
-    setNombreCliente(event.target.value);
-  };
+  
 
   const handleFechaEjecucionChange = (date) => {
     setFechaEjecucion(date);
@@ -187,9 +238,13 @@ export const CrearCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    const formattedDate = `${year}-${month}-${day}`;
-
+    const formattedDay = day.toString().padStart(2, '0');
+        
+    // Construir la cadena en el formato deseado (aaaa/dd/mm)
+    const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${formattedDay}`;
+    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
     setInputValueEjecucion(formattedDate);
+
   };
 
   const handleFechaFinalChange = (date) => {
@@ -198,13 +253,19 @@ export const CrearCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDay = day.toString().padStart(2, '0');
+    // Construir la cadena en el formato deseado (aaaa/dd/mm)
+    const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${formattedDay}`;
+    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
     setInputValueFinal(formattedDate);
 
     const monthC = fechaCreada.getMonth() + 1; 
     const dayC = fechaCreada.getDate(); 
     const yearC = fechaCreada.getFullYear(); 
-    const formattedDateC = `${yearC}-${monthC}-${dayC}`;
+    const formattedDayC = dayC.toString().padStart(2, '0');
+    // Construir la cadena en el formato deseado (aaaa/dd/mm)
+    const formattedDateC = `${yearC}-${monthC.toString().padStart(2, '0')}-${formattedDayC}`;
+    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
     setInputValueCreacion(formattedDateC);
 
 
@@ -258,12 +319,12 @@ export const CrearCapacitacion = () => {
             </div>
             <div className="mb-3" >
               <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Horas:</label>
-              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px', marginLeft: '150px' }}
+              <input  type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px', marginLeft: '150px' }}
               placeholder="Ingrese la duración en horas de la capacitación" value={horas} onChange={handleHoraChange} />
             </div>
             <div className="mb-3">
               <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Costo:</label>
-              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' , marginLeft: '151px' }}
+              <input  type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' , marginLeft: '151px' }}
               placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
             </div>
             <div class="mb-3">
@@ -364,6 +425,7 @@ export const CrearCapacitacion = () => {
                 }} /> Crear capacitación
               </button>
             </div>
+            <ToastContainer />
           </form>
 
         </div>
