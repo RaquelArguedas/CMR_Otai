@@ -111,41 +111,47 @@ export function ReporteRendimiento() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(clientes);
-    if (servicioCheckboxArray !== null &&
-        servicioCheckboxArray.length > 0 &&
-        IdCliente !== null &&
-        IdCliente !== ''){
-          Swal.fire({
-            title: 'Confirmación',
-            text: 'El reporte se ha creado satisfactoriamente.',
-            icon: 'success',
-            confirmButtonText: 'Aceptar',
-            allowOutsideClick: false, 
-            allowEscapeKey: false,    
-          }).then((result) => {
-            if (result.isConfirmed) {
-              const formData = new FormData();
-              //ToDo: Validar en el backend
-              formData.append('servicios', servicioCheckboxArray);
-              formData.append('cliente', IdCliente);
-              formData.append('estado', estadoDropdown);
-              formData.append('fechaInicio', fechaInicio);
-              formData.append('fechaFinal', fechaFinal); 
-              const res = fetch(`${API}/createReporteRendimiento`, {
-                  method: 'POST',
-                  body: formData
-              });
-              gotoReportesRendimiento();
-            }
-          }); 
-    } else {
-      Swal.fire({
-        title: 'Error',
-        text: 'Por favor, escoge los filtros correctamente (Recuerda: necesitas por lo menos marcar un cliente y un servicio para crear el reporte).',
-        icon: 'error',
-        confirmButtonText: 'Aceptar',
-      });
-    }  
+    Swal.fire({
+      title: 'Fuera del alcance',
+      text: 'La generacion de reportes no está contemplada en el desarrollo de este proyecto.',
+      icon: 'info',
+      confirmButtonText: 'Aceptar',
+    });
+    gotoReportesRendimiento();
+    // if (servicioCheckboxArray !== null &&
+    //     servicioCheckboxArray.length > 0 &&
+    //     IdCliente !== null &&
+    //     IdCliente !== ''){
+    //       Swal.fire({
+    //         title: 'Confirmación',
+    //         text: 'La generacion de reportes no está contemplada en el desarrollo de este proyecto.',
+    //         icon: 'success',
+    //         confirmButtonText: 'Aceptar',
+    //         allowOutsideClick: false, 
+    //         allowEscapeKey: false,    
+    //       }).then((result) => {
+    //         if (result.isConfirmed) {
+    //           // const formData = new FormData();
+    //           // formData.append('servicios', servicioCheckboxArray);
+    //           // formData.append('cliente', IdCliente);
+    //           // formData.append('estado', estadoDropdown);
+    //           // formData.append('fechaInicio', fechaInicio);
+    //           // formData.append('fechaFinal', fechaFinal); 
+    //           // const res = fetch(`${API}/createReporteFinanciero`, {
+    //           //     method: 'POST',
+    //           //     body: formData
+    //           // });
+    //           gotoReportesFinancieros();
+    //         }
+    //       }); 
+    // } else {
+    //   Swal.fire({
+    //     title: 'Error',
+    //     text: 'Por favor, escoge los filtros correctamente (Recuerda: necesitas por lo menos marcar un cliente y un servicio para crear el reporte).',
+    //     icon: 'error',
+    //     confirmButtonText: 'Aceptar',
+    //   });
+    // }  
   }
 
   const handleSearch = async () => { 
@@ -209,71 +215,63 @@ export function ReporteRendimiento() {
     console.log(idCliente + 'Handle')
     setIdCliente(idCliente);
   };
-return(
-  <Fragment>
-  <div className='container'>
-    <Navbar />
-    <div>
-      <h1 class="titulo-h1">Reporte de rendimiento</h1>
-      <form onSubmit={handleSubmit}>
-      <div class="row">
-          <h2 class="titulo-h2" >Servicios:</h2>
-          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '10px', marginTop:'50px' }}>
-            <Checkbox>
+  return (
+    <Fragment>
+      <div className='container'>
+        <Navbar />
+        <div>
+          <h1 class="titulo-h1">Reporte de Rendimiento</h1>
+          <form onSubmit={handleSubmit}>
+          <div class="row">
+              <h2 class="titulo-h2" >Servicios:</h2>
+                <div className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '0px', marginTop:'30px' }}>
+                  <input
+                    style={{ marginLeft: '10px', width: '30px',height: '30px',  marginRight: '0px', marginBottom:'15px'}}
+                    type="checkbox"
+                  /> 
+                  <label style={{ display:'flex', fontSize: '16px', height:'30px', fontFamily: 'Lato, sans-serif', fontWeight: 300, marginLeft:'10px', marginRight:'0px', marginTop:'0px', marginBottom:'0px'}}>
+                    Cotización
+                  </label>
+                </div>
+                <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '10px', marginTop:'5px' }}>
+                  <input
+                    style={{ marginLeft: '10px', width: '30px',height: '30px',  marginRight: '0px', marginBottom:'10px'}}
+                    type="checkbox"
+                  /> 
+                  <label style={{ display:'flex', fontSize: '16px', height:'30px', fontFamily: 'Lato, sans-serif', fontWeight: 300, marginLeft:'10px', marginRight:'0px', marginTop:'0px', marginBottom:'0px'}}>
+                  Evaluación
+                  </label>
+                  
+              </div>
+              <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '10px', marginTop:'5px'   }}>
+                  <input
+                    style={{ marginLeft: '10px', width: '30px',height: '30px',  marginRight: '0px', marginBottom:'10px'}}
+                    type="checkbox"
+                  /> 
+                  <label style={{ display:'flex', fontSize: '16px', height:'30px', fontFamily: 'Lato, sans-serif', fontWeight: 300, marginLeft:'10px', marginRight:'0px', marginTop:'0px', marginBottom:'0px'}}>
+                  Proyecto
+                  </label>
+                </div>
+              <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '50px', marginTop:'5px' }}>
+                  <input
+                    style={{ marginLeft: '10px', width: '30px',height: '30px',  marginRight: '0px', marginBottom:'10px'}}
+                    type="checkbox"
+                  /> 
+                  <label style={{ display:'flex', fontSize: '16px', height:'30px', fontFamily: 'Lato, sans-serif', fontWeight: 300, marginLeft:'10px', marginRight:'0px', marginTop:'0px', marginBottom:'0px'}}>
+                  Capacitación
+                  </label> 
+              </div>  
+              <h2 class="titulo-h2" >Estado:</h2>
+          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '5px', marginTop:'20px' }}>
               <input
+                style={{ marginLeft: '10px', width: '30px',height: '30px',  marginRight: '0px', marginBottom:'15px'}}
                 type="checkbox"
-                value="Cotización"
-                checked={servicioCheckboxArray.includes('Cotización')}
-                onChange={handleCheckboxChange}
-              /> Cotización
-            </Checkbox>
-
-            <Checkbox>
-              <input
-                type="checkbox"
-                value="Evaluación"
-                checked={servicioCheckboxArray.includes('Evaluación')}
-                onChange={handleCheckboxChange}
-              /> Evaluación
-            </Checkbox>
-
-           
+              /> 
+              <label style={{ display:'flex', fontSize: '16px', height:'30px', fontFamily: 'Lato, sans-serif', fontWeight: 300, marginLeft:'10px', marginRight:'0px', marginTop:'0px', marginBottom:'0px'}}>
+              Por estado
+              </label>
           </div>
-
-          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginTop:  '5px'   }}>
-          <Checkbox>
-              <input
-                type="checkbox"
-                value="Proyecto"
-                checked={servicioCheckboxArray.includes('Proyecto')}
-                onChange={handleCheckboxChange}
-              /> Proyecto
-          </Checkbox>
-
-            <Checkbox>
-              <input
-                type="checkbox"
-                value="Capacitación"
-                checked={servicioCheckboxArray.includes('Capacitación')}
-                onChange={handleCheckboxChange}
-                style={{marginLeft: '-218px' }}
-              /> Capacitación
-            </Checkbox>
-
-          </div>  
-
-          <h2 class="titulo-h2" >Estado:</h2>
-          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '5px', marginTop:'50px' }}>
-
-
-          <Checkbox>
-              <input
-                type="checkbox"
-                checked={estadoCheckbox}
-                onChange={() => setCheckboxEstado(!estadoCheckbox)}
-                
-              /> Por estado
-            </Checkbox>
+          <div  style={{marginBottom: '5px', marginTop:'15px', marginLeft:'-40px' }}>
             <Select
               value={estadoCheckbox ? estadoDropdown : ''}
               onChange={(e) => {
@@ -292,62 +290,61 @@ return(
             </Select>
           </div>
 
-          <h2 class="titulo-h2" >Fecha:</h2>
-          <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginTop:  '50px'   }}>
-            
-              <Checkbox>
+              <h2 class="titulo-h2" >Fecha:</h2>
+              <div  className="mb-3" style={{ display: 'flex', alignItems: 'flex-start', marginTop:  '20px', marginBottom:'40px'   }}>
                 <input
+                  style={{ marginLeft: '10px', width: '30px',height: '30px',  marginRight: '0px', marginBottom:'15px'}}
                   type="checkbox"
-                  checked={fechaCheckbox}
-                  onChange={() => setFechaCheckbox(!fechaCheckbox)}
-                />Por rango de fechas
-              </Checkbox>
-          </div>
+                /> 
+                <label style={{ display:'flex', fontSize: '16px', height:'30px', fontFamily: 'Lato, sans-serif', fontWeight: 300, marginLeft:'10px', marginRight:'0px', marginTop:'0px', marginBottom:'0px'}}>
+                Por rango de fechas
+                </label>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', marginTop:'-30px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginRight: '50px' }}>
+                      <h2 class="titulo-h2" style={{marginBottom:'30px', marginTop:'15px' }}>Fecha Inicio:</h2>
+                      <CustomDatePicker
+                        selected={fechaInicio}
+                        onChange={handleFechaInicioChange}
+                        dateFormat="dd/MM/yyyy"
+                        inline
+                        showYearDropdown
+                        showMonthDropdown
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginBottom:'50px' }}>
+                    <h2 class="titulo-h2" style={{marginBottom:'30px', marginTop:'15px' }}>Fecha Final:</h2>
+                      <CustomDatePicker
+                        selected={fechaFinal}
+                        onChange={handleFechaFinalChange}
+                        dateFormat="dd/MM/yyyy"
+                        inline
+                        showYearDropdown
+                        showMonthDropdown
+                      />
+                    </div>
+                    
+              </div>
+            <h2 class="titulo-h2" >Clientes:</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', marginTop:'10px'  }}>
+              <Styles>
+                <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange} />
+              </Styles>
+            </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px'}}>
+              <button type="submit" className='button1' >
+                <AiOutlinePlusCircle style={{
+                fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'
+                }} /> Crear reporte
+              </button>
+            </div>
 
-          <div style={{ display: 'flex', flexDirection: 'row', marginTop:'-30px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', marginRight: '50px' }}>
-                  <h2 class="titulo-h2" style={{marginBottom:'30px', marginTop:'15px' }}>Fecha Inicio:</h2>
-                  <CustomDatePicker
-                    selected={fechaInicio}
-                    onChange={handleFechaInicioChange}
-                    dateFormat="dd/MM/yyyy"
-                    inline
-                    showYearDropdown
-                    showMonthDropdown
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <h2 class="titulo-h2" style={{marginBottom:'30px', marginTop:'15px' }}>Fecha Final:</h2>
-                  <CustomDatePicker
-                    selected={fechaFinal}
-                    onChange={handleFechaFinalChange}
-                    dateFormat="dd/MM/yyyy"
-                    inline
-                    showYearDropdown
-                    showMonthDropdown
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', marginLeft:'50px', marginTop:'30px'  }}>
-                  <Styles>
-                    <Table columns={columns} data={clientes} handleIdClienteChange={handleIdClienteChange} />
-                  </Styles>
-                </div>
-          </div>
-
+          </form>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px'}}>
-          <button type="submit" className='button1' >
-            <AiOutlinePlusCircle style={{
-            fontSize: '25px',  marginRight: '20px',  marginLeft: '20px'
-            }} /> Crear reporte
-          </button>
-        </div>
-
-      </form>
-    </div>
-  </div>
-</Fragment>
-);
+      </div>
+    </Fragment>
+  );
 }
 
 export default ReporteRendimiento;

@@ -40,10 +40,12 @@ export const CrearProyectos = () => {
         //const res = await fetch(`${API}/getNewIdProyecto`);
         //const data = await res.json();
         event.preventDefault(); 
+        console.log("SERVICIOS DEL PROYECTO");
+        console.log(idServicio);
         const data = {
             nombre: nombre,
             descripcion: descripcion, 
-            idServicios: ['CA001','CA5','EVAL001'], // cambielo por la lista de idServicio(ejemplo.CA001), yo en el BE busco el idCliente
+            idServicios: idServicio, // cambielo por la lista de idServicio(ejemplo.CA001), yo en el BE busco el idCliente
             documentos: fileInputKey,
             fechaCreacion: inputValueCreacion,
             fechaInicio: inputValueIncio,

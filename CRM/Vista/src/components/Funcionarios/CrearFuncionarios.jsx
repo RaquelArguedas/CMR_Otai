@@ -51,19 +51,21 @@ export const CrearFuncionarios = () => {
             allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,
             
-          }).then((result) => {
+          }).then(async (result) => {
             if (result.isConfirmed) {
               const nombre = result.value; // Obtener el valor del input
               if (nombre !== '') {
                 //Enviar al backend
-                const res = fetch(`${API}/createPerfil/${nombre}`, {
+                const res = await fetch(`${API}/createPerfil/${nombre}`, {
                   method: 'POST'
               });
-                console.log(res)
+              const idPerfil = await res.json();
+              console.log("REEEES");
+                console.log(idPerfil)
                 //Recuperar opcion creada
                 setOptions((prevOptions) => [
                     ...prevOptions,
-                    { value: nombre, label: nombre },
+                    { value: idPerfil, label: nombre },
                   ]);
                 Swal.fire('Se ingresó correctamente: ' + nombre);
               } else {
@@ -118,6 +120,7 @@ export const CrearFuncionarios = () => {
         const response = await fetch(`${API}/getPerfiles`); // cambiar por el id
         const perfiles = await response.json();//resultado de la consulta
         const opcionesDesdeBackend = perfiles;
+        console.log(opcionesDesdeBackend);
             // Mapeamos las opciones desde el backend al formato que utiliza react-select
             const opcionesFormateadas = opcionesDesdeBackend.map((opcion) => ({
                 value: opcion[0],

@@ -90,7 +90,8 @@ export const ModificarProyecto = () => {
                 console.log(costo)
                 formData.append('subTotal', costo);
                 formData.append('estado', estado);
-                formData.append('servicios', idServicio);
+                console.log('servicios', idServicio)
+                formData.append('servicios', ['CA001','CA003']);
                 formData.append('doc', selectedFilesModified);
                 const res = fetch(`${API}/updateProyecto/${idProyecto}`, {
                     method: 'POST',

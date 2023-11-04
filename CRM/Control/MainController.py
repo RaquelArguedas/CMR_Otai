@@ -258,6 +258,8 @@ class SingletonDAO(metaclass=SingletonMeta):
     def updateEvaluacion(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
         e = self.readEvaluacion(idEvaluacion)
         if e != None:
+            print("ID PROYECTO")
+            print(idProyecto)
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
             try:
                 e.editar(idEvaluacion, nombre, descripcion, 
@@ -265,7 +267,8 @@ class SingletonDAO(metaclass=SingletonMeta):
                 documentos, idEstado, precio, idProyecto, idCliente)
                 if (idEstado != None):
                     e.idEstado = Estado(idEstado)
-                self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, {e.idProyecto}, {e.idCliente}")
+                print("DESPUES DE MODIFICADA")
+                self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, null, {e.idCliente}")
             except Exception as ex:
                  print("Se ha producido una excepción:", ex)
         else:
@@ -320,7 +323,7 @@ class SingletonDAO(metaclass=SingletonMeta):
         return None
     
     
-    def updateProyecto(self, idProyecto, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
+    def updateProyecto(self, idProyecto, nombre, descripcion, idServicios, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
         p = self.readProyecto(idProyecto)
         print("desde be: ", p.toList())
         if p != None:
@@ -334,9 +337,26 @@ class SingletonDAO(metaclass=SingletonMeta):
                     if f is not None:
                         funcionarios += [f]
                         self.executeCommit(f"EXEC createProyectoXFuncionario {p.id}, {fId}")
-            p.editar(None, nombre, descripcion, idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
+            servicios = self.capacitacion+self.evaluacion
+            servicioIndicados = [];
+            print("servicios", idServicios)
+            for servicio in servicios:
+                idServ = servicio.toList()[1]
+                for idS in idServicios:
+                    if idServ == idS:
+                        print("existe el servicio")
+                        servicioIndicados += [servicio]
+            if servicioIndicados == []:
+                print("No se encontro el servicio, operacion cancelada")
+                return -1
+            p.editar(None, nombre, descripcion, servicioIndicados[0].idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
             print(f"EXEC updateProyecto {p.id}, {p.idProyecto}, {p.nombre}, {p.descripcion}, '{p.idCliente}',  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
             self.executeCommit(f"EXEC updateProyecto {p.id}, '{p.idProyecto}', '{p.nombre}', '{p.descripcion}', {p.idCliente},  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
+            for servicio in servicioIndicados:
+                resCap = self.updateCapacitacion(servicio.toList()[1],None,None, None, None, None, None, None, None, None, None, None, None, p.id, None)
+                if resCap == -1:
+                    self.updateEvaluacion(servicio.toList()[1],None,None, None, None, None, None, None, None,p.id ,None)
+
         else:
             return -1
     
@@ -452,6 +472,8 @@ class SingletonDAO(metaclass=SingletonMeta):
         #si hay lista y no existe el idCapacitacion en los datos se crea
         if self.readPerfil(idPerfil[0][0]) == None:
             self.perfil += [Perfil(idPerfil[0][0], nombre)]
+
+        return idPerfil[0][0]
         
     def readPerfil(self, idPerfil):
         for p in self.perfil:

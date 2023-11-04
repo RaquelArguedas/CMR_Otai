@@ -291,6 +291,7 @@ def getPerfiles():
 @app.route('/createPerfil/<nombre>', methods=['POST'])
 def createPerfil(nombre):
     id = control.createPerfil(nombre)
+    print("ID DESDE BACKEND", id)
     return jsonify(str(id))
 
 @app.route('/readPerfil/<idPerfil>', methods=['GET'])
@@ -410,11 +411,14 @@ def updateProyecto(idProyecto):
     #print("updateProyecto", request.form.get('doc'))
     print("updateProyecto", request.form.get('fechaInicio'))
     print("updateProyecto", request.form.get('fechaFinalizacion'))
+    print("servicios", type(request.form.get('servicios')))
+    servicios = request.form.get('servicios');
+    listaServicios = str.split(servicios, ',')
     id = control.updateProyecto(
         idProyecto,
         request.form.get('nombre'),
         request.form.get('descripcion'),
-        None,
+        listaServicios,
         None,
         request.form.get('fechaInicio'),
         request.form.get('fechaFinalizacion'),
@@ -676,7 +680,7 @@ def getProyectos():
             if pro.idCliente == cliente.idCliente:
                 nombreCliente = cliente.nombre
         lista += [pro.toList()+[nombreCliente]]
-    print(lista)
+    #print(lista)
     return jsonify(lista)
 
 #getEvaluaciones

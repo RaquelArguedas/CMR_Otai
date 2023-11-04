@@ -39,6 +39,7 @@ export const ModificarEvaluacion = () => {
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
   
         //Notificacion de que se realizaron los cambios
+        console.log("AAAAAAAAAAAAAAA", idProyecto)
         console.log(nombre, descripcion, inputValueCreacion,inputValue,tipoEvaluacion, inputValue, fileInputKey,estado,costo,IdCliente, idProyecto)
         const data = {
             idEvaluacion:idEvaluacion,
