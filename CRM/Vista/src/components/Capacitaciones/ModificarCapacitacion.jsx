@@ -176,8 +176,10 @@ export const ModificarCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    const formattedDate = `${year}-${month}-${day}`;
-
+    const formattedDay = day.toString().padStart(2, '0');
+    // Construir la cadena en el formato deseado (aaaa/dd/mm)
+    const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${formattedDay}`;
+    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
     setInputValueEjecucion(formattedDate);
   };
 
@@ -187,13 +189,19 @@ export const ModificarCapacitacion = () => {
     const month = date.getMonth() + 1; // Obtener el mes (se suma 1 ya que los meses se indexan desde 0)
     const day = date.getDate(); // Obtener el día
     const year = date.getFullYear(); // Obtener el año
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDay = day.toString().padStart(2, '0');
+    // Construir la cadena en el formato deseado (aaaa/dd/mm)
+    const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${formattedDay}`;
+    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
     setInputValueFinal(formattedDate);
 
     const monthC = fechaCreada.getMonth() + 1; 
     const dayC = fechaCreada.getDate(); 
     const yearC = fechaCreada.getFullYear(); 
-    const formattedDateC = `${yearC}-${monthC}-${dayC}`;
+    const formattedDayC = dayC.toString().padStart(2, '0');
+    // Construir la cadena en el formato deseado (aaaa/dd/mm)
+    const formattedDateC = `${yearC}-${monthC.toString().padStart(2, '0')}-${formattedDayC}`;
+    //console.log("Fecha formateada:", formattedDate, typeof(formattedDate));
     setInputValueCreacion(formattedDateC);
 
 
