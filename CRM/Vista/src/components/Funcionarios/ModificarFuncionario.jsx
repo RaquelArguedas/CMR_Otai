@@ -9,6 +9,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../Clientes/CSSClientes/Clientes.css';
 import Select from 'react-select';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const API = "http://127.0.0.1:5000";
 export const ModificarFuncionario = () => {
     let navigate = useNavigate();
@@ -33,10 +35,51 @@ export const ModificarFuncionario = () => {
     
     const handleSubmit = async (event) => {
         event.preventDefault();  
-        //Es para enviar informacion al backend
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-        //Recordar en el backend poner lo de fecha de ingreso que se hace alla
-        //Para enviar la fecha es inputValue
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (apellido.length < 2) {
+            toast.error('El apellido debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+    
+          // Validación del campo "cedula"
+          if (cedula.length < 5) {
+              toast.error('La cédula debe ser mayor 5 caracteres.', {
+                  position: toast.POSITION.TOP_RIGHT,
+              });
+              return;
+          }
+    
+          // Validación del campo "telefono"
+          if (telefono.length < 5) {
+              toast.error('El número de teléfono debe ser mayor 4 caracteres.', {
+                  position: toast.POSITION.TOP_RIGHT,
+              });
+              return;
+          }
+    
+          // Validación del campo "correo"
+          if (correo.length < 5) {
+              toast.error('El correo electrónico debe tener al menos 5 caracteres.', {
+                  position: toast.POSITION.TOP_RIGHT,
+              });
+              return;
+          }
+          // Validación del formato de correo electrónico
+          const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    
+          if (!emailPattern.test(correo)) {
+              toast.error('Por favor, ingrese un correo electrónico válido.', {
+                  position: toast.POSITION.TOP_RIGHT,
+              });
+              return;
+          }
         Swal.fire({
             title: '¿Está seguro que desea modificar el funcionario?',
             showDenyButton: true,
@@ -44,18 +87,16 @@ export const ModificarFuncionario = () => {
             denyButtonText: `Cancelar`,
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
-          }).then((result) => {
+          }).then(async (result) => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
-              Swal.fire('El funcionario se ha modificado satisfactoriamente')
-
-              const formData = new FormData();
-              console.log("stuf")
-            const año = fechaNacimiento.getFullYear();
-            const mes = String(fechaNacimiento.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-            const dia = String(fechaNacimiento.getDate()).padStart(2, "0");
-              console.log(idFuncionario, nombre, apellido,fechaNacimiento, cedula, telefono, correo, estado, selectedOption)
+                const formData = new FormData();
+                console.log("stuf")
+                const año = fechaNacimiento.getFullYear();
+                const mes = String(fechaNacimiento.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+                const dia = String(fechaNacimiento.getDate()).padStart(2, "0");
+                console.log(idFuncionario, nombre, apellido,fechaNacimiento, cedula, telefono, correo, estado, selectedOption)
                 formData.append('nombre', nombre);
                 formData.append('apellido', apellido);
                 formData.append('fechaNacimiento', `${año}-${mes}-${dia}`);
@@ -66,11 +107,31 @@ export const ModificarFuncionario = () => {
                 const opcionesSeleccionadasAnteriormente =selectedOption.map((opcion) => opcion.value);
                 console.log(opcionesSeleccionadasAnteriormente, typeof(opcionesSeleccionadasAnteriormente))
                 formData.append('perfilesIds', opcionesSeleccionadasAnteriormente);
-                const res = fetch(`${API}/updateFuncionario/${idFuncionario}`, {
+                const res = await fetch(`${API}/updateFuncionario/${idFuncionario}`, {
                     method: 'POST',
                     body: formData
                 });
-              gotoFuncionario();
+                if (res.ok) {
+                    Swal.fire({
+                        title: 'Confirmación',
+                        text: 'El funcionario se ha modificado satisfactoriamente',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
+                        allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                            gotoFuncionario();}
+                        });
+                    } 
+                    else {
+                        Swal.fire({
+                          title: 'Error',
+                          text: 'Hubo un problema al modificar al funcionario.',
+                          icon: 'error',
+                          confirmButtonText: 'Aceptar',
+                        });
+                    }
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }
@@ -147,19 +208,79 @@ export const ModificarFuncionario = () => {
     margin-top: 25px;
     `;
     const handleNameChange = (event) => {
-        setNombre(event.target.value);
-    };
+        const inputValue = event.target.value;
+        
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setNombre(event.target.value);
+        } 
+        else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El nombre no debe superar los 50 caracteres.', {
+            position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+            
+        };
     const handleApellidoChange = (event) => {
-        setApellido(event.target.value);
+        const inputValue = event.target.value;
+        
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setApellido(event.target.value);
+        } 
+        else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El apellido no debe superar los 50 caracteres.', {
+            position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleCedulaChange = (event) => {
-        setCedula(event.target.value);
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCedula(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleTelefonoChange = (event) => {
-        setTelefono(event.target.value);
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número entero sin 'e', comas, puntos, guiones y otros caracteres no deseados
+        const validPattern = /^[0-9]*$/;
+
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setTelefono(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            // alert('Por favor, ingrese un número entero válido sin "e", comas, puntos, guiones ni otros caracteres no deseados.');
+        }
     };
     const handleCorreoChange = (event) => {
-        setCorreo(event.target.value);
+        const inputValue = event.target.value;
+        
+        if (inputValue.length <= 100) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setCorreo(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El correo no debe superar los 100 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     const handleEstadoChange = (event) => {
         setEstado(event.target.value);

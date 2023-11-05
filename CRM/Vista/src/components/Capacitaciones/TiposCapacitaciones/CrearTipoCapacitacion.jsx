@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import '../../Clientes/CSSClientes/Clientes.css'
 import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const API = "http://127.0.0.1:5000";
 
 export const CrearTipoCapacitacion = () => {
@@ -12,10 +14,15 @@ export const CrearTipoCapacitacion = () => {
     const gotoTipoCapacitacion = () => { navigate('/tiposCapacitaciones'); }
 
     const [nombre, setNombre] = useState('');
-    const [costo, setCosto] = useState('');
    
     const handleSubmit = async (event) => {
         event.preventDefault();  
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
         const data = {
             nombre: nombre,  
           };
@@ -28,6 +35,7 @@ export const CrearTipoCapacitacion = () => {
         body: JSON.stringify(data),
         };
         const res = await fetch(`${API}/createTipoCapacitacion`, requestOptions); 
+        if (res.ok) {
         Swal.fire({
             title: 'Confirmación',
             text: 'El tipo de capacitación se ha creado satisfactoriamente',
@@ -40,7 +48,14 @@ export const CrearTipoCapacitacion = () => {
               // El usuario hizo clic en "OK", entonces llama a la función gotoMenu
               gotoTipoCapacitacion();
             }
-          });
+          }); } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un problema al crear el tipo de capacitación.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar',
+            });
+          }
         
     };
     
@@ -52,11 +67,18 @@ export const CrearTipoCapacitacion = () => {
     margin-top: 25px;
     `;
     const handleNameChange = (event) => {
-        setNombre(event.target.value);
-    };
-    const handleCostoChange = (event) => {
-        setCosto(event.target.value);
-    };
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 50) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setNombre(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('El nombre no debe superar los 50 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
   
     return (
         
@@ -83,7 +105,7 @@ export const CrearTipoCapacitacion = () => {
                         
                         </div>
         
-
+                        <ToastContainer />
                     </form>
 
             </div>

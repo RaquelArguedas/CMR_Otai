@@ -62,6 +62,30 @@ export const CrearCapacitacion = () => {
       });
       return;
     }
+    if (tipoCapacitacion === '') {
+      toast.error('Seleccione un tipo de capacitación válido.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (modalidad === '') {
+      toast.error('Seleccione una modalidad válida.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (costo === '') {
+      toast.error('Debe ingresar un número.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (IdCliente === '') {
+      toast.error('Debe seleccionar un cliente.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
     const data = {
         nombre: nombre,
         descripcion: descripcion, 
@@ -228,7 +252,20 @@ export const CrearCapacitacion = () => {
     }
   };
   const handleHoraChange = (event) => {
-    setHora(event.target.value);
+    const inputValue = event.target.value;
+    // Expresión regular que valida un número decimal positivo
+    const validPattern = /^\d*\.?\d*$/;
+
+    if (validPattern.test(inputValue)) {
+        // La entrada es válida, puedes actualizar el estado
+        setHora(inputValue);
+    } else {
+        // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+        // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+        toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    }
   };
   
 

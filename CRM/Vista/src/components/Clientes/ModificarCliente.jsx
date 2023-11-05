@@ -23,6 +23,7 @@ export const ModificarCliente = () => {
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
+        console.log(nombre.length,cedula.length,' ', telefono.length )
         if (nombre.length < 2) {
             toast.error('El nombre debe ser mayor a un caracter.', {
                 position: toast.POSITION.TOP_RIGHT,

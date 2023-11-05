@@ -17,7 +17,7 @@ export const Clientes = () => {
     const [clientes, setClientes] = useState([]);//Meter los datos de los clientes ahi
     let navigate = useNavigate();
     const gotoCrearCliente = () => { navigate('/crearClientes'); }
-    
+    const [reloadPage, setReloadPage] = useState(false); 
    
     const handleSearch = async () => { 
         //Obtener infromacion existente en la base de datos
@@ -40,8 +40,15 @@ export const Clientes = () => {
     
     }; 
     React.useEffect(() => {
-      handleSearch()
-    }, []);
+        handleSearch();
+    }, [reloadPage]); // Dependencia añadida
+
+    React.useEffect(() => {
+        if (reloadPage) {
+            window.location.reload();
+            setReloadPage(false); // Restablecer el valor después de la recarga
+        }
+    }, [reloadPage]);
    
     return (
        <Fragment>

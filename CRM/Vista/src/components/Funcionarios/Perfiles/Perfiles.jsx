@@ -69,11 +69,12 @@ export const Perfiles = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           const nombreNuevo = result.value; // Obtén el valor del input
-          const res = fetch(`${API}/updatePerfil/${idPerfil}/${nombreNuevo}`, {
-              method: 'POST'
-          });
+          
           if (nombreNuevo !== '') {
             if (nombreNuevo !== nombre) {
+              const res = fetch(`${API}/updatePerfil/${idPerfil}/${nombreNuevo}`, {
+                method: 'POST'
+            });
               // Actualiza el nombre en la lista de perfiles en el estado
               // se debe mandar ha actualizar aqui
               const updatedPerfiles = perfiles.map((perfil) =>
@@ -123,41 +124,41 @@ export const Perfiles = () => {
   React.useEffect(() => {
       handleSearch()
   }, []);
-    const handleCrearPerfil= async (event) => {
-        event.preventDefault();  
-        //Es para enviar informacion al backend
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-        //Recordar en el backend poner lo de fecha de ingreso que se hace alla
-      	
-        Swal.fire({
-            title: 'Crear perfil',
-            input: 'text',
-            inputLabel: 'Nombre del perfil',
-            inputPlaceholder: 'Ingrese el nombre del perfil',
-            showDenyButton: true, // Agregar botones de confirmación y cancelación
-            confirmButtonText: 'Aceptar', // Cambiar texto del botón de confirmación
-            denyButtonText: 'Cancelar', // Cambiar texto del botón de cancelación
-            allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
-            allowEscapeKey: false,
-          }).then((result) => {
-            
-            if (result.isConfirmed) {
-              const nombre = result.value; // Obtener el valor del input
-              if (nombre !== '') {
-                //Enviar al backend el nombre del perfil creado
-                const res = fetch(`${API}/createPerfil/${nombre}`, {
-                    method: 'POST'
-                });
-                Swal.fire('Se ingresó correctamente: ' + nombre);
-                window.location.reload();
-              } else {
-                Swal.fire('Incorrecto', 'Debe ingresar el nombre', 'error');
-              }
-            } else if (result.isDenied) {
-              Swal.fire('Operación cancelada');
+  const handleCrearPerfil= async (event) => {
+      event.preventDefault();  
+      //Es para enviar informacion al backend
+      //Lo de abajo es la notificacion de que ya se creo la evalaucion
+      //Recordar en el backend poner lo de fecha de ingreso que se hace alla
+      
+      Swal.fire({
+          title: 'Crear perfil',
+          input: 'text',
+          inputLabel: 'Nombre del perfil',
+          inputPlaceholder: 'Ingrese el nombre del perfil',
+          showDenyButton: true, // Agregar botones de confirmación y cancelación
+          confirmButtonText: 'Aceptar', // Cambiar texto del botón de confirmación
+          denyButtonText: 'Cancelar', // Cambiar texto del botón de cancelación
+          allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
+          allowEscapeKey: false,
+        }).then((result) => {
+          
+          if (result.isConfirmed) {
+            const nombre = result.value; // Obtener el valor del input
+            if (nombre !== '') {
+              //Enviar al backend el nombre del perfil creado
+              const res = fetch(`${API}/createPerfil/${nombre}`, {
+                  method: 'POST'
+              });
+              Swal.fire('Se ingresó correctamente: ' + nombre);
+              window.location.reload();
+            } else {
+              Swal.fire('Incorrecto', 'Debe ingresar el nombre', 'error');
             }
-          })
-    };
+          } else if (result.isDenied) {
+            Swal.fire('Operación cancelada');
+          }
+        })
+  };
 
     return (
         <Fragment>

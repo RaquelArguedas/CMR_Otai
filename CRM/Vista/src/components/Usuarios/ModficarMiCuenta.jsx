@@ -141,7 +141,7 @@ export const ModficarMiCuenta = () => {
                         body: formData
                     });
                     gotoMiCuenta();
-                    Swal.fire('Error: Su información se ha modificado satisfactoriamente')
+                    Swal.fire('Su información se ha modificado satisfactoriamente')
                 }else{
                     Swal.fire('Ya el correo se encuentra registrado')
                 }
@@ -173,6 +173,7 @@ export const ModficarMiCuenta = () => {
         // ACTIVO = 5
         // INACTIVO = 6
         setEstado(data[7])
+        setContrasenna(data[8])
         //setFechaNacimiento(data[3])
         setInputValue(data[3]);
         const fechaDesdeBackend = data[3];
