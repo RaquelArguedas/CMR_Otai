@@ -68,7 +68,16 @@ export const TiposCapacitaciones = () => {
               const res = fetch(`${API}/deleteTipoCapacitacion/${idTipoCapacitacion}`, {
                 method: 'POST'
             });
+            if (res.ok) {
               gotoTipoCapacitacion();
+            } else {
+              Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al crear el tipo de capacitación.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+              });
+            }
             } else if (result.isDenied) {
               Swal.fire('No se guardaron los cambios')
             }

@@ -9,7 +9,8 @@ import { Navbar } from '../Navbar/Navbar';
 import '../Evaluaciones/CrearEvaluacion.css';
 import Swal from 'sweetalert2';
 import { Table, columns, data, Styles } from './TablaReSelect'; 
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const API = "http://127.0.0.1:5000";
 export const ModificarProyecto = () => {
     const [nombre, setNombre] = useState('');
@@ -22,8 +23,7 @@ export const ModificarProyecto = () => {
     const [inputValue, setInputValue] = useState('');
     const [outValue, setOutValue] = useState('');
     const [estado, setEstado] = useState("");
-    const [tipoEvalaucion, setTipoEvaluacion] = useState("");
-    const [cedula, setCedula] = useState('');
+    const [idCliente, setIdCliente] = useState('');
     const [nombreCliente, setNombreCliente] = useState('');
     
     const [servicios, setServicios] = useState([]); ///Esto son todos los servicios
@@ -40,10 +40,41 @@ export const ModificarProyecto = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();  
         //Es para enviar informacion al backend
-        
-        //Para enviar los datos de la fecha es inputValue
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-  
+         //const data = await res.json();
+         if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          // Validación del campo "nombre"
+          if (descripcion.length < 2) {
+            toast.error('La descripción debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (estado === '') {
+            toast.error('Seleccione un estado válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (costo === '') {
+            toast.error('Debe ingresar un número.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+
+          console.log(!Array.isArray(idServicio) || idServicio.length === 0)
+          if (!Array.isArray(idServicio) || idServicio.length === 0) {
+            toast.error('Debe seleccionar al menos un servicio .', {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          
         //Notificacion de que se realizaron los cambios
         Swal.fire({
             title: '¿Está seguro que desea modificar el proyecto?',
@@ -52,14 +83,10 @@ export const ModificarProyecto = () => {
             denyButtonText: `Cancelar`,
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
-          }).then((result) => {
+          }).then(async (result) => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
-              Swal.fire('El proyecto se ha modificado satisfactoriamente')
-              //crea el proyecto
-              console.log("AAAAAAAAAAAAAAAAAAAA")
-              //archivos por agregar
               const formData2 = new FormData();
               const selectedFilesModified = selectedFiles.map((item) => { 
                 if (item.url instanceof File) {
@@ -76,8 +103,8 @@ export const ModificarProyecto = () => {
               // console.log(selectedFilesModified)
 
 
-              const formData = new FormData();
-              const añoN = fechaIncio.getFullYear();
+                const formData = new FormData();
+                const añoN = fechaIncio.getFullYear();
                 const mesN = String(fechaIncio.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
                 const diaN = String(fechaIncio.getDate()).padStart(2, "0");
                 const año = fechaFinalizacion.getFullYear();
@@ -93,11 +120,30 @@ export const ModificarProyecto = () => {
                 console.log('servicios', idServicio)
                 formData.append('servicios', ['CA001','CA003']);
                 formData.append('doc', selectedFilesModified);
-                const res = fetch(`${API}/updateProyecto/${idProyecto}`, {
+                const res = await  fetch(`${API}/updateProyecto/${idProyecto}`, {
                     method: 'POST',
                     body: formData
                 });
-              gotoProyecto();
+                if (res.ok) {
+                    Swal.fire({
+                        title: 'Confirmación',
+                        text: 'El proyecto se ha creado exitosamente',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false, 
+                        allowEscapeKey: false,    
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                    gotoProyecto();
+                    }});    
+                } else {
+                    Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al crear el proyecto.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    });
+                }
             } else if (result.isDenied) {
               Swal.fire('No se guaron los cambios')
             }
@@ -162,20 +208,31 @@ export const ModificarProyecto = () => {
           const data = await res.json();//resultado de la consulta
           console.log(data)
            // Realiza la conversión de datos aquí
-           const formattedData = data.map((item) => ({
-              idServicio: item[1],
-              nombre: item[2],
-            }));
-            console.log("data1[0]",data1[0]);
-            const response = await fetch(`${API}/getServiciosProyecto/${data1[0]}`);
-            const serviciosCorrespondientes = await response.json();//resultado de la consulta
-            console.log(serviciosCorrespondientes)
-            const slicedData = serviciosCorrespondientes; // Obtiene los dos primeros elementos
+          
 
+           const formattedData = data.map((item) => ({
+            idServicio: item[1],
+            nombre: item[2],
+            idCliente: item.length === 18 ? item[16] : item[12],
+            nombreCliente: item.length === 18 ? item[17] : item[13],
+            
+          }));
+
+          
+            console.log("data1[0]",data1[0]);//id proyecto
+            const response = await fetch(`${API}/getServiciosProyecto/${data1[0]}`);
+
+            const serviciosCorrespondientes = await response.json();//resultado de la consulta
+            console.log('soy los servicios')
+            console.log(serviciosCorrespondientes)
+            const firstItem = serviciosCorrespondientes[0];
+            const tempID =firstItem.length === 16 ? firstItem[15] : firstItem[11];
+            setIdCliente( tempID);
+            
+            const slicedData = serviciosCorrespondientes; // Obtiene los dos primeros elementos
+            console.log(firstItem, idCliente, tempID,firstItem.length === 16 ? firstItem[15] : firstItem[11],slicedData)
             // Extraer solo los IDs de los elementos
             const slicedIds = serviciosCorrespondientes.map((item) => item[1]);
-
-            console.log(slicedIds); // Aquí tienes un array con los IDs de los dos primeros elementos
 
             // setIdServicios(slicedData); // Esto mantendría los objetos originales con nombre e ID
             setIdServicios(slicedIds); // Esto establecerá solo los IDs en idServicio
@@ -211,19 +268,50 @@ export const ModificarProyecto = () => {
     const handleEstadoChange = (event) => {
         setEstado(event.target.value);
     };
-    const handleTipoEvaluacionChange = (event) => {
-        setTipoEvaluacion(event.target.value);
-    };
+    
     const handleNameChange = (event) => {
-        setNombre(event.target.value);
-    };
-    const handleDescripcionChange = (event) => {
-        setDescripcion(event.target.value);
-    };
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 50) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setNombre(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('El nombre no debe superar los 50 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
+      const handleDescripcionChange = (event) => {
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 100) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setDescripcion(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('La descripción no debe superar los 100 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
     const handleCostoChange = (event) => {
-        setCosto(event.target.value);
-        console.log(costo)
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número decimal positivo
+        const validPattern = /^\d*\.?\d*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCosto(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
+   
     const handleIncioChange = (date) => {
         setfechaIncio(date);
 
@@ -290,7 +378,7 @@ export const ModificarProyecto = () => {
                         </div>
                         <div class="mb-3">
                             <label  style={{ marginRight: '61px'}} for="costInput" class="form-label">Sub Total:</label>
-                            <input type="number" class="form-control custom-margin-right" id="costInput"
+                            <input type="text" class="form-control custom-margin-right" id="costInput"
                             placeholder="Ingrese el costo del proyecto" value={costo} onChange={handleCostoChange}/>
                         </div>
                         <div class="mb-3">
@@ -371,7 +459,7 @@ export const ModificarProyecto = () => {
                             </div>
                             <div className="mb-3"  style={{ display: 'flex', marginTop:  '40px' }}>
                                 <Styles> 
-                                    <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio}/>
+                                    <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio} idCliente={idCliente}/>
                                 </Styles> 
                             </div>
                                 
@@ -384,7 +472,7 @@ export const ModificarProyecto = () => {
                                 </button>
                             
                             </div>
-            
+                            <ToastContainer />  
 
                     </form>
 

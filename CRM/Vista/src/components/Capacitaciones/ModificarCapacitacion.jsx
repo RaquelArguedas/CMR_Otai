@@ -10,7 +10,8 @@ import './CrearCapacitacion.css';
 import { Table, columns, data, Styles } from './TablaReSelect';  
 import { TableF, columnsF } from './TablaReSelectFuncionario';
 import Swal from 'sweetalert2';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const API = "http://127.0.0.1:5000";
 
 export const ModificarCapacitacion = () => {
@@ -42,7 +43,49 @@ export const ModificarCapacitacion = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    if (nombre.length < 2) {
+      toast.error('El nombre debe ser mayor a un caracter.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    // Validación del campo "nombre"
+    if (descripcion.length < 2) {
+      toast.error('La descripción debe ser mayor a un caracter.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (estado === '') {
+      toast.error('Seleccione un estado válido.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (tipoCapacitacion === '') {
+      toast.error('Seleccione un tipo de capacitación válido.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (modalidad === '') {
+      toast.error('Seleccione una modalidad válida.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (costo === '') {
+      toast.error('Debe ingresar un número.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+    if (IdCliente === '') {
+      toast.error('Debe seleccionar un cliente.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
     Swal.fire({
       title: '¿Está seguro desea modificar la evaluación?',
       showDenyButton: true,
@@ -50,10 +93,59 @@ export const ModificarCapacitacion = () => {
       denyButtonText: `Cancelar`,
       allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
       allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire('La evaluación se ha modificado satisfactoriamente')
-        gotoMenu()
+        const data = {
+          idCapacitacion: idCapacitacion,
+          nombre: nombre,
+          descripcion: descripcion, 
+          fechaCreacion: inputValueCreacion,
+          fechaEjecucion: inputValueEjecucion, 
+          documentos: fileInputKey,
+          idEstado: estado,
+          horasDuracion: horas, 
+          fechaFinalizacion: inputValueFinal,
+          modalidad: modalidad,
+          idFuncionario: IdFuncionario, 
+          precio: costo, 
+          tipoCapacitacion: tipoCapacitacion, 
+          idProyecto: 0, 
+          idCliente: IdCliente  
+        };
+  
+        console.log(data)
+    
+        const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        };
+        const res = await fetch(`${API}/updateCapacitacion`, requestOptions);
+
+        
+        if (res.ok) {
+          Swal.fire({
+            title: 'Confirmación',
+            text: 'La capacitación se ha modificado satisfactoriamente',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
+            allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
+          }).then((result) => {
+            if (result.isConfirmed) {
+              gotoMenu();
+            }
+          });
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al crear la capacitación.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+        }
         //gotoMenu();
       } else if (result.isDenied) {
         Swal.fire('No se guardaron los cambios')
@@ -153,17 +245,64 @@ export const ModificarCapacitacion = () => {
   };
   
   const handleNameChange = (event) => {
-    setNombre(event.target.value);
+    const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setNombre(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('El nombre no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
   };
   const handleDescripcionChange = (event) => {
-    setDescripcion(event.target.value);
+    const inputValue = event.target.value;
+    
+        if (inputValue.length <= 50) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setDescripcion(inputValue);
+        } else {
+            // La entrada supera el límite, muestra un alert
+            toast.error('La descripción no debe superar los 50 caracteres.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
   };
   const handleCostoChange = (event) => {
-    setCosto(event.target.value);
+    const inputValue = event.target.value;
+    // Expresión regular que valida un número decimal positivo
+    const validPattern = /^\d*\.?\d*$/;
+
+    if (validPattern.test(inputValue)) {
+        // La entrada es válida, puedes actualizar el estado
+        setCosto(inputValue);
+    } else {
+        // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+        // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+        toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    }
   };
   const handleHoraChange = (event) => {
-    setHora(event.target.value);
+    const inputValue = event.target.value;
+    // Expresión regular que valida un número decimal positivo
+    const validPattern = /^\d*\.?\d*$/;
+
+    if (validPattern.test(inputValue)) {
+        // La entrada es válida, puedes actualizar el estado
+        setHora(inputValue);
+    } else {
+        // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+        // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+        toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+            position: toast.POSITION.TOP_RIGHT,
+        });
+    }
   };
+  
   const handleEstadoChange = (event) => {
     setEstado(event.target.value);
   };
@@ -258,12 +397,12 @@ export const ModificarCapacitacion = () => {
             </div>
             <div className="mb-3" >
               <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Horas:</label>
-              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px', marginLeft: '150px' }}
+              <input  type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px', marginLeft: '150px' }}
               placeholder="Ingrese la duración en horas de la capacitación" value={horas} onChange={handleHoraChange} />
             </div>
             <div className="mb-3">
               <label for="costInput" class="form-label" style={{ marginTop: '2px', marginRight: '10px' }}>Costo:</label>
-              <input  type="number" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' , marginLeft: '151px' }}
+              <input  type="text" class="form-control custom-margin-right" id="costInput" style={{ width: '300px' , marginLeft: '151px' }}
               placeholder="Ingrese el costo de la capacitación" value={costo} onChange={handleCostoChange} />
             </div>
             <div class="mb-3">
@@ -364,6 +503,8 @@ export const ModificarCapacitacion = () => {
                 }} /> Modificar capacitación
               </button>
             </div>
+            
+            <ToastContainer />
           </form>
 
         </div>

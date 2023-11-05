@@ -9,6 +9,8 @@ import { Navbar } from '../Navbar/Navbar';
 import './CrearEvaluacion.css';
 import Swal from 'sweetalert2';
 import { Table, columns, data, Styles } from './TablaReSelect';  // Importa Table, columns y data desde Tabla.jsxy
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const API = "http://127.0.0.1:5000";
 
 export const ModificarEvaluacion = () => {
@@ -34,36 +36,47 @@ export const ModificarEvaluacion = () => {
     
     const handleSubmit = async (event) => {
         event.preventDefault();  
-        //Es para enviar informacion al backend
-        //Para enviar los datos de la fecha es inputValue
-        //Lo de abajo es la notificacion de que ya se creo la evalaucion
-  
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          // Validación del campo "nombre"
+          if (descripcion.length < 2) {
+            toast.error('La descripción debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (estado === '') {
+            toast.error('Seleccione un estado válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (tipoEvaluacion === '') {
+            toast.error('Seleccione un tipo de capacitación válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (costo === '') {
+            toast.error('Debe ingresar un número.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (IdCliente === '') {
+            toast.error('Debe seleccionar un cliente.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
         //Notificacion de que se realizaron los cambios
         console.log("AAAAAAAAAAAAAAA", idProyecto)
         console.log(nombre, descripcion, inputValueCreacion,inputValue,tipoEvaluacion, inputValue, fileInputKey,estado,costo,IdCliente, idProyecto)
-        const data = {
-            idEvaluacion:idEvaluacion,
-            nombre: nombre,
-            descripcion: descripcion, 
-            fechaCreacion: inputValueCreacion,
-            tipoEvaluacion: tipoEvaluacion, 
-            fechaEjecucion: inputValue, 
-            documentos: fileInputKey,
-            idEstado: estado,
-            precio: costo, 
-            idProyecto: idProyecto, 
-            idCliente: IdCliente  
-        };
-        console.log(idEvaluacion,descripcion,inputValueCreacion,tipoEvaluacion,inputValue
-            ,fileInputKey,estado,costo,idProyecto,IdCliente)
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        };
-        const res = await fetch(`${API}/updateEvaluacion`, requestOptions);
+       
         Swal.fire({
             title: '¿Está seguro desea modificar la evaluación?',
             showDenyButton: true,
@@ -71,13 +84,52 @@ export const ModificarEvaluacion = () => {
             denyButtonText: `Cancelar`,
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
-          }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            
+          }).then(async (result) => {
             if (result.isConfirmed) {
-                
-              Swal.fire('La evaluación se ha modificado satisfactoriamente')
-              gotoMenu()
+                const data = {
+                    idEvaluacion:idEvaluacion,
+                    nombre: nombre,
+                    descripcion: descripcion, 
+                    fechaCreacion: inputValueCreacion,
+                    tipoEvaluacion: tipoEvaluacion, 
+                    fechaEjecucion: inputValue, 
+                    documentos: fileInputKey,
+                    idEstado: estado,
+                    precio: costo, 
+                    idProyecto: idProyecto, 
+                    idCliente: IdCliente  
+                };
+                console.log(idEvaluacion,descripcion,inputValueCreacion,tipoEvaluacion,inputValue
+                    ,fileInputKey,estado,costo,idProyecto,IdCliente)
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                };
+                const res = await fetch(`${API}/updateEvaluacion`, requestOptions);
+                if (res.ok) {
+                    Swal.fire({
+                        title: 'Confirmación',
+                        text: 'La evaluación se ha modificado exitosamente',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false, 
+                        allowEscapeKey: false,    
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                        gotoMenu();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                      title: 'Error',
+                      text: 'Hubo un problema al modificar la evaluación.',
+                      icon: 'error',
+                      confirmButtonText: 'Aceptar',
+                    });
+                }        
               //gotoMenu();
             } else if (result.isDenied) {
               Swal.fire('No se guardaron los cambios')
@@ -175,14 +227,47 @@ export const ModificarEvaluacion = () => {
         setTipoEvaluacion(event.target.value);
     };
     const handleNameChange = (event) => {
-        setNombre(event.target.value);
-    };
-    const handleDescripcionChange = (event) => {
-        setDescripcion(event.target.value);
-    };
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 50) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setNombre(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('El nombre no debe superar los 50 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
+      const handleDescripcionChange = (event) => {
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 50) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setDescripcion(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('La descripción no debe superar los 50 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
     const handleCostoChange = (event) => {
-        setCosto(event.target.value);
-    };
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número decimal positivo
+        const validPattern = /^\d*\.?\d*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCosto(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+      };
     const handleFechaEjecucionChange = (date) => {
         setFechaEjecucion(date);
 
@@ -250,7 +335,7 @@ export const ModificarEvaluacion = () => {
                     
                     <div class="mb-3">
                         <label  style={{ marginRight: '95px' }} for="costInput" class="form-label">Costo:</label>
-                        <input type="number" class="form-control custom-margin-right" id="costInput"
+                        <input type="text" class="form-control custom-margin-right" id="costInput"
                          placeholder="Ingrese el costo de la evaluación" value={costo} onChange={handleCostoChange}/>
                         
                     </div>
@@ -350,7 +435,7 @@ export const ModificarEvaluacion = () => {
                                 </button>
                             
                             </div>
-        
+                            <ToastContainer /> 
 
                     </form>
 

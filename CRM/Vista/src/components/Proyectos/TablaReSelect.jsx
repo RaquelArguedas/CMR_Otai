@@ -238,26 +238,38 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
 
-export const Table = ({ columns, data, handleidServicioChange, idServicio }) => {
+export const Table = ({ columns, data, handleidServicioChange, idServicio, idCliente }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
     // console.log('ESTO DEBE SER ARRAY ')
     // console.log(JSON.stringify(idServicio));
-    console.log('esto es aqui en table:'+ data)
-    console.log('esto es aqui en idServicio:'+ idServicio)
     const [selectProyectosID, setSelectProyectosID] = useState(idServicio || []);
-
-    const handleSelectServicio= ( idServicios) => {
-      console.log(idServicios)
-      
+    const [selectedClientId, setSelectedClientId] = useState(idCliente);
+    const handleSelectServicio= ( idServicios, idClient) => {
+      console.log("No se que estoy haciendo",selectProyectosID, selectedClientId,'=', idServicios,'RATT' ,idClient)
+      if (selectedClientId === null||selectProyectosID.length===0) {
+          const temp = idClient;
+          setSelectedClientId(temp);
+        console.log('eN EST')
+      } else if (selectedClientId !== idClient) {
+        // Si el idCliente no coincide, muestra un alert y no agrega el servicio
+        alert('No se puede seleccionar este servicio, el idCliente no coincide');
+        return;
+      }
       if (selectProyectosID.includes(idServicios)) {
         // Si está seleccionado, quítalo del array
-        setSelectProyectosID(selectProyectosID.filter(servicioID => servicioID !== idServicio));
-        handleidServicioChange(selectProyectosID)
+        console.log(' debi haber entrado aqui')
+        if (selectProyectosID.length===1){
+          const temp = null;
+          setSelectedClientId(temp);
+        }
+        console.log(selectProyectosID.filter(servicioID => servicioID !== idServicios, idServicios));
+        const temp = selectProyectosID.filter(servicioID => servicioID !== idServicios);
+        setSelectProyectosID(temp); // Actualiza el estado
+        handleidServicioChange(temp); // Llama a la función con el nuevo valor
       } else {
         // Si no está seleccionado, agrégalo al array
-        setSelectProyectosID([...selectProyectosID, idServicios]);
-        handleidServicioChange(selectProyectosID)
-      console.log('Estos es  '+selectProyectosID)
+        setSelectProyectosID([...selectProyectosID, idServicios]); // Actualiza el estado
+        handleidServicioChange([...selectProyectosID, idServicios]); // Llama a la función con el nuevo valor
       }
     };
     // useEffect(() => {
@@ -265,9 +277,9 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio }) => 
     //     handleidServicioChange(selectProyectosID);
     // }, [selectProyectosID]);
     useEffect(() => {
-        setSelectProyectosID(idServicio);
-        console.log('Estos es  '+selectProyectosID)
-      }, [idServicio]);
+      setSelectProyectosID(idServicio);
+      console.log('Estos es  '+selectProyectosID)
+    }, [idServicio]);
     
       const filterTypes = React.useMemo(
     () => ({
@@ -351,7 +363,7 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio }) => 
                         type="checkbox"
                         checked={selectProyectosID.includes(row.original.idServicio)}
                         onChange={() => {
-                            handleSelectServicio( row.original.idServicio)
+                            handleSelectServicio(row.original.idServicio,  row.original.idCliente)
                             
                         
                           }}
@@ -426,6 +438,16 @@ export const columns = [
     accessor: 'nombre',
     filter: 'fuzzyText',
   },
+  {
+    Header: 'ID Cliente',
+    accessor: 'idCliente',
+    filter: 'fuzzyText',
+  },
+  {
+    Header: 'Nombre',
+    accessor: 'nombreCliente',
+    filter: 'fuzzyText',
+  },
   
   {
     Header: 'Seleccionar',
@@ -435,4 +457,6 @@ export const columns = [
   
   
 ];
+
+
 

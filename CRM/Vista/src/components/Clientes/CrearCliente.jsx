@@ -68,6 +68,18 @@ export const CrearCliente = () => {
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
+        
+        const formData = new FormData();
+        formData.append('correo', correo);
+        formData.append('telefono', telefono);
+        formData.append('cedula', cedula);
+        formData.append('nombre', nombre);
+        const res = await fetch(`${API}/createCliente`, {
+            method: 'POST',
+            body: formData
+        });
+        console.log(res.ok)
+        if (res.ok) {
         Swal.fire({
             title: 'Confirmación',
             text: 'El cliente se ha creado satisfactoriamente',
@@ -75,17 +87,21 @@ export const CrearCliente = () => {
             confirmButtonText: 'Aceptar',
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
-          })
-            const formData = new FormData();
-            formData.append('correo', correo);
-            formData.append('telefono', telefono);
-            formData.append('cedula', cedula);
-            formData.append('nombre', nombre);
-            const res = fetch(`${API}/createCliente`, {
-                method: 'POST',
-                body: formData
-            });
+          }).then((result) => {
+            if (result.isConfirmed) {
               gotoCliente();
+            }
+          });
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al crear la capacitación.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+        }
+           
+              
             }
         
     

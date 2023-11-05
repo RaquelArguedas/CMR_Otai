@@ -10,6 +10,8 @@ import { Navbar } from '../Navbar/Navbar';
 import './CrearEvaluacion.css';
 import Swal from 'sweetalert2';
 import { Table, columns, data, Styles } from './TablaSelectClientes';  // Importa Table, columns y data desde Tabla.jsxy
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const API = "http://127.0.0.1:5000";
 
 export  const CrearEvaluacion = () => {
@@ -26,7 +28,6 @@ export  const CrearEvaluacion = () => {
     const [tiposEvaluacion, setTiposEvaluacion] = useState([]);
     const [fileInputKey, setFileInputKey] = useState('');
     const [IdCliente, setIdCliente] = useState(''); 
-    const [nombreCliente, setNombreCliente] = useState('');
     const [clientes, setClientes] = useState([]);
     let navigate = useNavigate();
 
@@ -35,6 +36,43 @@ export  const CrearEvaluacion = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log(nombre, descripcion, inputValue,tipoEvaluacion, inputValue, fileInputKey,estado,costo,IdCliente)
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          // Validación del campo "nombre"
+          if (descripcion.length < 2) {
+            toast.error('La descripción debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (estado === '') {
+            toast.error('Seleccione un estado válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (tipoEvaluacion === '') {
+            toast.error('Seleccione un tipo de capacitación válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (costo === '') {
+            toast.error('Debe ingresar un número.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
+          if (IdCliente === '') {
+            toast.error('Debe seleccionar un cliente.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
         const data = {
             nombre: nombre,
             descripcion: descripcion, 
@@ -125,17 +163,48 @@ export  const CrearEvaluacion = () => {
         setTipoEvaluacion(event.target.value);
     };
     const handleNameChange = (event) => {
-        setNombre(event.target.value);
-    };
-    const handleDescripcionChange = (event) => {
-        setDescripcion(event.target.value);
-    };
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 50) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setNombre(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('El nombre no debe superar los 50 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
+      const handleDescripcionChange = (event) => {
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 50) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setDescripcion(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('La descripción no debe superar los 50 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
     const handleCostoChange = (event) => {
-        setCosto(event.target.value);
-    };
-    const handleClienteNombreChange = (event) => {
-        setNombreCliente(event.target.value);
-    };
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número decimal positivo
+        const validPattern = /^\d*\.?\d*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCosto(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+      };
+   
     const handleIdClienteChange = ( idCliente) => {
         console.log(idCliente + 'Por aqui en handle')
         setIdCliente(idCliente);
@@ -203,7 +272,7 @@ export  const CrearEvaluacion = () => {
                     </div>
                     <div class="mb-3">
                         <label  style={{ marginRight: '95px' }} for="costInput" class="form-label">Costo:</label>
-                        <input type="number" class="form-control custom-margin-right" id="costInput"
+                        <input type="text" class="form-control custom-margin-right" id="costInput"
                          placeholder="Ingrese el costo de la evaluación" value={costo} onChange={handleCostoChange}/>
                         
                     </div>
@@ -282,7 +351,7 @@ export  const CrearEvaluacion = () => {
                                         }} /> Crear evaluación
                             </button>
                             </div>
-                            
+                            <ToastContainer />   
                     </form>
             </div>
         </div>

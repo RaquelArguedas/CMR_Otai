@@ -242,12 +242,24 @@ export const Table = ({ columns, data, handleidServicioChange }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
     
     const [selectProyectosID, setSelectProyectosID] = useState([]);
-
-    const handleSelectServicio= ( idServicio) => {
-      console.log(idServicio)
-      
+    const [selectedClientId, setSelectedClientId] = useState(null);
+    const handleSelectServicio= ( idServicio, idCliente ) => {
+      console.log(idServicio, selectedClientId)
+      if (selectedClientId === null) {
+        setSelectedClientId(idCliente);
+        console.log('ando aqui seteando'+idServicio, selectedClientId)
+      } else if (selectedClientId !== idCliente) {
+        // Si el idCliente no coincide, muestra un alert y no agrega el servicio
+        alert('No se puede seleccionar este servicio, el idCliente no coincide');
+        return;
+      }
       if (selectProyectosID.includes(idServicio)) {
         // Si está seleccionado, quítalo del array
+        if (selectProyectosID.length===1){
+          setSelectedClientId(null)
+          console.log(idServicio, selectedClientId)
+        }
+          
         setSelectProyectosID(selectProyectosID.filter(servicioID => servicioID !== idServicio));
       } else {
         // Si no está seleccionado, agrégalo al array
@@ -343,9 +355,9 @@ export const Table = ({ columns, data, handleidServicioChange }) => {
                       // Aquí agregamos la lógica para los checkboxes
                       <input
                         type="checkbox"
-                        // checked={selectProyectosID.includes(row.original.idServicio)}
+                        checked={selectProyectosID.includes(row.original.idServicio)}
                         onChange={() => {
-                            handleSelectServicio( row.original.idServicio)
+                            handleSelectServicio(row.original.idServicio,  row.original.idCliente)
                             
                         
                           }}
@@ -418,6 +430,16 @@ export const columns = [
   {
     Header: 'Nombre',
     accessor: 'nombre',
+    filter: 'fuzzyText',
+  },
+  {
+    Header: 'ID Cliente',
+    accessor: 'idCliente',
+    filter: 'fuzzyText',
+  },
+  {
+    Header: 'Nombre',
+    accessor: 'nombreCliente',
     filter: 'fuzzyText',
   },
   
