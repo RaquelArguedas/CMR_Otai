@@ -83,7 +83,7 @@ def createCliente():
     numTelefono = request.form.get('telefono')
     correo = request.form.get('correo')
     print(cedJuridica, nombre,numTelefono,correo)
-    id = control.createCliente(cedJuridica, nombre, numTelefono, correo, fecha_actual, 5)
+    id = control.createCliente(int(cedJuridica), nombre, int(numTelefono), correo, fecha_actual, 5)
     return jsonify(str(id))
 
 @app.route('/readCliente/<idCliente>', methods=['GET'])
