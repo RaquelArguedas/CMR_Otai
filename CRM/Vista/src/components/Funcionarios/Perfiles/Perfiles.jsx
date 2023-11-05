@@ -19,9 +19,16 @@ export const Perfiles = () => {
     const [deletedPerfiles, setDeletedPerfiles] = useState([]); // Almacena perfiles eliminados
     
     const showNotification = async (event, idPerfil) => {
+      const res = await fetch(`${API}/isPerfilFK/${idPerfil}`);
+      const showError = await res.json();
+      if (showError){
+        Swal.fire('No se pueden eliminar porque ya ha sido utilizado en funcionarios.');
+        return;
+      }
+
       event.preventDefault();
       Swal.fire({
-        title: '¿Está seguro que desea eliminar el cliente seleccionado?',
+        title: '¿Está seguro que desea eliminar el perfil seleccionado?',
         showDenyButton: true,
         confirmButtonText: 'Aceptar',
         denyButtonText: `Cancelar`,
@@ -31,11 +38,11 @@ export const Perfiles = () => {
         /* Read more about isConfirmed, isDenied below */
         
         if (result.isConfirmed) {
-          Swal.fire('El cliente se ha eliminado satisfactoriamente')
+          Swal.fire('El perfil se ha eliminado satisfactoriamente')
           const updatedPerfiles = perfiles.filter((perfil) => perfil.idPerfil !== idPerfil);
           console.log(idPerfil)
           setPerfiles(updatedPerfiles);
-          // const res = fetch(`${API}/deleteCliente/${idCliente}`); // cambiar por el id
+          const res = fetch(`${API}/deletePerfil/${idPerfil}`); // cambiar por el id
           
         } else if (result.isDenied) {
           Swal.fire('No se guaron los cambios')

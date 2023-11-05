@@ -103,10 +103,10 @@ class SingletonDAO(metaclass=SingletonMeta):
             conn = pyodbc.connect(connection_string)
             cursor = conn.cursor()
             #print("Conexión exitosa a SQL Server en AWS con " + command)
-            print(command)
+            #print(command)
             # Ejecuta consultas o comandos SQL aquí
             r = cursor.execute(command)
-            print(r)
+            #print(r)
             conn.commit()  # Realiza el commit para aplicar los cambios en la base de datos
             cursor.close()
             conn.close()
@@ -493,10 +493,7 @@ class SingletonDAO(metaclass=SingletonMeta):
     def deletePerfil(self, idPerfil):
         p = self.readPerfil(idPerfil)
         if p != None:
-            #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
-            for p in self.perfil:
-                if p.idPerfil == idPerfil:
-                    self.perfil.remove(p)
+            self.perfil.remove(p)
             self.executeCommit(f"DELETE FROM Perfil WHERE idPerfil = {p.idPerfil}")
         else:
             return -1

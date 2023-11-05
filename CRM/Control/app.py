@@ -308,19 +308,19 @@ def updatePerfil(idPerfil,nombre):
     print(id)
     return jsonify(str(id))
 
-@app.route('/deletePerfil/<idPerfil>', methods=['POST'])
+@app.route('/deletePerfil/<idPerfil>', methods=['GET'])
 def deletePerfil(idPerfil):
-    print("HOLAAAAAAAAAAAAA")
+    print("HOLAAAAAAAAAAAAA", idPerfil)
     id = control.deletePerfil(int(idPerfil))
     print(id)
     return jsonify(str(id))
 
-@app.route('/isPerfilFK/<idPerfil>', methods=['POST'])
+@app.route('/isPerfilFK/<idPerfil>', methods=['GET'])
 def isPerfilFK(idPerfil):
     result = 0
     for funcionario in control.funcionario:
         for perfil in funcionario.perfiles:
-            if (perfil.idPerfil == idPerfil):
+            if (perfil.idPerfil == int(idPerfil)):
                 result = 1
     return jsonify(result)
 
