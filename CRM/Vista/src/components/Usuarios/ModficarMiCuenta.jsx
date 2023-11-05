@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../Clientes/CSSClientes/Clientes.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './toast-styles.css'; // Estilos personalizados para el Toast
 import Select from 'react-select';
 const API = "http://127.0.0.1:5000";
 export const ModficarMiCuenta = () => {
@@ -23,6 +24,7 @@ export const ModficarMiCuenta = () => {
     const [apellido, setApellido] = useState('');
     const [estado, setEstado] = useState('');
     const [contrasenna, setContrasenna] = useState('');
+    const [contrasennat, setContrasennaT] = useState('');
     
     const [selectedOption, setSelectedOption] = useState([]);
     const [options, setOptions] = useState([]);
@@ -32,16 +34,85 @@ export const ModficarMiCuenta = () => {
     fechaNacimientoInicial.setFullYear(fechaNacimientoInicial.getFullYear() - 10);
     const [fechaNacimiento, setFechaNacimiento] = useState(null);
     
+    const [temp, setTemp] = useState(true);
+    const handleNotification = () => {
+        const notificationId = toast.info(
+            <div>
+              <h2 className="titulo-h2">¿Está seguro que desea modificar la información?</h2>
+              <button className="accept-buttona" onClick={() => handleConfirmClick(notificationId)}>
+                Aceptar
+              </button>
+              <button className="cancel-buttona" onClick={() => handleCancelClick(notificationId)}>
+                Cancelar
+              </button>
+            </div>,
+            {
+              position: toast.POSITION.TOP_RIGHT,
+              className: 'toast-message',
+              autoClose: false,
+              closeButton: false,
+            }
+          );
+      };
+      const handleConfirmClick = async (notificationId) => {
+        // Lógica de confirmación aquí
+        toast.dismiss(notificationId);
+        const formData = new FormData();
+        console.log("stuf")
+        const año = fechaNacimiento.getFullYear();
+        const mes = String(fechaNacimiento.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
+        const dia = String(fechaNacimiento.getDate()).padStart(2, "0");
+    //console.log(idFuncionario, nombre, apellido,fechaNacimiento, cedula, telefono, correo, estado, selectedOption)
+        formData.append('nombre', nombre);
+        formData.append('apellido', apellido);
+        formData.append('fechaNacimiento', `${año}-${mes}-${dia}`);
+        formData.append('cedula', cedula);
+        formData.append('numTelefono', telefono);
+        formData.append('correo', correo);
+        if(contrasenna.length<1){
+            formData.append('contrasenha', contrasennat);
+
+        }else{
+            formData.append('contrasenha', contrasenna);
+        }
+        
+        const res =await fetch(`${API}/updateUsuario/${1}`, {
+            method: 'POST',
+            body: formData
+        });
+        if (res.ok) {
+            toast.success('La información se ha modificado exitosamente', {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 1000, // Establece el tiempo en milisegundos (5 segundos en este caso)
+                onClose: () => {
+                  gotoMiCuenta(); // Redirige a gotoMiCuenta después de que se cierre el Toast
+                }
+              });
+        } else {
+            toast.error('Hubo un problema al modificar la cuenta.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });}
+         // Cierra la notificación actual
+      };
+      
+      const handleCancelClick = (notificationId) => {
+        setTimeout(() => {
+            toast.dismiss(notificationId);
+          }, 1000); // Cierra la notificación actual
+        
+      };
+      
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        setTemp(true)
+         // Validación del campo "contrasenna"
+           
         if (nombre.length < 2) {
             toast.error('El nombre debe ser mayor a un caracter.', {
                 position: toast.POSITION.TOP_RIGHT,
             });
             return;
         }
-    
         // Validación del campo "apellido"
         if (apellido.length < 2) {
             toast.error('El apellido debe ser mayor a un caracter.', {
@@ -56,8 +127,6 @@ export const ModficarMiCuenta = () => {
             });
             return;
         }
-
-    
         // Validación del campo "telefono"
         if (telefono.length < 5) {
             toast.error('El número de teléfono debe ser mayor 4 caracteres.', {
@@ -66,13 +135,14 @@ export const ModficarMiCuenta = () => {
             return;
         }
 
-        // Validación del campo "contrasenna"
-        if (contrasenna.length < 5) {
-            toast.error('La contraseña debe tener al menos 5 caracteres.', {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-            
-            return;
+        if(contrasenna.length  > 0 ){
+            if (contrasenna.length < 5) {
+                toast.error('La contraseña debe tener al menos 5 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                
+                return;
+            }
         }
     
         // Validación del campo "correo"
@@ -108,51 +178,39 @@ export const ModficarMiCuenta = () => {
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
         //Para enviar la fecha es inputValue
-        Swal.fire({
-            title: '¿Está seguro que desea modificar la información?',
-            showDenyButton: true,
-            confirmButtonText: 'Aceptar',
-            denyButtonText: `Cancelar`,
-            allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
-            allowEscapeKey: false, 
-          }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                const correoExiste = correos.some((c) => c == correo);
-                console.log("correoExiste: ", correoExiste)
-                console.log("miCorreo: ", miCorreo, correo)
-                console.log("miCorreo!=correo: ", miCorreo!=correo)
-                if (!correoExiste || miCorreo==correo){
-                    const formData = new FormData();
-                    console.log("stuf")
-                    const año = fechaNacimiento.getFullYear();
-                    const mes = String(fechaNacimiento.getMonth() + 1).padStart(2, "0"); // Sumamos 1 al mes porque en JavaScript los meses van de 0 a 11
-                    const dia = String(fechaNacimiento.getDate()).padStart(2, "0");
-                //console.log(idFuncionario, nombre, apellido,fechaNacimiento, cedula, telefono, correo, estado, selectedOption)
-                    formData.append('nombre', nombre);
-                    formData.append('apellido', apellido);
-                    formData.append('fechaNacimiento', `${año}-${mes}-${dia}`);
-                    formData.append('cedula', cedula);
-                    formData.append('numTelefono', telefono);
-                    formData.append('correo', correo);
-                    formData.append('contrasenha', contrasenna);
-                    const res = fetch(`${API}/updateUsuario/${1}`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    gotoMiCuenta();
-                    Swal.fire('Su información se ha modificado satisfactoriamente')
-                }else{
-                    Swal.fire('Ya el correo se encuentra registrado')
-                }
+        const correoExiste = correos.some((c) => c == correo);
+        console.log("correoExiste: ", correoExiste)
+        console.log("miCorreo: ", miCorreo, correo)
+        console.log("miCorreo!=correo: ", miCorreo!=correo)
+        if (!correoExiste || miCorreo==correo){
+        if(temp){
+            handleNotification()
+            setTemp(false)
+        }}else{
+            Swal.fire('Ya el correo se encuentra registrado')
+        }
+        // Swal.fire({
+        //     title: '¿Está seguro que desea modificar la información?',
+        //     showDenyButton: true,
+        //     confirmButtonText: 'Aceptar',
+        //     denyButtonText: `Cancelar`,
+        //     allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
+        //     allowEscapeKey: false, 
+        //   }).then((result) => {
+        //     /* Read more about isConfirmed, isDenied below */
+        //     if (result.isConfirmed) {
                 
-            } else if (result.isDenied) {
-              Swal.fire('No se guaron los cambios')
-            }
-          })
+                    
+        //             Swal.fire('Su información se ha modificado satisfactoriamente')
+                
+                
+        //     } else if (result.isDenied) {
+        //       Swal.fire('No se guaron los cambios')
+        //     }
+        //   })
         
     }
-  
+    
     const handleSearch = async () => {
         //Buscamos la informacion del backend
        
@@ -173,7 +231,7 @@ export const ModficarMiCuenta = () => {
         // ACTIVO = 5
         // INACTIVO = 6
         setEstado(data[7])
-        setContrasenna(data[8])
+        setContrasennaT(data[8])
         //setFechaNacimiento(data[3])
         setInputValue(data[3]);
         const fechaDesdeBackend = data[3];

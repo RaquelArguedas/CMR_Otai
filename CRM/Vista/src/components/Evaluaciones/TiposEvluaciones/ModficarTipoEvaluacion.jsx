@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import '../../Clientes/CSSClientes/Clientes.css'
 import { AiOutlinePlusCircle } from 'react-icons/ai';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API = "http://127.0.0.1:5000";
 
@@ -19,6 +20,18 @@ export const ModficarTipoEvaluacion = () => {
     const { idTipoEvaluacion } = useParams(); //Para buscar
     const handleSubmit = async (event) => {
         event.preventDefault();  
+        if (nombre.length < 2) {
+            toast.error('El nombre debe ser mayor a un caracter.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+        }
+        if (costo === '') {
+            toast.error('Debe ingresar un número.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
         //Es para enviar informacion al backend
         //Lo de abajo es la notificacion de que ya se creo la evalaucion
         //Recordar en el backend poner lo de fecha de ingreso que se hace alla
@@ -70,11 +83,34 @@ export const ModficarTipoEvaluacion = () => {
     margin-top: 25px;
     `;
     const handleNameChange = (event) => {
-        setNombre(event.target.value);
-    };
-    const handleCostoChange = (event) => {
-        setCosto(event.target.value);
-    };
+        const inputValue = event.target.value;
+        
+            if (inputValue.length <= 50) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setNombre(inputValue);
+            } else {
+                // La entrada supera el límite, muestra un alert
+                toast.error('El nombre no debe superar los 50 caracteres.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+      };
+      const handleCostoChange = (event) => {
+        const inputValue = event.target.value;
+        // Expresión regular que valida un número decimal positivo
+        const validPattern = /^\d*\.?\d*$/;
+    
+        if (validPattern.test(inputValue)) {
+            // La entrada es válida, puedes actualizar el estado
+            setCosto(inputValue);
+        } else {
+            // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
+            // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
+            toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+      };
   
     return (
         
