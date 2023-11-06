@@ -98,13 +98,15 @@ export const DetalleProyecto = () => {
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
+            confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             
             if (result.isConfirmed) {
-              Swal.fire('La evaluación se ha eliminado satisfactoriamente')
+              Swal.fire('El proyecto se ha eliminado satisfactoriamente')
               const res = fetch(`${API}/deleteProyecto/${idProyecto}`);
               gotoProyecto();
             } else if (result.isDenied) {

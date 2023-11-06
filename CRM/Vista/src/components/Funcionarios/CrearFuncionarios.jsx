@@ -47,9 +47,9 @@ export const CrearFuncionarios = () => {
             inputPlaceholder: 'Ingrese el nombre del perfil',
             showDenyButton: true, // Agregar botones de confirmación y cancelación
             confirmButtonText: 'Aceptar', // Cambiar texto del botón de confirmación
-            confirmButtonColor:'#12959E',
             denyButtonText: 'Cancelar', // Cambiar texto del botón de cancelación
-            denyButtonColor: '#FF0000',
+            confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
             allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,
             

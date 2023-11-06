@@ -243,14 +243,17 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio, idCli
     // console.log('ESTO DEBE SER ARRAY ')
     // console.log(JSON.stringify(idServicio));
     const [selectProyectosID, setSelectProyectosID] = useState(idServicio || []);
-    const [selectedClientId, setSelectedClientId] = useState(idCliente);
+    const [selectedClientId, setSelectedClientId] = useState(null);
     const handleSelectServicio= ( idServicios, idClient) => {
       console.log("No se que estoy haciendo",selectProyectosID, selectedClientId,'=', idServicios,'RATT' ,idClient)
+      //console.log(selectedClientId, selectedClientId === null)
+      console.log(idClient)
+      console.log(selectedClientId, selectedClientId==null)
       if (selectedClientId === null||selectProyectosID.length===0) {
           const temp = idClient;
           setSelectedClientId(temp);
         console.log('eN EST')
-      } else if (selectedClientId !== idClient) {
+      } else if (selectedClientId !== idClient ) {
         // Si el idCliente no coincide, muestra un alert y no agrega el servicio
         alert('No se puede seleccionar este servicio, el idCliente no coincide');
         return;
@@ -300,6 +303,9 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio, idCli
     }),
     []
   )
+  React.useEffect(() => {
+    console.log('primera vez')
+  }, []);
   const defaultColumn = React.useMemo(
     () => ({
       // Let's set up our default Filter UI

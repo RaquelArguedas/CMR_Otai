@@ -102,9 +102,9 @@ export const DetalleFuncionario = () => {
             title: '¿Está seguro que desea eliminar el funcionario seleccionado?',
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
-            confirmButtonColor:'#12959E',
             denyButtonText: 'Cancelar', // Cambiar texto del botón de cancelación
-            denyButtonColor: '#FF0000',
+            confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
             style: {

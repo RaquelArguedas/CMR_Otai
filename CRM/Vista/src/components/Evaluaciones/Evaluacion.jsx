@@ -40,6 +40,7 @@ export const Evaluacion = () => {
     //Obtener infromacion existente en la base de datos
     const res = await fetch(`${API}/getEvaluaciones`);
     const data = await res.json();//resultado de la consulta
+    console.log("dataAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     console.log(data)
     const rest = await fetch(`${API}/readCliente/${data[0][5]}`);
     const dato = await rest.json();
@@ -69,21 +70,36 @@ export const Evaluacion = () => {
       default:
           estado = 'Estado no reconocido';
       }
-      
-      return {
-        idEvaluacion: item[1],
-        nombre: item[2],
-        idcliente: item[5],
-        nombreCliente: item[12],
-        estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
-        fecha: item[6],
-        tipoE:item[13],
-        detalle: 'Ver más',
-      };
-    
+      if (estado !== 'Eliminado'){
+        return {
+            idEvaluacion: item[1],
+            nombre: item[2],
+            idcliente: item[11],
+            nombreCliente: item[12],
+            estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
+            fecha: item[6],
+            tipoE:item[13],
+            detalle: 'Ver más',
+        };
+      }
     });
-    setEvaluaciones(formattedData);
-    console.log(formattedData)
+    const filteredData = formattedData.filter(item => item !== undefined);
+    setEvaluaciones(filteredData);
+      
+    //   return {
+        // idEvaluacion: item[1],
+        // nombre: item[2],
+        // idcliente: item[5],
+        // nombreCliente: item[12],
+        // estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
+        // fecha: item[6],
+        // tipoE:item[13],
+        // detalle: 'Ver más',
+    //   };
+    
+    // });
+    // setEvaluaciones(formattedData);
+    // console.log(formattedData)
   }; 
   React.useEffect(() => {
     handleSearch()

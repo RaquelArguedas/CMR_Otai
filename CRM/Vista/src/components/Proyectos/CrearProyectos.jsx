@@ -36,11 +36,12 @@ export const CrearProyectos = () => {
 
 
     const handleSubmit = async (event) => {
-        //const res = await fetch(`${API}/getNewIdProyecto`);
-        //const data = await res.json();
+        console.log('di sub')
+        console.log(nombre)
         if (nombre.length < 2) {
             toast.error('El nombre debe ser mayor a un caracter.', {
                 position: toast.POSITION.TOP_RIGHT,
+                autoClose: 1000
             });
             return;
           }
@@ -48,24 +49,30 @@ export const CrearProyectos = () => {
           if (descripcion.length < 2) {
             toast.error('La descripción debe ser mayor a un caracter.', {
                 position: toast.POSITION.TOP_RIGHT,
+                autoClose: 1000
             });
             return;
           }
           if (estado === '') {
             toast.error('Seleccione un estado válido.', {
                 position: toast.POSITION.TOP_RIGHT,
+                autoClose: 1000
             });
             return;
           }
           if (costo === '') {
             toast.error('Debe ingresar un número.', {
                 position: toast.POSITION.TOP_RIGHT,
+                autoClose: 1000
             });
             return;
           }
+          console.log('idServicio00000000000000000000')
+          console.log(idServicio)
           if (!Array.isArray(idServicio) || idServicio.length === 0) {
             toast.error('Debe seleccionar al menos un servicio .', {
               position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000
             });
             return;
           }
@@ -104,20 +111,6 @@ export const CrearProyectos = () => {
             }).then((result) => {
                 if (result.isConfirmed) {
                     gotoMenu();
-                //   const formData2 = new FormData();
-                //   const selectedFilesModified = selectedFiles.map((item) => { 
-                //     if (item.url instanceof File) {
-                //         formData2.append('doc', item.url);
-                //         fetch(`${API}/saveDoc/${idProyecto}`, {
-                //             method: 'POST',
-                //             body: formData2, // Utiliza el objeto FormData que contiene archivos
-                //         });
-                //         formData2.delete('*');
-                //     }else {
-                //         return null; // O cualquier otro valor que desees en lugar de null
-                //       }
-                //     }).filter((item) => item !== null); // Eliminar elementos nulos
-                //   // console.log(selectedFilesModified)
             }});    
         } else {
             Swal.fire({
@@ -140,7 +133,7 @@ export const CrearProyectos = () => {
         //A esto me refiero recuperar los datos del cliente
         console.log(1)
         //Se supoene que ahi abajo mandamos a llamar a todos los servicios
-        const res = await fetch(`${API}/getServicios`);
+        const res = await fetch(`${API}/getServiciosSinProyecto`);
         const data = await res.json();//resultado de la consulta
         console.log("servicios")
         console.log(data)
@@ -341,6 +334,7 @@ export const CrearProyectos = () => {
                                     key={fileInputKey}
                                     onChange={handleFileChange}
                                     multiple
+                                    disabled = {true}
                                 />
                                 <ul style={{ marginLeft: '150px', marginTop : '-15px'}}>
                                 {selectedFiles.map((file, index) => (

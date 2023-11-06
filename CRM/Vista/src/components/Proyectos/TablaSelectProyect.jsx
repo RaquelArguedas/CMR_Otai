@@ -244,6 +244,7 @@ export const Table = ({ columns, data, handleidServicioChange }) => {
     const [selectProyectosID, setSelectProyectosID] = useState([]);
     const [selectedClientId, setSelectedClientId] = useState(null);
     const handleSelectServicio= ( idServicio, idCliente ) => {
+      console.log("Arriba")
       console.log(idServicio, selectedClientId)
       if (selectedClientId === null) {
         setSelectedClientId(idCliente);

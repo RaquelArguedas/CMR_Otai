@@ -1,4 +1,4 @@
-import React, { useState,  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
@@ -238,22 +238,44 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
 
-export const Table = ({ columns, data, handleIdClienteChange }) => {
+export const Table = ({ columns, data, handleidServicioChange }) => {
     const navigate = useNavigate(); // Usar useNavigate aquí
     
+    const [selectProyectosID, setSelectProyectosID] = useState([]);
     const [selectedClientId, setSelectedClientId] = useState(null);
+    const handleSelectServicio= ( idServicio, idCliente ) => {
+      console.log(idServicio, selectedClientId)
+      if (selectedClientId === null) {
+        setSelectedClientId(idCliente);
+        console.log('ando aqui seteando'+idServicio, selectedClientId)
+      }
+      if (selectProyectosID.includes(idServicio)) {
+        // Si está seleccionado, quítalo del array
+        if (selectProyectosID.length===1){
+          setSelectedClientId(null)
+          console.log(idServicio, selectedClientId)
+        }
+          
+        setSelectProyectosID(selectProyectosID.filter(servicioID => servicioID !== idServicio));
+      } else {
+        // Si no está seleccionado, agrégalo al array
+        setSelectProyectosID([...selectProyectosID, idServicio]);
+        
+      console.log('Estos es  '+selectProyectosID)
+      }
 
-    const handleSelectClient = ( idCliente) => {
-      console.log(idCliente)
-    setSelectedClientId(idCliente);
-    handleIdClienteChange(idCliente)
+      
+    
     };
-
+    useEffect(() => {
+        // Este efecto se ejecutará cada vez que selectProyectosID cambie.
+        handleidServicioChange(selectProyectosID);
+    }, [selectProyectosID]);
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, overridCliente the default text filter to use
+      // Or, overridServicio the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
@@ -305,7 +327,7 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
   )
     return (
       <>
-        <table style={{ fontFamily: 'Lato, sans-serif' }}>
+         <table style={{ fontFamily: 'Lato, sans-serif' }}>
           <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -329,9 +351,9 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
                       // Aquí agregamos la lógica para los checkboxes
                       <input
                         type="checkbox"
-                        checked={row.original.idCliente === selectedClientId}
+                        checked={selectProyectosID.includes(row.original.idServicio)}
                         onChange={() => {
-                           handleSelectClient( row.original.idCliente)
+                            handleSelectServicio(row.original.idServicio,  row.original.idCliente)
                             
                         
                           }}
@@ -355,18 +377,18 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
           </tbody>
         </table>
         <div className="pagination"> 
-          <ButtonTbl onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            {'<<'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </ButtonTbl>{' '}
-          <ButtonTbl onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            {'>>'}
-          </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </ButtonTbl>{' '}
+        <ButtonTbl type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </ButtonTbl>{' '}
           <span style={{ marginLeft: '10px' }}>
             Página{' '}
             <strong>
@@ -395,9 +417,15 @@ export const Table = ({ columns, data, handleIdClienteChange }) => {
 
 // Define las columnas de la tabla
 export const columns = [
-    {
-    Header: 'Cédula Jurídica',
-    accessor: 'cedula',
+    
+  {
+    Header: 'ID Servicio',
+    accessor: 'idServicio',
+    filter: 'fuzzyText',
+  },
+  {
+    Header: 'Nombre',
+    accessor: 'nombre',
     filter: 'fuzzyText',
   },
   {
@@ -407,7 +435,7 @@ export const columns = [
   },
   {
     Header: 'Nombre',
-    accessor: 'nombre',
+    accessor: 'nombreCliente',
     filter: 'fuzzyText',
   },
   
@@ -417,4 +445,6 @@ export const columns = [
     disableFilters: true,
   },
   
+  
 ];
+

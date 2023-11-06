@@ -75,19 +75,32 @@ export const Proyectos = () => {
         default:
             estado = 'Estado no reconocido';
         }
-        
-        return {
-          idProyecto: item[1],
-          nombre: item[2],
-          idCliente: item[4],
-          nombreCliente: item[11],
-          estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
-          fecha: item[6],
-          detalle: 'Ver más',
-        };
-      });
+        if (estado !== 'Eliminado'){
+            return {
+                idProyecto: item[1],
+                nombre: item[2],
+                idCliente: item[4],
+                nombreCliente: item[11],
+                estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
+                fecha: item[6],
+                detalle: 'Ver más',
+            };
+          }
+        });
+        const filteredData = formattedData.filter(item => item !== undefined);
+        setProyectos(filteredData);
+    //     return {
+        //   idProyecto: item[1],
+        //   nombre: item[2],
+        //   idCliente: item[4],
+        //   nombreCliente: item[11],
+        //   estado: estado, // Utiliza el valor de 'estado' calculado anteriormente
+        //   fecha: item[6],
+        //   detalle: 'Ver más',
+    //     };
+    //   });
       
-      setProyectos(formattedData);
+    //   setProyectos(formattedData);
     }; 
     
     React.useEffect(() => {

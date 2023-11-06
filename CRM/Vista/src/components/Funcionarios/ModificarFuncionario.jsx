@@ -34,6 +34,7 @@ export const ModificarFuncionario = () => {
     const [fechaNacimiento, setFechaNacimiento] = useState(null);
     
     const handleSubmit = async (event) => {
+        console.log("SUBMIIIIIIIIIIIIT")
         event.preventDefault();  
         if (nombre.length < 2) {
             toast.error('El nombre debe ser mayor a un caracter.', {
@@ -85,6 +86,8 @@ export const ModificarFuncionario = () => {
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
+            confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
           }).then(async (result) => {
@@ -208,8 +211,9 @@ export const ModificarFuncionario = () => {
     margin-top: 25px;
     `;
     const handleNameChange = (event) => {
+        console.log("cambiando nombre")
         const inputValue = event.target.value;
-        
+        console.log(inputValue)
         if (inputValue.length <= 50) {
             // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
             setNombre(event.target.value);
@@ -403,7 +407,7 @@ export const ModificarFuncionario = () => {
                             </button>
                         
                         </div>
-
+                        <ToastContainer />  
                     </form>
 
             </div>

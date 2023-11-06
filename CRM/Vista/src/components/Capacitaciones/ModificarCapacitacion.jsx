@@ -86,11 +86,19 @@ export const ModificarCapacitacion = () => {
       });
       return;
     }
+    if (IdFuncionario === 0) {
+      toast.error('Debe seleccionar un funcionario.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
     Swal.fire({
       title: '¿Está seguro desea modificar la evaluación?',
       showDenyButton: true,
       confirmButtonText: 'Aceptar',
       denyButtonText: `Cancelar`,
+      confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
       allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
       allowEscapeKey: false,    // Evita que se cierre al presionar la tecla Escape (esc)
     }).then(async (result) => {
@@ -112,7 +120,7 @@ export const ModificarCapacitacion = () => {
           idProyecto: 0, 
           idCliente: IdCliente  
         };
-  
+        console.log("DATAAAAAAAAA")
         console.log(data)
     
         const requestOptions = {
@@ -171,10 +179,11 @@ export const ModificarCapacitacion = () => {
     const resC = await fetch(`${API}/readCapacitacion/${idCapacitacion}`);
     console.log(2) // imprime en consola web
     const dataC = await resC.json();//resultado de la consulta
+    console.log("DATA CCCCCCCCCCCCCCCCCCCCCCCCCC")
     console.log(dataC) // imprime en consola web
 
     setIdCliente(dataC[15])
-    setIdFuncionario(dataC[14])
+    setIdFuncionario(dataC[11])
     setNombre(dataC[2])
     setDescripcion(dataC[3])
     setTipoCapacitacion(dataC[13])
@@ -217,6 +226,7 @@ export const ModificarCapacitacion = () => {
 
     const rest2 = await fetch(`${API}/getFuncionarios`);
     const dat2 = await rest2.json();//resultado de la consulta
+    console.log("222222222222222222222222")
     console.log(dat2)
      // Realiza la conversión de datos aquí
     const formattedData2 = dat2.map((item) => ({
@@ -468,6 +478,7 @@ export const ModificarCapacitacion = () => {
                         key={fileInputKey}
                         onChange={handleFileChange}
                         multiple
+                        disabled = {true}
                     />
                     <ul style={{ marginLeft: '150px', marginTop : '-15px'}}>
                     {selectedFiles.map((file, index) => (

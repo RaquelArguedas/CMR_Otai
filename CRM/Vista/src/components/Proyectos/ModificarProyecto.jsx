@@ -67,13 +67,13 @@ export const ModificarProyecto = () => {
             return;
           }
 
-          console.log(!Array.isArray(idServicio) || idServicio.length === 0)
-          if (!Array.isArray(idServicio) || idServicio.length === 0) {
-            toast.error('Debe seleccionar al menos un servicio .', {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-            return;
-          }
+        //   console.log(!Array.isArray(idServicio) || idServicio.length === 0)
+        //   if (!Array.isArray(idServicio) || idServicio.length === 0) {
+        //     toast.error('Debe seleccionar al menos un servicio .', {
+        //       position: toast.POSITION.TOP_RIGHT,
+        //     });
+        //     return;
+        //   }
           
         //Notificacion de que se realizaron los cambios
         Swal.fire({
@@ -81,6 +81,8 @@ export const ModificarProyecto = () => {
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
+            confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
           }).then(async (result) => {
@@ -118,7 +120,7 @@ export const ModificarProyecto = () => {
                 formData.append('subTotal', costo);
                 formData.append('estado', estado);
                 console.log('servicios', idServicio)
-                formData.append('servicios', ['CA001','CA003']);
+                formData.append('servicios', idServicio);
                 formData.append('doc', selectedFilesModified);
                 const res = await  fetch(`${API}/updateProyecto/${idProyecto}`, {
                     method: 'POST',
@@ -353,7 +355,7 @@ export const ModificarProyecto = () => {
     React.useEffect(() => {
         handleSearch()
     }, []);
-   
+    const fact = 1;
     return (
        
         <Fragment>
@@ -431,8 +433,9 @@ export const ModificarProyecto = () => {
                                         key={fileInputKey}
                                         onChange={handleFileChange}
                                         multiple
+                                        disabled = {true}
                                     />
-                                    <ul style={{ marginLeft: '150px', marginTop : '-15px' }}>
+                                    <ul disabled={true} style={{ marginLeft: '150px', marginTop : '-15px' }}>
                                         {selectedFiles.map((file) => (
                                             <li key={file.nombre}> {/* Cambia key a file.url si es único */}
                                             {file.nombre} {/* Muestra el nombre del archivo */}
@@ -457,11 +460,11 @@ export const ModificarProyecto = () => {
 
                                 </div>
                             </div>
-                            <div className="mb-3"  style={{ display: 'flex', marginTop:  '40px' }}>
+                            {/* <div className="mb-3"  style={{ display: 'flex', marginTop:  '40px' }}>
                                 <Styles> 
                                     <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio} idCliente={idCliente}/>
                                 </Styles> 
-                            </div>
+                            </div> */}
                                 
                             <div className="mb-3" 
                                 style={{ marginTop:  '50px' }} >

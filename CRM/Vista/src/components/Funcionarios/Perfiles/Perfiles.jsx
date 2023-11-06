@@ -32,6 +32,8 @@ export const Perfiles = () => {
         showDenyButton: true,
         confirmButtonText: 'Aceptar',
         denyButtonText: `Cancelar`,
+        confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
         allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
         allowEscapeKey: false, 
       }).then((result) => {
@@ -71,6 +73,8 @@ export const Perfiles = () => {
         showDenyButton: true,
         confirmButtonText: 'Aceptar',
         denyButtonText: 'Cancelar',
+        confirmButtonColor: "#4CAF50",
+        denyButtonColor: "#d33",
         allowOutsideClick: false,
         allowEscapeKey: false,
       }).then((result) => {
@@ -145,6 +149,8 @@ export const Perfiles = () => {
           showDenyButton: true, // Agregar botones de confirmación y cancelación
           confirmButtonText: 'Aceptar', // Cambiar texto del botón de confirmación
           denyButtonText: 'Cancelar', // Cambiar texto del botón de cancelación
+          confirmButtonColor: "#4CAF50",
+          denyButtonColor: "#d33",
           allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
           allowEscapeKey: false,
         }).then((result) => {

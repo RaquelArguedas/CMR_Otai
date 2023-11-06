@@ -4,10 +4,6 @@ import zipfile
 
 if __name__ == "__main__":
     dao = SingletonDAO()
-    cliente = dao.cliente[0]
-    nombre_clase = cliente.__class__.__name__
-
-    print(cliente.__class__.__name__) 
 
     # fun = [2]
     # mi_dict = {}

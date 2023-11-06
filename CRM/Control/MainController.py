@@ -268,7 +268,10 @@ class SingletonDAO(metaclass=SingletonMeta):
                 if (idEstado != None):
                     e.idEstado = Estado(idEstado)
                 print("DESPUES DE MODIFICADA")
-                self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, null, {e.idCliente}")
+                if (e.idProyecto == None):
+                    self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, null, {e.idCliente}")
+                else:
+                    self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, {e.idProyecto}, {e.idCliente}")
             except Exception as ex:
                  print("Se ha producido una excepción:", ex)
         else:
@@ -338,18 +341,21 @@ class SingletonDAO(metaclass=SingletonMeta):
                         funcionarios += [f]
                         self.executeCommit(f"EXEC createProyectoXFuncionario {p.id}, {fId}")
             servicios = self.capacitacion+self.evaluacion
+            
             servicioIndicados = [];
-            print("servicios", idServicios)
-            for servicio in servicios:
-                idServ = servicio.toList()[1]
-                for idS in idServicios:
-                    if idServ == idS:
-                        print("existe el servicio")
-                        servicioIndicados += [servicio]
-            if servicioIndicados == []:
-                print("No se encontro el servicio, operacion cancelada")
-                return -1
-            p.editar(None, nombre, descripcion, servicioIndicados[0].idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
+            if idServicios != None:
+                print("servicios", idServicios)
+                for servicio in servicios:
+                    idServ = servicio.toList()[1]
+                    for idS in idServicios:
+                        if idServ == idS:
+                            print("existe el servicio")
+                            servicioIndicados += [servicio]
+                if servicioIndicados == []:
+                    print("No se encontro el servicio, operacion cancelada")
+                    return -1
+                p.editar(None, nombre, descripcion, servicioIndicados[0].idCliente, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
+            p.editar(None, nombre, descripcion, None, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
             print(f"EXEC updateProyecto {p.id}, {p.idProyecto}, {p.nombre}, {p.descripcion}, '{p.idCliente}',  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
             self.executeCommit(f"EXEC updateProyecto {p.id}, '{p.idProyecto}', '{p.nombre}', '{p.descripcion}', {p.idCliente},  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
             for servicio in servicioIndicados:
@@ -389,16 +395,19 @@ class SingletonDAO(metaclass=SingletonMeta):
 
     #CRUDS Cotizacion
     def createCotizacion(self, nombre, descripcion, idCliente, idPorcentajesC, Total, idServicio, estado, fechaCreacion):
+        print("DESDE BE")
+        print( nombre, descripcion, idCliente, idPorcentajesC, Total, idServicio, estado, fechaCreacion)
+
         if nombre is None or descripcion is None or idCliente is None or idPorcentajesC is None or Total is None or idServicio is None or estado is None or fechaCreacion is None:
             return -1  # No se puede crear una cotización con atributos nulos
-
+        print(1)
         self.executeCommit(f"EXEC createCotizacion '{nombre}', '{descripcion}', {idCliente}, {idPorcentajesC}, {Total}, '{idServicio}', {estado}, '{fechaCreacion}'")
         idCotizacion = self.execute(f"SELECT MAX(idCotizacion) FROM Cotizacion")
-
+        print(2)    
         # Si hay lista y no existe el idCotizacion en los datos se crea
         if self.readCotizacion(idCotizacion[0][0]) is None:
             self.cotizacion += [Cotizacion(idCotizacion[0][0], nombre, descripcion, idCliente, idPorcentajesC, Total, idServicio, estado, fechaCreacion)]
-
+        print(3)
     def readCotizacion(self, idCotizacion):
         for c in self.cotizacion:
             print(c.idCotizacion, idCotizacion)

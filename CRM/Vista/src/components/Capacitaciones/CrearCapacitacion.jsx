@@ -86,6 +86,12 @@ export const CrearCapacitacion = () => {
       });
       return;
     }
+    if (IdFuncionario === '') {
+      toast.error('Debe seleccionar un funcionario.', {
+          position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
     const data = {
         nombre: nombre,
         descripcion: descripcion, 
@@ -427,6 +433,7 @@ export const CrearCapacitacion = () => {
                         key={fileInputKey}
                         onChange={handleFileChange}
                         multiple
+                        disabled = {true}
                     />
                     <ul style={{ marginLeft: '150px', marginTop : '-15px'}}>
                     {selectedFiles.map((file, index) => (

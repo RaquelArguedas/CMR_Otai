@@ -56,6 +56,8 @@ export const TiposCapacitaciones = () => {
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
+            confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
           }).then((result) => {
@@ -68,16 +70,8 @@ export const TiposCapacitaciones = () => {
               const res = fetch(`${API}/deleteTipoCapacitacion/${idTipoCapacitacion}`, {
                 method: 'POST'
             });
-            if (res.ok) {
-              gotoTipoCapacitacion();
-            } else {
-              Swal.fire({
-                title: 'Error',
-                text: 'Hubo un problema al crear el tipo de capacitación.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar',
-              });
-            }
+            gotoTipoCapacitacion();
+
             } else if (result.isDenied) {
               Swal.fire('No se guardaron los cambios')
             }

@@ -320,6 +320,7 @@ export  const CrearEvaluacion = () => {
                                     key={fileInputKey}
                                     onChange={handleFileChange}
                                     multiple
+                                    disabled = {true}
                                     
                                 />
                                 <ul style={{ marginLeft: '150px'}}>

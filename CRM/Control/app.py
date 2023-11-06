@@ -50,11 +50,19 @@ def readCapacitacion(idCapacitacion):
 #Update
 @app.route('/updateCapacitacion', methods=['POST'])
 def updateCapacitacion(): 
-  id = control.updateCapacitacion(int(request.json['idCapacitacion']), request.json['nombre'],
+  print("ID FUNCIONARIO")
+  print(request.json['idFuncionario'])
+  fechaFin = request.json['fechaFinalizacion']
+  if(request.json['fechaFinalizacion'] == ''):
+      fechaFin = None
+  fechaEj = request.json['fechaEjecucion']
+  if(request.json['fechaEjecucion'] == ''):
+      fechaEj = None
+  id = control.updateCapacitacion(request.json['idCapacitacion'], request.json['nombre'],
                                   request.json['descripcion'], request.json['fechaCreacion'], 
-                                  request.json['fechaEjecucion'], None, 
+                                  fechaEj, None, 
                                   int(request.json['idEstado']), int(request.json['horasDuracion']),
-                                  request.json['fechaFinalizacion'], int(request.json['modalidad']),
+                                  fechaFin, int(request.json['modalidad']),
                                   int(request.json['idFuncionario']), float(request.json['precio']),
                                   int(request.json['tipoCapacitacion']), int(request.json['idProyecto']),
                                   int(request.json['idCliente']))
@@ -127,15 +135,26 @@ def getClientes():
 #CRUD Cotizacion
 @app.route('/createCotizacion', methods=['POST'])
 def createCotizacion():
+    print('llegue a crear')
+    idServicio = request.json['idServicio'][0];
+    print(idServicio)
+    idCliente = 0;
+    for cap in control.capacitacion:
+        if cap.idCapacitacion == idServicio:
+            idCliente = cap.idCliente
+    for evalu in control.evaluacion:
+        if evalu.idEvaluacion ==  idServicio:
+            idCliente = evalu.idCliente
+    fecha_hoy = datetime.now().strftime('%Y-%m-%d')
     id = control.createCotizacion(
         request.json['nombre'],
         request.json['descripcion'],
-        request.json['idCliente'],
-        request.json['idPorcentajesC'],
-        request.json['Total'],
-        request.json['idServicio'],
-        request.json['estado'],
-        request.json['fechaCreacion']
+        idCliente,
+        1,
+        float(request.json['total']),
+        idServicio,
+        int(request.json['estado']),
+        fecha_hoy
     )
     return jsonify(str(id))
 
@@ -148,16 +167,25 @@ def readCotizacion(idCotizacion):
 
 @app.route('/updateCotizacion', methods=['POST'])
 def updateCotizacion():
+    print('llegue a modificar')
+    idCliente = 0;
+    idServicio = request.json['idServicio'][0]
+    for cap in control.capacitacion:
+        if cap.idCapacitacion == idServicio:
+            idCliente = cap.idCliente
+    for evalu in control.evaluacion:
+        if evalu.idEvaluacion ==  idServicio:
+            idCliente = evalu.idCliente
     id = control.updateCotizacion(
-        request.json['idCotizacion'],
+        int(request.json['idCotizacion']),
         request.json['nombre'],
         request.json['descripcion'],
-        request.json['idCliente'],
-        request.json['idPorcentajesC'],
-        request.json['Total'],
-        request.json['idServicio'],
-        request.json['estado'],
-        request.json['fechaCreacion']
+        idCliente,
+        None,
+        float(request.json['total']),
+        idServicio,
+        int(request.json['estado']),
+        None
     )
     return jsonify(str(id))
 
@@ -193,7 +221,7 @@ def readEvaluacion(idEvaluacion):
     return jsonify(c.toList())
 
 @app.route('/updateEvaluacion', methods=['POST'])
-def updateEvaluacion(): 
+def updateEvaluacion():
     id = control.updateEvaluacion(
         request.json['idEvaluacion'],
         request.json['nombre'],
@@ -204,7 +232,7 @@ def updateEvaluacion():
         None,
         int(request.json['idEstado']),
         int(request.json['precio']),
-        int(request.json['idProyecto']),
+        None,
         int(request.json['idCliente'])
     )
     return jsonify(str(id))
@@ -406,12 +434,24 @@ def getServiciosProyecto(idProyecto):
     print(lista)
     return jsonify(lista)
 
+@app.route('/getServiciosCotizacion/<idCotizacion>', methods=['GET'])
+def getServiciosCotizacion(idCotizacion):
+    print("________________________________________")
+    lista = []
+    cot = control.readCotizacion(int(idCotizacion))
+    ser = control.readEvaluacion(cot.idServicio)
+    if ser==None:
+        ser = control.readCapacitacion(cot.idServicio)
+    lista += [ser.toList()]
+    print(lista)
+    return jsonify(lista)
+
 @app.route('/updateProyecto/<idProyecto>', methods=['POST'])
 def updateProyecto(idProyecto):
     #print("updateProyecto", request.form.get('doc'))
     print("updateProyecto", request.form.get('fechaInicio'))
     print("updateProyecto", request.form.get('fechaFinalizacion'))
-    print("servicios", type(request.form.get('servicios')))
+    print("servicios", type(request.form.get('servicios')), request.form.get('servicios'))
     servicios = request.form.get('servicios');
     listaServicios = str.split(servicios, ',')
     id = control.updateProyecto(
@@ -734,6 +774,27 @@ def getServicios():
     print(lista)
     return jsonify(lista)
 
+
+@app.route('/getServiciosSinProyecto', methods=['GET'])
+def getServiciosSinProyecto():
+    capacitaciones = control.capacitacion
+    evaluaciones = control.evaluacion
+    lista = []
+
+    for cap in capacitaciones:
+        if (cap.idProyecto == 0):
+            cliente = control.readCliente(cap.idCliente)
+            lista += [cap.toList()+[cliente.idCliente]+[cliente.nombre]]
+
+    
+    for eval in evaluaciones:
+        if (eval.idProyecto == 0):
+            cliente = control.readCliente(eval.idCliente)
+            lista += [eval.toList()+[cliente.idCliente]+[cliente.nombre]]
+        
+    print(lista)
+    return jsonify(lista)
+
 #getEvaluaciones
 @app.route('/getCotizaciones', methods=['GET'])
 def getCotizaciones():
@@ -745,7 +806,7 @@ def getCotizaciones():
             if eval.idCliente == cliente.idCliente:
                 nombreCliente = cliente.nombre
         lista += [eval.toList()+[nombreCliente]]
-    #print(lista)
+    print(lista)
     return jsonify(lista)
 
 #getNewIdProyecto

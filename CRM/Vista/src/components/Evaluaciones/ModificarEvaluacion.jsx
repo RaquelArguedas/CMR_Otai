@@ -82,6 +82,8 @@ export const ModificarEvaluacion = () => {
             showDenyButton: true,
             confirmButtonText: 'Aceptar',
             denyButtonText: `Cancelar`,
+            confirmButtonColor: "#4CAF50",
+            denyButtonColor: "#d33",
             allowOutsideClick: false, // Evita que se cierre haciendo clic fuera de la notificación
             allowEscapeKey: false, 
           }).then(async (result) => {
@@ -389,6 +391,7 @@ export const ModificarEvaluacion = () => {
                                     key={fileInputKey}
                                     onChange={handleFileChange}
                                     multiple
+                                    disabled = {true}
                                 />
                                 <ul style={{ marginLeft: '150px' }}>
                                     {selectedFiles.map((file) => (
