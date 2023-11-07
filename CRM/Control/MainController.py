@@ -214,14 +214,16 @@ class SingletonDAO(metaclass=SingletonMeta):
         
     def updateCapacitacion(self, idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, documentos, idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente):
         cap = self.readCapacitacion(idCapacitacion)
+        
         if cap != None:
+            print('-----Entre a modificar capacitacion', cap.toList())
             print("HOLA CAMARON SIN COLA")
             cap.editar(idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, None, idEstado, horasDuracion, fechaFinalizacion, modalidad, idFuncionario, precio, tipoCapacitacion, idProyecto, idCliente)
             print("idProyecto:", cap.idProyecto)
-            print(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
+            #print(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
             if cap.idProyecto == 0:
                 print("DESDE IF")
-                print(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, {cap.idProyecto}, {cap.idCliente}")
+                print(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, null, {cap.idCliente}")
                 self.executeCommit(f"EXEC updateCapacitacion {cap.id}, '{cap.idCapacitacion}', '{cap.nombre}', '{cap.descripcion}', '{cap.fechaCreacion}', '{cap.fechaEjecucion}', null, {cap.idEstado.value}, {cap.horasDuracion}, '{cap.fechaFinalizacion}', {cap.modalidad.value}, {cap.idFuncionario}, {cap.precio}, {cap.tipoCapacitacion}, null, {cap.idCliente}")
             else:
                 print("DESDE ELSE")
@@ -258,6 +260,7 @@ class SingletonDAO(metaclass=SingletonMeta):
     def updateEvaluacion(self, idEvaluacion, nombre, descripcion, fechaCreacion, tipoEvaluacion, fechaEjecucion, documentos, idEstado, precio, idProyecto, idCliente):
         e = self.readEvaluacion(idEvaluacion)
         if e != None:
+            print('-----Entre a modificar evaluacion', e.toList())
             print("ID PROYECTO")
             print(idProyecto)
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
@@ -268,9 +271,11 @@ class SingletonDAO(metaclass=SingletonMeta):
                 if (idEstado != None):
                     e.idEstado = Estado(idEstado)
                 print("DESPUES DE MODIFICADA")
-                if (e.idProyecto == None):
+                if (e.idProyecto == 0):
+                    print(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, null, {e.idCliente}")
                     self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, null, {e.idCliente}")
                 else:
+                    print(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, {e.idProyecto}, {e.idCliente}")
                     self.executeCommit(f"EXEC updateEvaluacion {e.id}, '{e.idEvaluacion}', '{e.nombre}', '{e.descripcion}', '{e.fechaCreacion}', {e.tipoEvaluacion}, '{e.fechaEjecucion}', null, {e.idEstado.value}, {e.precio}, {e.idProyecto}, {e.idCliente}")
             except Exception as ex:
                  print("Se ha producido una excepción:", ex)
@@ -328,6 +333,8 @@ class SingletonDAO(metaclass=SingletonMeta):
     
     def updateProyecto(self, idProyecto, nombre, descripcion, idServicios, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionariosIds):
         p = self.readProyecto(idProyecto)
+        print('updateProyectooooooooooooooooooooooooooo')
+        print('idServicios', idServicios)
         print("desde be: ", p.toList())
         if p != None:
             #print(f"EXEC updateEvaluacion {eval.id}, {eval.idEvaluacion}, {eval.nombre}, {eval.descripcion}, '{eval.fechaCreacion}', {eval.tipoEvaluacion}, '{eval.fechaEjecucion}', null, {eval.idEstado}, {eval.precio}, {eval.idProyecto}, {eval.idCliente}")
@@ -358,6 +365,17 @@ class SingletonDAO(metaclass=SingletonMeta):
             p.editar(None, nombre, descripcion, None, documentos, fechaInicio, fechaFinalizacion, subTotal, estado, funcionarios)
             print(f"EXEC updateProyecto {p.id}, {p.idProyecto}, {p.nombre}, {p.descripcion}, '{p.idCliente}',  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
             self.executeCommit(f"EXEC updateProyecto {p.id}, '{p.idProyecto}', '{p.nombre}', '{p.descripcion}', {p.idCliente},  null, '{p.fechaInicio}', '{p.fechaFinalizacion}', {p.subTotal}, {p.estado.value}")
+            #quita el proyecto de los servicios que tenia 
+            if idServicios != None:
+                servicios2 = self.capacitacion+self.evaluacion
+                for servicio2 in servicios2:
+                    print(servicio2.idProyecto, idProyecto, servicio2.idProyecto == idProyecto)
+                    if servicio2.idProyecto == p.id:
+                        print('SERVICIO PARA QUITAR')
+                        resCap = self.updateCapacitacion(servicio2.toList()[1],None,None, None, None, None, None, None, None, None, None, None, None, 0, None)
+                        if resCap == -1:
+                            self.updateEvaluacion(servicio2.toList()[1],None,None, None, None, None, None, None, None,0 ,None)
+            #agrega el proyecto a los nuevos servicios
             for servicio in servicioIndicados:
                 resCap = self.updateCapacitacion(servicio.toList()[1],None,None, None, None, None, None, None, None, None, None, None, None, p.id, None)
                 if resCap == -1:

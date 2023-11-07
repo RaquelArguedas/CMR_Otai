@@ -239,11 +239,13 @@ fuzzyTextFilterFn.autoRemove = val => !val
 // Define un componente de tabla
 
 export const Table = ({ columns, data, handleidServicioChange, idServicio, idCliente }) => {
+    const [firstRender, setFirstRender] = useState(true);
+    console.log("me pasaron: ", idServicio, idCliente)
     const navigate = useNavigate(); // Usar useNavigate aquí
     // console.log('ESTO DEBE SER ARRAY ')
     // console.log(JSON.stringify(idServicio));
     const [selectProyectosID, setSelectProyectosID] = useState(idServicio || []);
-    const [selectedClientId, setSelectedClientId] = useState(null);
+    const [selectedClientId, setSelectedClientId] = useState('');
     const handleSelectServicio= ( idServicios, idClient) => {
       console.log("No se que estoy haciendo",selectProyectosID, selectedClientId,'=', idServicios,'RATT' ,idClient)
       //console.log(selectedClientId, selectedClientId === null)
@@ -260,11 +262,14 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio, idCli
       }
       if (selectProyectosID.includes(idServicios)) {
         // Si está seleccionado, quítalo del array
-        console.log(' debi haber entrado aqui')
+        console.log(' debi haber entrado aqui', idCliente)
         if (selectProyectosID.length===1){
           const temp = null;
           setSelectedClientId(temp);
+          setFirstRender(false);
+          console.log('AJAAAAAAAAAAAAA', temp, selectedClientId)
         }
+        console.log(' debi haber entrado aqui', selectedClientId)
         console.log(selectProyectosID.filter(servicioID => servicioID !== idServicios, idServicios));
         const temp = selectProyectosID.filter(servicioID => servicioID !== idServicios);
         setSelectProyectosID(temp); // Actualiza el estado
@@ -279,10 +284,21 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio, idCli
     //     // Este efecto se ejecutará cada vez que selectProyectosID cambie.
     //     handleidServicioChange(selectProyectosID);
     // }, [selectProyectosID]);
+    // useEffect(() => {
+    //   setSelectProyectosID(idServicio);
+    //   console.log('Estos es  '+selectProyectosID)
+      
+    // }, [idServicio]);
     useEffect(() => {
-      setSelectProyectosID(idServicio);
-      console.log('Estos es  '+selectProyectosID)
-    }, [idServicio]);
+        console.log('EN USE EFFECT', firstRender);
+        console.log('Esto es idServicio: ' + idServicio);
+        console.log('Esto es idCliente: ' + idCliente);
+        setSelectProyectosID(idServicio);
+        if(firstRender) setSelectedClientId(idCliente);
+        console.log('Esto es idServicio: ' + idServicio);
+        console.log('Esto es idCliente: ' + idCliente);
+        console.log('EN USE EFFECT', firstRender);
+    }, [idServicio, idCliente]);
     
       const filterTypes = React.useMemo(
     () => ({
@@ -304,6 +320,7 @@ export const Table = ({ columns, data, handleidServicioChange, idServicio, idCli
     []
   )
   React.useEffect(() => {
+    console.log('Esto es idCliente: ' + idCliente);
     console.log('primera vez')
   }, []);
   const defaultColumn = React.useMemo(

@@ -67,13 +67,13 @@ export const ModificarProyecto = () => {
             return;
           }
 
-        //   console.log(!Array.isArray(idServicio) || idServicio.length === 0)
-        //   if (!Array.isArray(idServicio) || idServicio.length === 0) {
-        //     toast.error('Debe seleccionar al menos un servicio .', {
-        //       position: toast.POSITION.TOP_RIGHT,
-        //     });
-        //     return;
-        //   }
+          console.log(!Array.isArray(idServicio) || idServicio.length === 0)
+          if (!Array.isArray(idServicio) || idServicio.length === 0) {
+            toast.error('Debe seleccionar al menos un servicio .', {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
           
         //Notificacion de que se realizaron los cambios
         Swal.fire({
@@ -435,7 +435,7 @@ export const ModificarProyecto = () => {
                                         multiple
                                         disabled = {true}
                                     />
-                                    <ul disabled={true} style={{ marginLeft: '150px', marginTop : '-15px' }}>
+                                    <ul style={{ marginLeft: '150px', marginTop : '-15px' }}>
                                         {selectedFiles.map((file) => (
                                             <li key={file.nombre}> {/* Cambia key a file.url si es único */}
                                             {file.nombre} {/* Muestra el nombre del archivo */}
@@ -460,11 +460,11 @@ export const ModificarProyecto = () => {
 
                                 </div>
                             </div>
-                            {/* <div className="mb-3"  style={{ display: 'flex', marginTop:  '40px' }}>
+                            <div className="mb-3"  style={{ display: 'flex', marginTop:  '40px' }}>
                                 <Styles> 
                                     <Table columns={columns} data={servicios} handleidServicioChange={handleidServicioChange} idServicio={idServicio} idCliente={idCliente}/>
                                 </Styles> 
-                            </div> */}
+                            </div>
                                 
                             <div className="mb-3" 
                                 style={{ marginTop:  '50px' }} >
@@ -476,7 +476,6 @@ export const ModificarProyecto = () => {
                             
                             </div>
                             <ToastContainer />  
-
                     </form>
 
             </div>

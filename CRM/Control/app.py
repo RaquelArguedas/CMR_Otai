@@ -199,6 +199,8 @@ def deleteCotizacion(idCotizacion):
 #CRUD Evaluacion
 @app.route('/createEvaluacion', methods=['POST'])
 def createEvaluacion(): 
+    print('CREAR')
+    print(request.json['documentos'])
     id = control.createEvaluacion(
         request.json['nombre'],
         request.json['descripcion'],
@@ -466,19 +468,19 @@ def updateProyecto(idProyecto):
         request.form.get('estado'),
         None #recibe una lista con ids de funcionarios
     )
-    #print("__________________")
-    if id==None: #si sale bien, crea los archivos y hace los cambios en servicios
-        mi_lista = (request.form.get('servicios')).split(',')
-        for servicio in mi_lista:
-            #print(servicio, "AAA")
-            for c in control.capacitacion:
-                if c.idCapacitacion == servicio:
-                    c.idProyecto = idProyecto
-                    #print("cambie cap")
-            for c in control.evaluacion:
-                if c.idEvaluacion == servicio:
-                    c.idProyecto = idProyecto
-                    #print("cambie eval")
+    # #print("__________________")
+    # if id==None: #si sale bien, crea los archivos y hace los cambios en servicios
+    #     mi_lista = (request.form.get('servicios')).split(',')
+    #     for servicio in mi_lista:
+    #         #print(servicio, "AAA")
+    #         for c in control.capacitacion:
+    #             if c.idCapacitacion == servicio:
+    #                 c.idProyecto = idProyecto
+    #                 #print("cambie cap")
+    #         for c in control.evaluacion:
+    #             if c.idEvaluacion == servicio:
+    #                 c.idProyecto = idProyecto
+    #                 #print("cambie eval")
         
     return jsonify(str(id))
 
