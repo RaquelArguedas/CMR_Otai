@@ -153,7 +153,17 @@ export const Perfiles = () => {
           denyButtonColor: "#d33",
           allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
           allowEscapeKey: false,
+          inputValidator: (value) => {
+            if (value.length > 50) {
+              return 'El nombre del perfil no debe superar los 50 caracteres.';
+            }
+          }
         }).then((result) => {
+          console.log(result.value.length)
+          const confirmButton = Swal.getConfirmButton();
+            if (result.value.length > 50) {
+              return 'El nombre del perfil no debe superar los 50 caracteres.';
+          }
           
           if (result.isConfirmed) {
             const nombre = result.value; // Obtener el valor del input

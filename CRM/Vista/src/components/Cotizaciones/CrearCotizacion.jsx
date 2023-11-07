@@ -180,12 +180,21 @@ export const CrearCotizacion = () => {
         const validPattern = /^\d*\.?\d*$/;
     
         if (validPattern.test(inputValue)) {
+          if (inputValue.length <= 9) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
             setTotal(inputValue);
+          } else {
+              // La entrada supera el límite, muestra un alert
+              toast.error('El total no debe superar los 9 digitos.', {
+                  position: toast.POSITION.TOP_RIGHT,
+              });
+          }
         } else {
             toast.error('Por favor, ingrese un número decimal positivo válido sin "e", comas, guiones ni otros caracteres no deseados.', {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
+        
       };
     const handleCostoChange = (event) => {
         const inputValue = event.target.value;

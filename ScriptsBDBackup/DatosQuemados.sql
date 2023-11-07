@@ -56,28 +56,28 @@ INSERT INTO Cliente (cedJuridica, nombre, numTelefono, correo, fechaIngreso, idE
 VALUES (567890123, 'ESPH', 66667777, 'esph@gmail.com', '2023-10-05', 5);
 
 -- Sentencias INSERT para la tabla Proyecto
-INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('PRO001', 'Proyecto A', 'Descripción del Proyecto A', 1, null, '2023-10-05', '2023-12-31', 1000.00, 1);
-INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('PRO002', 'Proyecto B', 'Descripción del Proyecto B', 2, null, '2023-11-01', '2024-01-31', 1500.00, 2);
-INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
-VALUES ('PRO003', 'Proyecto C', 'Descripción del Proyecto C', 3, null, '2023-12-15', '2024-03-15', 2000.00, 3);
+--INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
+--VALUES ('PRO001', 'Proyecto A', 'Descripción del Proyecto A', 1, null, '2023-10-05', '2023-12-31', 1000.00, 1);
+--INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
+--VALUES ('PRO002', 'Proyecto B', 'Descripción del Proyecto B', 2, null, '2023-11-01', '2024-01-31', 1500.00, 2);
+--INSERT INTO Proyecto (idProyecto, nombre, descripcion, idCliente, documento, fechaInicio, fechaFinalizacion, subTotal, idEstado)
+--VALUES ('PRO003', 'Proyecto C', 'Descripción del Proyecto C', 3, null, '2023-12-15', '2024-03-15', 2000.00, 3);
 
 -- Sentencias INSERT para la tabla Evaluacion
 INSERT INTO Evaluacion (idEvaluacion, nombre, descripcion, fechaCreacion, idTipo, fechaEjecucion, documento, idEstado, precio, idProyecto, idCliente)
-VALUES ('EVAL001', 'Evaluación 1', 'Descripción de la Evaluación 1', '2023-10-10', 1, '2023-10-15', null, 1, 500.00, 1, 1);
+VALUES ('EVAL001', 'Evaluación 1', 'Descripción de la Evaluación 1', '2023-10-10', 1, '2023-10-15', null, 1, 500.00, null, 1);
 INSERT INTO Evaluacion (idEvaluacion, nombre, descripcion, fechaCreacion, idTipo, fechaEjecucion, documento, idEstado, precio, idProyecto, idCliente)
-VALUES ('EVAL002', 'Evaluación 2', 'Descripción de la Evaluación 2', '2023-11-15', 2, '2023-11-20', null, 2, 750.00, 2, 2);
+VALUES ('EVAL002', 'Evaluación 2', 'Descripción de la Evaluación 2', '2023-11-15', 2, '2023-11-20', null, 2, 750.00, null, 2);
 INSERT INTO Evaluacion (idEvaluacion, nombre, descripcion, fechaCreacion, idTipo, fechaEjecucion, documento, idEstado, precio, idProyecto, idCliente)
-VALUES ('EVAL003', 'Evaluación 3', 'Descripción de la Evaluación 3', '2023-12-20', 3, '2023-12-25', null, 3, 1000.00, 3, 3);
+VALUES ('EVAL003', 'Evaluación 3', 'Descripción de la Evaluación 3', '2023-12-20', 3, '2023-12-25', null, 3, 1000.00, null, 3);
 
 -- Sentencias INSERT para la tabla Capacitacion
 INSERT INTO Capacitacion (idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, documento, idEstado, horasDuracion, fechaFinalizacion, idModalidad, idFuncionario, precio, idTipo, idProyecto, idCliente)
-VALUES ('CA001', 'Capacitación 1', 'Descripción de la Capacitación 1', '2023-10-10', '2023-10-15', 0x54686973206973206120646F63756D656E74, 1, 20, '2023-10-30', 1, 1, 500.00, 1, 1, 1);
+VALUES ('CA001', 'Capacitación 1', 'Descripción de la Capacitación 1', '2023-10-10', '2023-10-15', 0x54686973206973206120646F63756D656E74, 1, 20, '2023-10-30', 1, 1, 500.00, 1, null, 1);
 INSERT INTO Capacitacion (idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, documento, idEstado, horasDuracion, fechaFinalizacion, idModalidad, idFuncionario, precio, idTipo, idProyecto, idCliente)
-VALUES ('CA002', 'Capacitación 2', 'Descripción de la Capacitación 2', '2023-11-15', '2023-11-20', 0x546869732069732062, 2, 30, '2023-12-15', 2, 2, 750.00, 2, 2, 2);
+VALUES ('CA002', 'Capacitación 2', 'Descripción de la Capacitación 2', '2023-11-15', '2023-11-20', 0x546869732069732062, 2, 30, '2023-12-15', 2, 2, 750.00, 2, null, 2);
 INSERT INTO Capacitacion (idCapacitacion, nombre, descripcion, fechaCreacion, fechaEjecucion, documento, idEstado, horasDuracion, fechaFinalizacion, idModalidad, idFuncionario, precio, idTipo, idProyecto, idCliente)
-VALUES ('CA003', 'Capacitación 3', 'Descripción de la Capacitación 3', '2023-12-20', '2023-12-25', 0x546869732069732063, 3, 25, '2024-01-10', 3, 1, 1000.00, 3, 3, 3);
+VALUES ('CA003', 'Capacitación 3', 'Descripción de la Capacitación 3', '2023-12-20', '2023-12-25', 0x546869732069732063, 3, 25, '2024-01-10', 3, 1, 1000.00, 3, null, 3);
 
 -- Insertar un usuario con datos completos
 INSERT INTO Usuario (nombre, apellido, fechaNacimiento, cedula, numTelefono, correo, fechaIngreso, contrasenha, idEstado)
@@ -94,8 +94,8 @@ INSERT INTO Cotizacion (nombre, descripcion, idCliente, idPorcentajesC, total, i
 VALUES ('Cotización 2', 'Descripción de la cotización 2', 2, 1, 1500.00, 'CA002', 2, '2023-10-05');
 
 -- Insertar valores en la tabla ProyectoXFuncionario
-INSERT INTO ProyectoXFuncionario (idProyecto, idFuncionario)
-VALUES (1, 1);
+--INSERT INTO ProyectoXFuncionario (idProyecto, idFuncionario)
+--VALUES (1, 1);
 -- Insertar valores en la tabla ProyectoXFuncionario
-INSERT INTO ProyectoXFuncionario (idProyecto, idFuncionario)
-VALUES (1, 2);
+--INSERT INTO ProyectoXFuncionario (idProyecto, idFuncionario)
+--VALUES (1, 2);

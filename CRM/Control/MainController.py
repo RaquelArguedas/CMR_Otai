@@ -294,10 +294,11 @@ class SingletonDAO(metaclass=SingletonMeta):
             nuevo_valor = valor_maximo + 1
             idProyectoCodigo = f'PRO{nuevo_valor}'
         else:
+            nuevo_valor = 1
             idProyectoCodigo = 'PRO1'
 
         print("AQUI SI LLEGO!")
-        if (self.readProyecto(nuevo_valor) == None):
+        if (self.readProyecto(idProyectoCodigo) == None):
             #funcionarios = []
             #for fId in funcionariosIds:
                 #f = self.readFuncionario(int(fId))
@@ -493,7 +494,7 @@ class SingletonDAO(metaclass=SingletonMeta):
         if nombre == None:
             return -1 #No se puede crear una capacitacion con atributos nulos   
 
-        self.executeCommit(f"EXEC createPerfil {nombre}")
+        self.executeCommit(f"EXEC createPerfil '{nombre}'")
         idPerfil = self.execute(f"SELECT MAX(idPerfil) FROM Perfil")
 
         #si hay lista y no existe el idCapacitacion en los datos se crea

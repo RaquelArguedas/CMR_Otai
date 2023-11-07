@@ -266,7 +266,8 @@ export const ModificarProyecto = () => {
     const handleRemoveFile = (urlToRemove) => {
         const updatedFiles = selectedFiles.filter((file) => file.url !== urlToRemove);
         setSelectedFiles(updatedFiles);
-      };
+    };
+
     const handleEstadoChange = (event) => {
         setEstado(event.target.value);
     };
@@ -283,8 +284,9 @@ export const ModificarProyecto = () => {
                     position: toast.POSITION.TOP_RIGHT,
                 });
             }
-      };
-      const handleDescripcionChange = (event) => {
+    };
+
+    const handleDescripcionChange = (event) => {
         const inputValue = event.target.value;
         
             if (inputValue.length <= 100) {
@@ -296,7 +298,7 @@ export const ModificarProyecto = () => {
                     position: toast.POSITION.TOP_RIGHT,
                 });
             }
-      };
+    };
     const handleCostoChange = (event) => {
         const inputValue = event.target.value;
         // Expresión regular que valida un número decimal positivo
@@ -304,7 +306,15 @@ export const ModificarProyecto = () => {
     
         if (validPattern.test(inputValue)) {
             // La entrada es válida, puedes actualizar el estado
-            setCosto(inputValue);
+            if (inputValue.length <= 9) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setCosto(inputValue);
+              } else {
+                  // La entrada supera el límite, muestra un alert
+                  toast.error('El total no debe superar los 9 digitos.', {
+                      position: toast.POSITION.TOP_RIGHT,
+                  });
+              }
         } else {
             // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
             // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario

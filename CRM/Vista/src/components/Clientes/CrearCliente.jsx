@@ -133,7 +133,15 @@ export const CrearCliente = () => {
     
         if (validPattern.test(inputValue)) {
             // La entrada es válida, puedes actualizar el estado
-            setCedula(inputValue);
+            if (inputValue.length <= 9) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setCedula(inputValue);
+              } else {
+                  // La entrada supera el límite, muestra un alert
+                  toast.error('El total no debe superar los 9 digitos.', {
+                      position: toast.POSITION.TOP_RIGHT,
+                  });
+              }
         } else {
             // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
             // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
@@ -149,7 +157,15 @@ export const CrearCliente = () => {
     
         if (validPattern.test(inputValue)) {
             // La entrada es válida, puedes actualizar el estado
-            setTelefono(inputValue);
+            if (inputValue.length <= 9) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setTelefono(inputValue);
+              } else {
+                  // La entrada supera el límite, muestra un alert
+                  toast.error('El total no debe superar los 9 digitos.', {
+                      position: toast.POSITION.TOP_RIGHT,
+                  });
+              }
         } else {
             // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
             // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario

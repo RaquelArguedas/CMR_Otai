@@ -52,8 +52,17 @@ export const CrearFuncionarios = () => {
             denyButtonColor: "#d33",
             allowOutsideClick: false, // Evitar cierre haciendo clic fuera de la notificación
             allowEscapeKey: false,
+            inputValidator: (value) => {
+              if (value.length > 50) {
+                return 'El nombre del perfil no debe superar los 50 caracteres.';
+              }
+            }
             
           }).then(async (result) => {
+            const confirmButton = Swal.getConfirmButton();
+            if (result.value.length > 50) {
+              return 'El nombre del perfil no debe superar los 50 caracteres.';
+            }
             if (result.isConfirmed) {
               const nombre = result.value; // Obtener el valor del input
               if (nombre !== '') {
@@ -231,7 +240,15 @@ export const CrearFuncionarios = () => {
   
       if (validPattern.test(inputValue)) {
           // La entrada es válida, puedes actualizar el estado
-          setCedula(inputValue);
+          if (inputValue.length <= 9) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setCedula(inputValue);
+          } else {
+              // La entrada supera el límite, muestra un alert
+              toast.error('La cédula no debe superar los 9 digitos.', {
+                  position: toast.POSITION.TOP_RIGHT,
+              });
+          }
       } else {
           // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
           // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
@@ -247,7 +264,15 @@ export const CrearFuncionarios = () => {
   
       if (validPattern.test(inputValue)) {
           // La entrada es válida, puedes actualizar el estado
-          setTelefono(inputValue);
+          if (inputValue.length <= 9) {
+            // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+            setTelefono(inputValue);
+          } else {
+              // La entrada supera el límite, muestra un alert
+              toast.error('El número de teléfono no debe superar los 9 digitos.', {
+                  position: toast.POSITION.TOP_RIGHT,
+              });
+          }
       } else {
           // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
           // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario

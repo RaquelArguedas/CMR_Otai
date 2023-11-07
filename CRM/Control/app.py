@@ -426,11 +426,11 @@ def getServiciosProyecto(idProyecto):
     lista = []
 
     for cap in capacitaciones:
-        if cap.idProyecto == int(idProyecto):
+        if cap.idProyecto == int(idProyecto) and cap.idEstado!=1:
             lista += [cap.toList()]
     
     for eval in evaluaciones:
-        if eval.idProyecto == int(idProyecto):
+        if eval.idProyecto == int(idProyecto) and eval.idEstado!=1:
             lista += [eval.toList()]
         
     print(lista)
@@ -766,12 +766,18 @@ def getServicios():
 
     for cap in capacitaciones:
         cliente = control.readCliente(cap.idCliente)
-        lista += [cap.toList()+[cliente.idCliente]+[cliente.nombre]]
+        print("cap.idEstado")
+        print(cap.idEstado)
+        if cap.idEstado.value != 1:
+            lista += [cap.toList()+[cliente.idCliente]+[cliente.nombre]]
 
     
     for eval in evaluaciones:
         cliente = control.readCliente(eval.idCliente)
-        lista += [eval.toList()+[cliente.idCliente]+[cliente.nombre]]
+        print("eval.idEstado")
+        print(eval.idEstado)
+        if eval.idEstado.value != 1:
+            lista += [eval.toList()+[cliente.idCliente]+[cliente.nombre]]
         
     print(lista)
     return jsonify(lista)
@@ -784,13 +790,13 @@ def getServiciosSinProyecto():
     lista = []
 
     for cap in capacitaciones:
-        if (cap.idProyecto == 0):
+        if (cap.idProyecto == 0 and cap.idEstado.value != 1):
             cliente = control.readCliente(cap.idCliente)
             lista += [cap.toList()+[cliente.idCliente]+[cliente.nombre]]
 
     
     for eval in evaluaciones:
-        if (eval.idProyecto == 0):
+        if (eval.idProyecto == 0 and eval.idEstado.value != 1):
             cliente = control.readCliente(eval.idCliente)
             lista += [eval.toList()+[cliente.idCliente]+[cliente.nombre]]
         

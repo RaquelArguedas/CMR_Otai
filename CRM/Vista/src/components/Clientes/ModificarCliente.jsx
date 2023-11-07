@@ -56,6 +56,13 @@ export const ModificarCliente = () => {
             });
             return;
         }
+
+        if (estado === '') {
+            toast.error('Seleccione un estado válido.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            return;
+          }
     
         // Validación del formato de correo electrónico
         const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -161,7 +168,15 @@ export const ModificarCliente = () => {
     
         if (validPattern.test(inputValue)) {
             // La entrada es válida, puedes actualizar el estado
-            setTelefono(inputValue);
+            if (inputValue.length <= 9) {
+                // La entrada no supera el límite de 100 caracteres, puedes actualizar el estado
+                setTelefono(inputValue);
+              } else {
+                  // La entrada supera el límite, muestra un alert
+                  toast.error('El total no debe superar los 9 digitos.', {
+                      position: toast.POSITION.TOP_RIGHT,
+                  });
+              }
         } else {
             // La entrada no es válida, puedes mostrar un mensaje de error o realizar alguna otra acción apropiada
             // Por ejemplo, mostrar un mensaje de error en la interfaz de usuario
